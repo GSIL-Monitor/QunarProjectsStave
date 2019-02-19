@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:property-placeholder location="classpath:db.properties" ignore-unresolvable="true"/>
+
+    <!--<bean id="tomcatJdbcDataSourceFactory" class="com.qunar.db.resource.impl.TomcatJdbcDataSourceFactory"/>-->
+
+    <!-- qmha venice-pay 读写数据源（MasterDelegatorDataSource）配置 -->
+    <!--<bean id="dataSource" class="com.qunar.db.resource.MasterDelegatorDataSource">-->
+    <!--<constructor-arg index="0"  type="java.lang.String" value="${db.namespace}"/>  &lt;!&ndash; DBA分配给业务的namespace &ndash;&gt;-->
+    <!--<constructor-arg index="1"  type="java.lang.String" value="${db.username}"/>   &lt;!&ndash; DBA分配给业务的MySQL用户名 &ndash;&gt;-->
+    <!--<constructor-arg index="2"  type="java.lang.String" value="${db.password}"/>   &lt;!&ndash; DBA分配给业务的MySQL密码&ndash;&gt;-->
+    <!--<constructor-arg index="3"  type="java.lang.String" value="${db.dbName}"/>     &lt;!&ndash;如果将db_name替换成空串("")，则是连接实例 &ndash;&gt;-->
+    <!--<constructor-arg index="4"  type="int" value="20"/>  &lt;!&ndash; 客户端MySQL连接池核心连接数，推荐：10&ndash;&gt;-->
+    <!--<constructor-arg index="5"  type="int" value="50"/>  &lt;!&ndash; 客户端MySQL连接池最大连接数，推荐：20 &ndash;&gt;-->
+    <!--<constructor-arg index="6"  type="java.lang.String" value="?useunicode=true&amp;autoReconnect=true&amp;socketTimeout=10000"/>  &lt;!&ndash; MySQL jdbc Url 参数&ndash;&gt;-->
+    <!--<constructor-arg index="7"  type="boolean" value="true"/>  &lt;!&ndash; autocommit=true or false, 默认是true &ndash;&gt;-->
+    <!--<constructor-arg index="8"  ref="tomcatJdbcDataSourceFactory"/> &lt;!&ndash; 数据源工厂实现类 &ndash;&gt;-->
+    <!--</bean>-->
+    <!--qmha config-->
+    <bean id="dataSourceAdmin" class="com.qunar.db.resource.MasterDelegatorDataSource">
+        <constructor-arg index="0" type="java.lang.String"
+                         value="${admin.db.namespace}"/>  <!-- DBA分配给业务的namespace -->
+        <constructor-arg index="1" type="java.lang.String"
+                         value="${admin.db.username}"/>  <!-- DBA分配给业务的MySQL用户名 -->
+        <constructor-arg index="2" type="java.lang.String" value="${admin.db.password}"/>  <!-- DBA分配给业务的MySQL密码-->
+        <constructor-arg index="3" type="java.lang.String"
+                         value="${admin.db.name}"/>  <!--如果将db_name替换成空串("")，则是连接实例 -->
+        <constructor-arg index="4"  type="int" value="20"/> <!-- 客户端MySQL连接池核心连接数，推荐：10-->
+        <constructor-arg index="5"  type="int" value="50"/> <!-- 客户端MySQL连接池最大连接数，推荐：20 -->
+        <constructor-arg index="6"  type="java.lang.String" value="?useunicode=true&amp;autoReconnect=true&amp;socketTimeout=10000&amp;zeroDateTimeBehavior=convertToNull"/>
+        <constructor-arg index="7"  ref="tomcatJdbcDataSourceFactory"/>
+    </bean>
+
+    <bean id="tomcatJdbcDataSourceFactory" class="com.qunar.db.resource.impl.TomcatJdbcDataSourceFactory"/>
+
+    <bean id="sqlSessionFactoryAdmin" class="com.qunar.fintech.util.mybatis.MonitoredSqlSessionFactory">
+        <constructor-arg index="0">
+            <bean class="org.mybatis.spring.SqlSessionFactoryBean">        <!-- dataSource -->
+                <property name="dataSource" ref="dataSourceAdmin"/>
+                <property name="mapperLocations" value="classpath:mybatis/system/*.xml"/>
+                <property name="typeAliasesPackage" value="com.qunar.fintech.plat.admin.system.dao.entity"/>
+                <property name="typeHandlersPackage" value="com.qunar.fintech.plat.admin.system.dao.handler"/>
+                <property name="configuration">
+                    <bean class="org.apache.ibatis.session.Configuration">
+                        <property name="mapUnderscoreToCamelCase" value="true"/>
+                    </bean>
+                </property>
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="1" value="plat_admin"/>
+    </bean>
+    <bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.qunar.fintech.plat.admin.system.dao.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryAdmin" />
+    </bean>
+
+    <!-- 事务处理 -->
+    <tx:annotation-driven transaction-manager="transactionManagerAdmin"/>
+    <bean id="transactionManagerAdmin" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceAdmin"/>
+    </bean>
+    <!--事务模板 -->
+    <bean id="transTemplateAdmin" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManagerAdmin"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.ScheduleDetailDao">
+    <sql id="Base_Column_List">
+        id AS id,
+        repayment_schedule_id AS repaymentScheduleId,
+        user_id AS userId,
+        product_no AS productNo,
+        tpp_code AS tppCode,
+        org_channel AS orgChannel,
+        loan_provide_no AS loanProvideNo,
+        due_date AS dueDate,
+        int_rate AS intRate,
+        prcp_amount AS prcpAmount,
+        int_amount AS intAmount,
+        total_amount AS totalAmount,
+        setl_prcp_amount AS setlPrcpAmount,
+        payed_amount AS payedAmount,
+        sched_prcp_amount AS schedPrcpAmount,
+        prcp_status AS prcpStatus,
+        last_setl_date AS lastSetlDate,
+        status AS status,
+        create_time AS createTime,
+        update_time AS updateTime,
+        od_amount AS odAmount,
+        cur_od_amount AS curOdAmount,
+        od_prcp_amount AS odPrcpAmount,
+        od_int_amount AS odIntAmount,
+        act_repay_date AS actRepayDate,
+        int_status AS intStatus,
+        repay_index AS repayIndex,
+        setl_od_amount AS setlOdAmount,
+        spreads_amount AS spreadsAmount,
+        payed_spreads_amount AS payedSpreadsAmount
+    </sql>
+
+    <select id="queryByUserIdLoanPrvdNo" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_schedule_detail IGNORE INDEX(PRIMARY)
+        where 1=1
+        <if test="userId != null and userId != ''">
+            AND user_id = #{userId}
+        </if>
+        <if test="loanProvideNo != null and loanProvideNo != ''">
+            AND loan_provide_no = #{loanProvideNo}
+        </if>
+        AND product_no = #{productNo}
+        ORDER BY id ASC
+    </select>
+
+    <select id="queryIntRateByRequest" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        SELECT
+        int_rate AS intRate
+        ,loan_provide_no AS loanProvideNo
+        ,status          AS status
+        FROM tbl_schedule_detail
+        WHERE
+        loan_provide_no IN
+        <foreach collection="loanInfos" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item.loanProvideNo}
+        </foreach>
+        GROUP BY loan_provide_no
+    </select>
+
+    <select id="queryByUserIdAndTppCode" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_schedule_detail
+        where
+        user_id = #{userId}
+        and
+        tpp_code = #{tppCode}
+        and
+        product_no = #{productNo}
+    </select>
+
+    <select id="queryByStatus" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_schedule_detail
+        where
+        user_id = #{userId}
+        and
+        tpp_code = #{tppCode}
+        and
+        status = #{status}
+    </select>
+    <select id="queryDetailByLoanProvideNo" parameterType="string" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        SELECT
+          loan_provide_no     AS loanProvideNo
+          ,due_date           AS dueDate
+          ,update_time        AS updateTime
+          ,status             AS status
+          ,prcp_status        AS prcpStatus
+          ,prcp_amount        AS prcpAmount
+          ,setl_prcp_amount   AS setlPrcpAmount
+          ,int_amount         AS intAmount
+          ,payed_amount       AS payedAmount
+          ,od_amount          AS odAmount
+          ,user_id            AS userId
+          ,tpp_code           AS tppCode
+          ,setl_od_amount     AS setlOdAmount
+          ,repay_index        AS repayIndex
+          ,int_status         AS intStatus
+        FROM tbl_schedule_detail
+        WHERE
+        loan_provide_no = #{loanProvideNo}
+        ORDER BY repay_index ASC
+    </select>
+
+    <select id="queryOverDueOrder" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.QueryOverDueOrderRecord">
+        SELECT
+            tli.user_id AS userId,
+            tli.product_no AS productNo,
+            tli.tpp_code AS tppCode,
+            tli.busi_order_no AS busiOrderNo,
+            tli.merchant_code AS merchantCode,
+            tli.pay_amount AS orderAmt,
+            tli.loan_term AS loanTerm,
+            tli.ious_pay_amount AS loanAmt,
+            tli.loan_provide_no AS loanProvideNo,
+            tsd.order_time AS orderTime,
+            tsd.fee AS totalHandingCharge
+        FROM
+        (
+            select distinct loan_provide_no,tpp_code,max(create_time) as order_time,sum(int_amount-payed_amount+od_amount-setl_od_amount) as fee
+            from tbl_schedule_detail AS tbl_sd
+            where
+            tbl_sd.user_id = #{request.userId} AND tbl_sd.int_status='OL'
+            <trim>
+                <if test="request.productNo != null and request.productNo != ''">
+                    AND tbl_sd.product_no = #{request.productNo}
+                </if>
+                <if test="request.tppCode != null and request.tppCode != ''">
+                    AND tbl_sd.tpp_code = #{request.tppCode}
+                </if>
+                <if test="request.startTime != null and  request.startTime != ''">
+                    AND tbl_sd.create_time <![CDATA[ >= ]]> #{request.startTime}
+                </if>
+                <if test="request.endTime != null and  request.endTime != ''">
+                    AND tbl_sd.create_time <![CDATA[ < ]]> #{request.endTime}
+                </if>
+            </trim>
+            group by loan_provide_no,tpp_code
+        )
+        AS tsd,tbl_loan_info AS tli
+        WHERE  tsd.tpp_code=tli.tpp_code
+            AND tsd.loan_provide_no=tli.loan_provide_no
+            <trim>
+            	<if test="request.orgChannel != null and  request.orgChannel != ''">
+                	AND tli.org_channel= #{request.orgChannel}
+            	</if>
+                <if test="request.busiOrderNo != null and request.busiOrderNo != ''">
+                    AND tli.busi_order_no = #{request.busiOrderNo}
+                </if>
+            </trim>
+        order by tsd.order_time desc
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryOverDueOrderCount" parameterType="Object" resultType="Integer">
+        SELECT
+            count(*)
+        FROM
+        (
+        select distinct loan_provide_no,tpp_code,max(create_time) as order_time,sum(int_amount-payed_amount+od_amount-setl_od_amount) as fee
+        from tbl_schedule_detail AS tbl_sd
+        where
+        tbl_sd.user_id = #{request.userId} AND tbl_sd.int_status='OL'
+        <trim>
+            <if test="request.productNo != null and request.productNo != ''">
+                AND tbl_sd.product_no = #{request.productNo}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tbl_sd.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND tbl_sd.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND tbl_sd.create_time <![CDATA[ < ]]> #{request.endTime}
+            </if>
+        </trim>
+        group by loan_provide_no,tpp_code
+        )
+        AS tsd,tbl_loan_info AS tli
+        WHERE  tsd.tpp_code=tli.tpp_code
+        AND tsd.loan_provide_no=tli.loan_provide_no
+        <trim>
+           <if test="request.orgChannel != null and  request.orgChannel != ''">
+                AND tli.org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.busiOrderNo != null and request.busiOrderNo != ''">
+                AND tli.busi_order_no = #{request.busiOrderNo}
+            </if>
+        </trim>
+    </select>
+
+    <select id="queryOverDueOrderDetail" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.QueryOverDueOrderDetailRecord">
+        SELECT
+        	tsd.product_no AS productNo,
+            tsd.repay_index AS repayIndex,
+            tsd.create_time AS orderTime,
+            tsd.due_date AS dueDate,
+            (tsd.od_amount-tsd.setl_od_amount) AS penalty,
+            (tsd.prcp_amount-tsd.setl_prcp_amount+tsd.int_amount-tsd.payed_amount+tsd.od_amount-tsd.setl_od_amount) AS repayAmtCurrentTerm,
+            tsd.status AS repayStatus,
+            trw.withhold_status AS withHoldStatus,
+            trw.withhold_amt AS withHoldAmt,
+            trfa.audit_status AS auditStatus
+        FROM tbl_schedule_detail AS tsd
+        LEFT JOIN tbl_repayment_forced_audit AS trfa ON tsd.loan_provide_no=trfa.loan_provide_no AND tsd.due_date=trfa.due_date AND trfa.audit_status IN (0,1)
+        LEFT JOIN tbl_repayment_withhold AS trw ON trfa.withhold_no = trw.withhold_no
+        WHERE
+            tsd.user_id = #{userId} AND tsd.tpp_code = #{tppCode} AND tsd.loan_provide_no = #{loanProvideNo}
+        ORDER BY tsd.repay_index
+    </select>
+
+    <select id="queryOverDueOrderDueDays" parameterType="Object" resultType="java.util.Date">
+        SELECT
+        tsd.due_date AS dueDate
+        FROM tbl_schedule_detail AS tsd
+        WHERE
+        tsd.user_id = #{userId} AND tsd.tpp_code = #{tppCode} AND tsd.loan_provide_no = #{loanProvideNo}
+    </select>
+
+    <select id="queryMaxOverDueUserList" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.OverDueWithholdRecord">
+        SELECT userId, productNo,tppCode,minOverDue from ( SELECT
+        user_id as userId,
+        product_no as productNo,
+        tpp_code as tppCode,
+        due_date as dueDate,
+        MIN(due_date) as minOverDue
+        FROM tbl_schedule_detail as tbl_sd WHERE
+        tbl_sd.status = 0 
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.maxOverDueDate}
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.userMaxOverDueDate}
+        <trim>
+            <if test="overDueReq.userId != null and overDueReq.userId != ''">
+                AND tbl_sd.user_id = #{overDueReq.userId}
+            </if>
+            <if test="overDueReq.productNo != null and overDueReq.productNo != ''">
+                AND tbl_sd.product_no = #{overDueReq.productNo}
+            </if>
+            <if test="overDueReq.tppCode != null and overDueReq.tppCode != ''">
+                AND tbl_sd.tpp_code = #{overDueReq.tppCode}
+            </if>
+            <if test="overDueReq.orgChannel != null and  overDueReq.orgChannel != ''">
+                AND tbl_sd.org_channel= #{overDueReq.orgChannel}
+            </if>
+            <if test="overDueReq.userIdList != null">
+                AND tbl_sd.user_id in
+                <foreach item="item" index="index" collection="overDueReq.userIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+        GROUP BY tbl_sd.user_id,tbl_sd.tpp_code) as t order by dueDate desc
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryMaxOverDueUserListCount" parameterType="Object" resultType="Integer">
+        select
+          count(*) from (
+        select * from tbl_schedule_detail
+        where
+        status = 0
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.maxOverDueDate}
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.userMaxOverDueDate}
+        <trim>
+            <if test="overDueReq.userId != null and overDueReq.userId != ''">
+                AND user_id = #{overDueReq.userId}
+            </if>
+             <if test="overDueReq.orgChannel != null and  overDueReq.orgChannel != ''">
+                AND org_channel= #{overDueReq.orgChannel}
+            </if>
+            <if test="overDueReq.productNo != null and overDueReq.productNo != ''">
+                AND product_no = #{overDueReq.productNo}
+            </if>
+            <if test="overDueReq.tppCode != null and overDueReq.tppCode != ''">
+                AND tpp_code = #{overDueReq.tppCode}
+            </if>
+            <if test="overDueReq.userIdList != null">
+                AND user_id in
+                <foreach item="item" index="index" collection="overDueReq.userIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+        GROUP BY user_id,tpp_code
+        ) AS a
+    </select>
+
+    <select id="queryScheduleDetailByUserIds" parameterType="Object"
+            resultType="com.qunar.fintech.plat.admin.query.vo.OverDueWithholdRecord">
+        select
+        user_id AS userId,
+        product_no AS productNo,
+        tpp_code AS tppCode,
+        loan_provide_no AS loanProvideNo ,
+        SUM(tbl_sd.prcp_amount-tbl_sd.setl_prcp_amount+tbl_sd.int_amount-tbl_sd.payed_amount+tbl_sd.od_amount-tbl_sd.setl_od_amount+tbl_sd.spreads_amount-tbl_sd.payed_spreads_amount )
+                AS debtSumAmount ,
+        COUNT(*) AS debtNum
+        from tbl_schedule_detail AS tbl_sd
+        where
+        tbl_sd.status in (0,1)
+  		AND due_date <![CDATA[ <= ]]>  #{overDueReq.maxOverDueDate}
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.userMaxOverDueDate}
+        <trim>
+            <if test="overDueReq.userId != null and overDueReq.userId != ''">
+                AND tbl_sd.user_id = #{overDueReq.userId}
+            </if>
+            <if test="overDueReq.productNo != null and overDueReq.productNo != ''">
+                AND tbl_sd.product_no = #{overDueReq.productNo}
+            </if>
+            <if test="overDueReq.tppCode != null and overDueReq.tppCode != ''">
+                AND tbl_sd.tpp_code = #{overDueReq.tppCode}
+            </if>
+            <if test="overDueReq.orgChannel != null and  overDueReq.orgChannel != ''">
+                AND tbl_sd.org_channel= #{overDueReq.orgChannel}
+            </if>
+            <if test="userIdList != null">
+                AND tbl_sd.user_id in
+                <foreach item="item" index="index" collection="userIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+        GROUP BY tbl_sd.user_id,tbl_sd.tpp_code
+    </select>
+
+    <select id="queryOverDueDetailByUIdAndTppCode" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_schedule_detail as tbl_sd
+        where
+        tbl_sd.status = '0'
+        <trim>
+            <if test="overDueReq.maxOverDueDate != null and overDueReq.maxOverDueDate != ''">
+                AND tbl_sd.due_date <![CDATA[ < ]]>  #{overDueReq.maxOverDueDate}
+            </if>
+            <if test="overDueReq.userId != null and overDueReq.userId != ''">
+                AND tbl_sd.user_id = #{overDueReq.userId}
+            </if>
+            <if test="overDueReq.tppCode != null and overDueReq.tppCode != ''">
+                AND tbl_sd.tpp_code = #{overDueReq.tppCode}
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="queryOverDueOrderAudit" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.OverDueOrderAuditRecord">
+        SELECT
+            trfa.user_id AS userId,
+            trfa.tpp_code AS tppCode,
+            tli.busi_order_no AS busiOrderNo,
+            tsd.create_time AS orderTime,
+            tli.ious_pay_amount AS loanAmt,
+            tli.loan_term AS loanTerm,
+            trfa.repay_no AS loanIndex,
+            trw.withhold_amt AS withHoldAmt,
+            trfa.repay_amt AS repayAmtCurrentTerm,
+            trfa.audit_status AS auditStatus,
+            trfa.loan_provide_no AS loanProvideNo,
+            trfa.due_date AS dueDate
+        FROM
+            tbl_schedule_detail AS tsd,
+            tbl_loan_info AS tli,
+            tbl_repayment_forced_audit AS trfa
+            LEFT JOIN tbl_repayment_withhold as trw on trfa.loan_provide_no = trw.loan_provide_no AND trfa.due_date = trw.due_date
+        WHERE
+            trfa.loan_provide_no = tsd.loan_provide_no AND trfa.due_date = tsd.due_date AND
+            tsd.tpp_code=tli.tpp_code AND tsd.loan_provide_no=tli.loan_provide_no
+            <trim>
+                <if test="request.userId != null and request.userId != ''">
+                    AND trfa.user_id = #{request.userId}
+                </if>
+                <if test="request.busiOrderNo != null and request.busiOrderNo != ''">
+                    AND tli.busi_order_no = #{request.busiOrderNo}
+                </if>
+                <if test="request.startTime != null and  request.startTime != ''">
+                    AND tsd.create_time <![CDATA[ >= ]]> #{request.startTime}
+                </if>
+                <if test="request.endTime != null and  request.endTime != ''">
+                    AND tsd.create_time <![CDATA[ < ]]> #{request.endTime}
+                </if>
+                <if test="request.auditStatus != null">
+                    AND trfa.audit_status = #{request.auditStatus}
+                </if>
+            </trim>
+        ORDER BY trfa.create_time DESC
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+
+    <select id="queryOverDueOrderAuditCount" parameterType="Object" resultType="Integer">
+        SELECT
+            COUNT(*)
+        FROM
+        tbl_schedule_detail AS tsd,
+        tbl_loan_info AS tli,
+        tbl_repayment_forced_audit AS trfa
+        LEFT JOIN tbl_repayment_withhold as trw on trfa.loan_provide_no = trw.loan_provide_no AND trfa.due_date = trw.due_date
+        WHERE
+        trfa.loan_provide_no = tsd.loan_provide_no AND trfa.due_date = tsd.due_date AND
+        tsd.tpp_code=tli.tpp_code AND tsd.loan_provide_no=tli.loan_provide_no
+        <trim>
+            <if test="request.userId != null and request.userId != ''">
+                AND trfa.user_id = #{request.userId}
+            </if>
+            <if test="request.busiOrderNo != null and request.busiOrderNo != ''">
+                AND tli.busi_order_no = #{request.busiOrderNo}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND tsd.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND tsd.create_time <![CDATA[ < ]]> #{request.endTime}
+            </if>
+            <if test="request.auditStatus != null">
+                AND trfa.audit_status = #{request.auditStatus}
+            </if>
+        </trim>
+    </select>
+
+    <select id="exportOverDueOrderCount" parameterType="Object" resultType="Integer">
+        SELECT
+            count(*)
+        from  tbl_schedule_detail AS tsd,
+        tbl_loan_info AS tli,
+        tbl_ious_white_user AS tiwu
+        where
+        tsd.int_status='OL' and tsd.status='0' and tsd.due_date <![CDATA[ < ]]> now()
+        and tsd.loan_provide_no=tli.loan_provide_no
+        and tsd.user_id=tiwu.user_id
+        <trim>
+            <if test="request.userId != null and request.userId != ''">
+                AND tsd.user_id = #{request.userId}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tsd.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND tsd.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND tsd.create_time <![CDATA[ < ]]> #{request.endTime}
+            </if>
+            <if test="request.busiOrderNo != null and request.busiOrderNo != ''">
+                AND tli.busi_order_no = #{request.busiOrderNo}
+            </if>
+        </trim>
+        <if test="page.fromIndex != null and page.pageSize !=null">
+            limit #{page.fromIndex}, #{page.pageSize}
+        </if>
+    </select>
+
+    <select id="exportOverDueOrderInfo" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.ExportOverDueOrderResp">
+        SELECT
+        tiwu.user_id AS userId,
+        tiwu.mosaic_ident_code AS identCard,
+        tli.order_no AS orderNo,
+        tli.busi_order_no AS busiOrderNo,
+        tli.pay_amount AS orderAmt,
+        tli.loan_term AS loanTerm,
+        tli.ious_pay_amount AS loanAmt,
+        tli.pay_time AS payTime,
+        tsd.loan_provide_no AS loanProvideNo,
+        tsd.due_date AS dueDate,
+        (tsd.prcp_amount-tsd.setl_prcp_amount+tsd.int_amount-tsd.payed_amount+tsd.od_amount-tsd.setl_od_amount) AS overDueAmt,
+        (tsd.int_amount-tsd.payed_amount+tsd.od_amount-tsd.setl_od_amount) AS overDueFineAmt,
+
+        (tsd.prcp_amount-tsd.setl_prcp_amount+tsd.int_amount-tsd.payed_amount+tsd.od_amount-tsd.setl_od_amount) AS residueRepayTotalAmt,
+        (tsd.prcp_amount-tsd.setl_prcp_amount) AS residueRepayPrcpAmt,
+        (tsd.int_amount-tsd.payed_amount) AS residueRepayFeeAmt,
+        (tsd.od_amount-tsd.setl_od_amount) AS residueRepayFineAmt,
+
+        (tsd.prcp_amount-tsd.setl_prcp_amount+tsd.int_amount-tsd.payed_amount+tsd.od_amount-tsd.setl_od_amount) AS currRepayTotalAmt,
+        (tsd.prcp_amount-tsd.setl_prcp_amount) AS currRepayPrcpAmt,
+        (tsd.int_amount-tsd.payed_amount) AS currRepayFeeAmt,
+        (tsd.od_amount-tsd.setl_od_amount) AS currRepayFineAmt,
+
+        (tsd.prcp_amount-tsd.setl_prcp_amount+tsd.int_amount-tsd.payed_amount+tsd.od_amount-tsd.setl_od_amount) AS currRepayedTotalAmt,
+        (tsd.prcp_amount-tsd.setl_prcp_amount) AS currRepayedPrcpAmt,
+        (tsd.int_amount-tsd.payed_amount) AS currRepayedFeeAmt,
+        (tsd.od_amount-tsd.setl_od_amount) AS currRepayedFineAmt
+
+        from  tbl_schedule_detail AS tsd,
+        tbl_loan_info AS tli,
+        tbl_ious_white_user AS tiwu
+        where
+        tsd.int_status='OL' and tsd.status='0' and tsd.due_date <![CDATA[ < ]]> now()
+        and tsd.loan_provide_no=tli.loan_provide_no
+        and tsd.user_id=tiwu.user_id
+        <trim>
+            <if test="request.userId != null and request.userId != ''">
+                AND tsd.user_id = #{request.userId}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tsd.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND tsd.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND tsd.create_time <![CDATA[ < ]]> #{request.endTime}
+            </if>
+            <if test="request.busiOrderNo != null and request.busiOrderNo != ''">
+                AND tli.busi_order_no = #{request.busiOrderNo}
+            </if>
+        </trim>
+        order by tsd.due_date asc
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryByLoanProvideNoDueDate" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_schedule_detail IGNORE INDEX(PRIMARY)
+        where
+        loan_provide_no = #{loanProvideNo}
+        AND due_date = #{dueDate}
+        ORDER BY id ASC
+    </select>
+
+    <select id="queryCurrentOverdueCountByUserIdAndProductNo" parameterType="Object" resultType="Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            tbl_schedule_detail tsd
+        WHERE
+            user_id = #{userId}
+            AND product_no = #{productNo}
+            AND tpp_code = #{tppCode}
+            AND tsd.status NOT IN (3, 4)
+            AND tsd.due_date <![CDATA[ < ]]> NOW();
+    </select>
+
+    <select id="queryCurrentOverdueAmountByUserIdAndProductNo" parameterType="Object" resultType="java.math.BigDecimal">
+        SELECT
+        SUM(prcp_amount + int_amount + od_amount - setl_prcp_amount - payed_amount - setl_od_amount + spreads_amount - payed_spreads_amount)
+        FROM
+        tbl_schedule_detail tsd
+        WHERE
+        user_id = #{userId}
+        AND product_no = #{productNo}
+        AND tpp_code = #{tppCode}
+        AND tsd.status NOT IN (3, 4)
+        AND tsd.due_date <![CDATA[ < ]]> NOW();
+    </select>
+
+    <select id="queryDebtAmountAllByUserIdAndProductNo" parameterType="Object" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(prcp_amount + int_amount + od_amount - setl_prcp_amount - payed_amount - setl_od_amount + spreads_amount - payed_spreads_amount)
+        FROM
+            tbl_schedule_detail tsd
+        WHERE
+            user_id = #{userId}
+            AND product_no = #{productNo}
+            And tsd.tpp_code = #{tppCode}
+            AND tsd.status NOT IN (3, 4)
+    </select>
+
+    <select id="queryDebtCountByUserIdAndProductNo" parameterType="Object" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        tbl_schedule_detail tsd
+        WHERE
+        user_id = #{userId}
+        AND product_no = #{productNo}
+        And tsd.tpp_code = #{tppCode}
+        AND tsd.status NOT IN (3, 4)
+    </select>
+    
+    <select id="querycurrentAmt" parameterType="Object" resultType="java.math.BigDecimal">
+                 select 
+                       SUM( prcp_amount-setl_prcp_amount+int_amount-payed_amount+od_amount-setl_od_amount+spreads_amount-payed_spreads_amount )
+                 from
+                                tbl_schedule_detail 
+                 where 
+                                user_id = #{userId}
+                                AND
+                                tpp_code = #{tppCode}
+                                AND
+                                status = 0
+    </select>
+
+    <select id="queryDebtAmountAllByLoanProviderNo" parameterType="Object" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(prcp_amount + int_amount + od_amount - setl_prcp_amount - payed_amount - setl_od_amount + spreads_amount - payed_spreads_amount)
+        FROM
+            tbl_schedule_detail tsd
+        WHERE
+            loan_provide_no = #{loanProvideNo}
+            AND product_no = 'IOUS'
+            AND tsd.status NOT IN (3, 4)
+    </select>
+
+    <select id="queryByAppIdAndTppCode" resultType="com.qunar.fintech.plat.admin.query.entity.TblScheduleDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_schedule_detail 
+        where
+        status = 0
+  		AND user_id = #{userId}
+        AND tpp_code = #{tppCode}
+    </select>
+
+    <select id="queryDebtAmountByUserIdAndTpp" parameterType="Object" resultType="java.math.BigDecimal">
+        SELECT
+        SUM(prcp_amount + int_amount + od_amount - setl_prcp_amount - payed_amount - setl_od_amount + spreads_amount - payed_spreads_amount)
+        FROM
+        tbl_schedule_detail tsd
+        WHERE
+        user_id = #{userId}
+        AND tpp_code = #{tppCode}
+        AND product_no = #{productNo}
+        AND tsd.status NOT IN (3, 4)
+    </select>
+
+    <select id="queryCurrentOverdueAmountByProvideNo" resultType="java.math.BigDecimal">
+        SELECT
+        SUM(prcp_amount + int_amount + od_amount - setl_prcp_amount - payed_amount - setl_od_amount + spreads_amount - payed_spreads_amount)
+        FROM
+        tbl_schedule_detail tsd
+        WHERE
+        loan_provide_no = #{loanProvideNo}
+        AND product_no = 'IOUS'
+        AND tsd.status NOT IN (3, 4)
+        AND tsd.due_date <![CDATA[ < ]]> NOW();
+    </select>
+
+    <select id="queryCurrentOverdueCountByProvideNo" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        tbl_schedule_detail tsd
+        WHERE
+        loan_provide_no = #{loanProvideNo}
+        AND product_no = 'IOUS'
+        AND tsd.status NOT IN (3, 4)
+        AND tsd.due_date <![CDATA[ < ]]> NOW();
+    </select>
+
+</mapper>

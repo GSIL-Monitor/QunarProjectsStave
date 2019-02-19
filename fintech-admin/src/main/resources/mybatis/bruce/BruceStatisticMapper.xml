@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.bruce.mapper.BruceStatisticMapper" >
+
+    <select id="selectStatisticLoanAmt" parameterType="java.lang.Object" resultType="java.math.BigDecimal">
+        SELECT
+        sum(amount)
+        from
+        statistic_loan_info
+        where
+            statistic_type = #{statisticType,jdbcType=VARCHAR}
+            and  tpp_code = #{tppCode,jdbcType=VARCHAR}
+            and period = #{staticTime,jdbcType=TIMESTAMP}
+        <if test="orgChannel != '' ">
+            AND org_channel =#{orgChannel,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
+    <select id="selectOverdue90Amt" parameterType="java.lang.Object" resultType="java.math.BigDecimal">
+        select
+        sum(prcp_amt)
+        from over_due_plan_gather
+        WHERE
+            over_due_day <![CDATA[  > ]]>90
+            and  tpp_code = #{tppCode,jdbcType=VARCHAR}
+            and statistic_time = #{staticTime,jdbcType=TIMESTAMP}
+        <if test="orgChannel != '' ">
+            and org_channel = #{orgChannel,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
+    <select id="selectOverdue60Amt" parameterType="java.lang.Object" resultType="java.math.BigDecimal">
+        select
+        sum(prcp_amt)
+        from over_due_plan_gather
+        WHERE
+             over_due_day <![CDATA[  > ]]>60
+            and  tpp_code = #{tppCode,jdbcType=VARCHAR}
+            and statistic_time = #{staticTime,jdbcType=TIMESTAMP}
+        <if test="orgChannel != '' ">
+            and org_channel = #{orgChannel,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
+
+    <select id="selectRepayDate" parameterType="java.lang.Object" resultType="com.qunar.fintech.plat.admin.bruce.entity.RepayDateDto">
+        select
+        sum(act_repay_prcp_amt) as actPrcpAmt,
+        sum(act_repay_int_amt) as actIntAmt,
+        sum(act_repay_fine_amt) as actFineAmt ,
+        sum(act_repay_fee_amt) as actFeeAmt,
+        sum(act_repay_spreads_amt) as actSpreadsAmt
+        from repay_info_gather
+        where
+            tpp_code = #{tppCode,jdbcType=VARCHAR}
+        <if test="orgChannel != '' ">
+            and org_channel = #{orgChannel,jdbcType=VARCHAR}
+        </if>
+        and finish_time  <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+        and finish_time  <![CDATA[  < ]]> #{endTime,jdbcType=TIMESTAMP}
+    </select>
+
+</mapper>

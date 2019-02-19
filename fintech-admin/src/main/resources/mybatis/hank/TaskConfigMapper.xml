@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.hank.mapper.TaskConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.hank.entity.TaskConfig">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="task_type" jdbcType="VARCHAR" property="taskType"/>
+        <result column="base_table" jdbcType="VARCHAR" property="baseTable"/>
+        <result column="query_mode" jdbcType="TINYINT" property="queryMode"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="task_desc" jdbcType="VARCHAR" property="taskDesc"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, task_type, base_table, query_mode, status, task_desc
+    </sql>
+
+    <!-- 根据 id 查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from task_config where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据 taskType 查询 -->
+    <select id="selectConfigByTaskType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from task_config where task_type = #{taskType,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="select" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from task_config
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 条件查询数量 -->
+    <select id="count" parameterType="java.lang.Object" resultType="int">
+        select count(*) from task_config
+        <where>
+            <if test="id != null and id != ''"> and id = #{id,jdbcType=BIGINT} </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入 -->
+    <insert id="insertSelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.TaskConfig">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into task_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="baseTable != null">
+                base_table,
+            </if>
+            <if test="queryMode != null">
+                query_mode,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="taskDesc != null">
+                task_desc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseTable != null">
+                #{baseTable,jdbcType=VARCHAR},
+            </if>
+            <if test="queryMode != null">
+                #{queryMode,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="taskDesc !=null">
+                #{taskDesc,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 通过 id 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.TaskConfig">
+        update task_config
+        <set>
+            <if test="taskType != null">
+                task_type = #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseTable != null">
+                base_table = #{baseTable,jdbcType=VARCHAR},
+            </if>
+            <if test="queryMode != null">
+                query_mode = #{queryMode,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="taskDesc != null">
+                task_desc = #{taskDesc,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

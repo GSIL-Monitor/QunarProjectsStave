@@ -1,0 +1,19 @@
+.wrapper-content .ibox .ibox-search .form-control{
+	width: 55%;
+}
+.wrapper-content .ibox .ibox-search{
+	border: 1px #ccc solid;
+	padding: 10px;
+}
+.wrapper-content .ibox .ibox-search h4{
+	font-size: 20px;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+.wrapper-content .ibox-body #exampleToolbar h4{
+	font-size: 20px;
+}
+.wrapper-content .ibox .ibox-body .table-btn{
+    margin-bottom: 3px;
+}

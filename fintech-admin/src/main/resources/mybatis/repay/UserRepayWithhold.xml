@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.UserRepayWithholdDao">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.UserRepayWithhold">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="req_serial_no" property="reqSerialNo" jdbcType="VARCHAR"/>
+        <result column="pay_scene" property="payScene" jdbcType="VARCHAR"/>
+        <result column="asset_mode" property="assetMode" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="VARCHAR"/>
+        <result column="busi_type_id" property="busiTypeId" jdbcType="VARCHAR"/>
+        <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR"/>
+        <result column="trans_type_id" property="transTypeId" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="order_date" property="orderDate" jdbcType="TIMESTAMP"/>
+        <result column="order_amount" property="orderAmount" jdbcType="DECIMAL"/>
+        <result column="ref_amount" property="refAmount" jdbcType="DECIMAL"/>
+        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
+        <result column="product_id" property="productId" jdbcType="VARCHAR"/>
+        <result column="share_data" property="shareData" jdbcType="VARCHAR"/>
+        <result column="pm_code" property="pmCode" jdbcType="VARCHAR"/>
+        <result column="tpp_code" property="tppCode" jdbcType="VARCHAR"/>
+        <result column="bank_code" property="bankCode" jdbcType="VARCHAR"/>
+        <result column="cur_id" property="curId" jdbcType="VARCHAR"/>
+        <result column="page_ret_url" property="pageRetUrl" jdbcType="VARCHAR"/>
+        <result column="bg_ret_url" property="bgRetUrl" jdbcType="VARCHAR"/>
+        <result column="cardholder" property="cardholder" jdbcType="VARCHAR"/>
+        <result column="identitytype" property="identitytype" jdbcType="VARCHAR"/>
+        <result column="identitycode" property="identitycode" jdbcType="VARCHAR"/>
+        <result column="card_id" property="cardId" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="bind_card" property="bindCard" jdbcType="VARCHAR"/>
+        <result column="payment_merchant" property="paymentMerchant" jdbcType="VARCHAR"/>
+        <result column="valid_time" property="validTime" jdbcType="TIMESTAMP"/>
+        <result column="busi_order_no" property="busiOrderNo" jdbcType="VARCHAR"/>
+        <result column="qunar_trade_no" property="qunarTradeNo" jdbcType="VARCHAR"/>
+        <result column="combine_info" property="combineInfo" jdbcType="VARCHAR"/>
+        <result column="ext" property="ext" jdbcType="VARCHAR"/>
+        <result column="pay_status" property="payStatus" jdbcType="TINYINT"/>
+        <result column="pay_id" property="payId" jdbcType="VARCHAR"/>
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP"/>
+        <result column="err_code" property="errCode" jdbcType="VARCHAR"/>
+        <result column="err_msg" property="errMsg" jdbcType="VARCHAR"/>
+        <result column="req_num" property="reqNum" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, req_serial_no, pay_scene, asset_mode, version, busi_type_id, merchant_code,
+        trans_type_id, order_no, order_date, order_amount, ref_amount, product_name, product_id,
+        share_data, pm_code, tpp_code, bank_code, cur_id, page_ret_url, bg_ret_url, cardholder,
+        identitytype, identitycode, card_id, mobile, bind_card, payment_merchant, valid_time,
+        combine_info, busi_order_no, qunar_trade_no, ext, pay_status, pay_id, pay_time, err_code, err_msg,
+        req_num, create_time, update_time
+    </sql>
+
+    <sql id="whereCondition">
+        <trim suffixOverrides=",">
+            <if test="request.userId != null and request.userId != ''">
+                AND user_id = #{request.userId}
+            </if>
+            <if test="request.orderNo != null and request.orderNo != ''">
+                AND order_no = #{request.orderNo}
+            </if>
+            <if test="request.reqSerialNo != null and request.reqSerialNo != ''">
+                AND req_serial_no = #{request.reqSerialNo}
+            </if>
+            <if test="request.startTime != null">
+                AND order_date <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.orgChannel != null and  request.orgChannel != ''">
+                AND org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.endTime != null">
+                AND order_date <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+            <if test="request.status != null">
+                AND pay_status = #{request.status}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="countByReqDto" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM
+        user_repay_withhold
+        WHERE 1 = 1
+        <trim suffixOverrides=",">
+            <if test="request.userId != null and request.userId != ''">
+                AND user_id = #{request.userId}
+            </if>
+            <if test="request.orderNo != null and request.orderNo != ''">
+                AND order_no = #{request.orderNo}
+            </if>
+            <if test="request.reqSerialNo != null and request.reqSerialNo != ''">
+                AND req_serial_no = #{request.reqSerialNo}
+            </if>
+            <if test="request.startTime != null">
+                AND order_date <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND order_date <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+            <if test="request.status != null and request.status != ''">
+                AND pay_status = #{request.status}
+            </if>
+        </trim>
+
+    </select>
+
+    <select id="queryUserRepayWithholdList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_repay_withhold where  1 = 1
+        <trim suffixOverrides=",">
+            <if test="request.userId != null and request.userId != ''">
+                AND user_id = #{request.userId}
+            </if>
+            <if test="request.orderNo != null and request.orderNo != ''">
+                AND order_no = #{request.orderNo}
+            </if>
+            <if test="request.reqSerialNo != null and request.reqSerialNo != ''">
+                AND req_serial_no = #{request.reqSerialNo}
+            </if>
+            <if test="request.startTime != null">
+                AND order_date <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND order_date <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+            <if test="request.status != null and request.status != ''">
+                AND pay_status = #{request.status}
+            </if>
+        </trim>
+        order by create_time DESC
+        LIMIT #{page.currentIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryUserRepayWithholdListBySerialNo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_repay_withhold
+        where
+        	req_serial_no = #{userWithholdNo}
+        order by create_time DESC
+
+    </select>
+
+</mapper>

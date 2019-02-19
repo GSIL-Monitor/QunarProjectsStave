@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<form class="form-horizontal m-t" id="signupForm" method="post" action="/marketing/file/export">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">活动code：</label>
+							<div class="col-sm-8">
+								<input id="activityCode" name="activityCode" class="form-control" type="text" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">导出类型：</label>
+							<div class="col-sm-8">
+								<label class="radio-inline"> <input type="radio"
+											 name="type" value="PAY" /> PAY
+								</label> <label class="radio-inline"> <input type="radio"
+											 name="type" value="REFUND" /> REFUND
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">选择渠道：</label>
+							<div class="col-sm-8">
+								<label class="radio-inline"> <input type="radio"
+											 name="channel" value="QUNAR" /> 去哪儿网
+								</label> <label class="radio-inline"> <input type="radio"
+											 name="channel" value="CTRIP" /> 携程
+								</label><label class="radio-inline"> <input type="radio"
+											 name="channel" value="QUICKPASS_SH" /> 闪付-上海
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">起始时间：</label>
+							<div class="col-sm-8">
+								<input id="startTime" name="startTime" class="form-control layui-input"  lay-verify="date" autocomplete="off">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">终止时间：</label>
+							<div class="col-sm-8">
+								<input id="endTime" name="endTime" class="form-control layui-input"  lay-verify="date" autocomplete="off">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-8 col-sm-offset-3">
+								<!--<input type="submit" value="提交" />-->
+								<button type="submit" class="btn btn-primary">导出</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div th:include="include::footer"></div>
+<script src="/static/appjs/marketing/file/export.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function(){
+        var form = layui.form
+            ,laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+    });
+</script>
+</body>
+</html>

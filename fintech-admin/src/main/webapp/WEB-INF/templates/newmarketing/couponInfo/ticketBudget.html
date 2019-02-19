@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="">
+<div class="heading">
+    <h3 class="green-heading">优惠券预算信息</h3>
+    <p class="warn-heading">所有内容必须与经审批通过后的活动内容一致，否则活动不予通过</p>
+    <p class="required-msg">*带红星为必填信息</p>
+</div>
+<div class="ibox-content">
+    <form class="form-horizontal m-t" id="signupForm2">
+        <!--默认新账务-->
+        <input id="newAccount" name="newAccount"
+               type="hidden" th:value="1"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="couponTotalAmt">
+                <span class="required-msg">*</span>优惠券费用预算：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponTotalAmt" name="couponTotalAmt" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="couponTotalAmt">优惠券费用预算</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="couponTotalNum">
+                <span class="required-msg">*</span>优惠券预计发放数量：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponTotalNum" name="couponTotalNum" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="couponTotalNum">依据测算结果填写优惠券预计发放总量</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="couponExpectedUsedNum">
+                <span class="required-msg">*</span>券预计使用数量：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponExpectedUsedNum" name="couponExpectedUsedNum" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="couponExpectedUsedNum">依据测算结果填写优惠券预计使用量</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="activityAccountName">
+                <span class="required-msg">*</span>营销账户：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="activityAccountName" name="activityAccountName" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="activityAccountName">通过财务审批的资金账户</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="couponStartTime">
+                <span class="required-msg">*</span>开始时间：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponStartTime" name="couponStartTime"
+                       class="form-control col-sm-7 layui-input budget-time-start" lay-verify="date" autocomplete="off">
+                <label class="col-sm-5 hint-tag" for="couponStartTime">控制优惠券的开始发放时间，于当天9:00开始发送</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="couponEndTime">
+                <span class="required-msg">*</span>结束时间：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponEndTime" name="couponEndTime" class="form-control col-sm-7 layui-input budget-time-end"
+                       lay-verify="date" autocomplete="off">
+                <label class="col-sm-5 hint-tag" for="couponEndTime">控制优惠券的结束发放时间，于当天21:00停止发送</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <button type="button" class="btn btn-primary" onclick="chooseNav(null,1)">上一页</button>
+                <button type="submit" class="btn btn-primary">下一页</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>

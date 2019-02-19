@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+	<div class="col-sm-12">
+		<div class="ibox">
+			<div class="ibox-body">
+				<table class="table table-striped" id="exampleTable" data-mobile-responsive="true">
+					<tr>
+						<th>借据号</th>
+						<th>业务线订单号</th>
+						<th>商户号</th>
+						<th>应还金额</th>
+						<th>当期期数</th>
+						<th>贷款提供方</th>
+						<th>本金</th>
+						<th>利息</th>
+						<th>罚息</th>
+						<th>消费日</th>
+					</tr>
+					<tr th:each="data,dataStat:${billDetails}">
+						<td th:text="${data.loanProvideNo}"></td>
+						<td th:text="${data.busiOrderNo}"></td>
+						<td th:text="${data.merchantNo}"></td>
+						<td th:text="${data.repayAmt}"></td>
+						<td th:text="${data.termInfo}"></td>
+						<td th:text="${data.tppCode}"></td>
+						<td th:text="${data.prcpAmt}"></td>
+						<td th:text="${data.intAmt}"></td>
+						<td th:text="${data.fineAmt}"></td>
+						<td th:text="${data.loanDate}"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div th:include="include::footer"></div>
+</body>
+
+</html>

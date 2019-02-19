@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/resources/css/marketing/add.css" rel="stylesheet">
+</head>
+<body class="">
+<div class="heading">
+    <h3 class="green-heading">优惠券配置信息</h3>
+    <p class="warn-heading">所有内容必须与经审批通过后的活动内容一致，否则活动不予通过</p>
+    <p class="required-msg">*带红星为必填信息</p>
+</div>
+<div class="ibox-content">
+    <form class="form-horizontal m-t" id="signupForm3">
+        <input id="newAccount" name="newAccount"
+               type="hidden" th:value="1"/>
+        <div class="section-heading col-sm-8 col-sm-offset-2">
+            <span class="section-con">基本信息</span>
+            <span onclick="openImgTag()">
+                    <span class="glyphicon glyphicon-picture"></span>
+                    <span>样式对照</span>
+                </span>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="couponCode">
+                <span class="required-msg">*</span>券号：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponCode" name="couponCode" class="form-control col-sm-7" type="text" disabled>
+                <label class="col-sm-5 hint-tag" for="couponCode">优惠券号码</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="couponName">
+                <span class="required-msg">*</span>券名称：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponName" name="couponName" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="couponName">优惠券展示名称</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="couponDesc">
+                <span class="required-msg">*</span>券描述：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponDesc" name="couponDesc" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="couponDesc">优惠券描述信息</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="instructions">
+                <span class="required-msg">*</span>使用说明：
+            </label>
+            <div class="col-sm-9 row">
+                <textarea id="instructions" name="instructions" class="form-control col-sm-7" rows="3"></textarea>
+                <label class="col-sm-5 hint-tag" for="instructions">展示给用户优惠券的使用说明</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="ruleTips">
+                <span class="required-msg">*</span>适用于：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="ruleTips" name="ruleTips" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="ruleTips">展示给用户优惠券适用范围字段</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="couponUseUrl">
+                <span class="required-msg">*</span>券跳转地址：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="couponUseUrl" name="useUrl" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="couponUseUrl">点击优惠券去使用按钮跳转链接</label>
+            </div>
+        </div>
+        <div class="section-heading col-sm-8 col-sm-offset-2">
+            <span class="section-con">券类型配置</span>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="changeTicket">
+                <span class="required-msg">*</span>券类型：
+            </label>
+            <div class="col-sm-9 row">
+                <select class="form-control col-sm-7" onchange="changeTicketType()" id="changeTicket" required>
+                    <option value="" selected>无</option>
+                    <option value="free-interest">免息券</option>
+                    <option value="cash-ticket">现金券</option>
+                    <option value="random-minus">立减券</option>
+                </select>
+                <label class="col-sm-5 " for="changeTicket"></label>
+            </div>
+        </div>
+        <!-- 免息券 -->
+        <div class="free-interest ticketType" id="interestTypeArea">
+            <div class="form-group free-type">
+                <label class="col-sm-3 control-label">
+                    <span class="required-msg">*</span>免息券类型：
+                </label>
+                <div class="col-sm-9 row" id="interestTypeSelect">
+                    <div class="col-sm-3 radio-div">
+                        <input id="n-day" name="interestType" value="n-day" class="col-sm-1" type="radio" required>
+                        <label class="col-sm-11" for="n-day">N天免息</label>
+                    </div>
+                    <div class="col-sm-3 radio-div">
+                        <input id="n-yuan" name="interestType" value="n-yuan" class="col-sm-1" type="radio">
+                        <label class="col-sm-11" for="n-yuan">N元免息券</label>
+                    </div>
+                    <div class="col-sm-3 radio-div">
+                        <input id="n-zhe" name="interestType" value="n-zhe" class="col-sm-1" type="radio">
+                        <label class="col-sm-11" for="n-zhe">N折免息券</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group interestItem n-day">
+                <label class="col-sm-3 control-label" for="freeIntDays">
+                    <span class="required-msg">*</span>免息天数：
+                </label>
+                <div class="col-sm-9 row">
+                    <input id="freeIntDays" name="freeIntDays" class="form-control col-sm-7" type="text">
+                    <label class="col-sm-5" for="freeIntDays"></label>
+                </div>
+            </div>
+            <div class="form-group interestItem n-yuan">
+                <label class="col-sm-3 control-label" for="couponAmount">
+                    <span class="required-msg">*</span>券面额：
+                </label>
+                <div class="col-sm-9 row">
+                    <input id="couponAmount" name="couponAmount" class="form-control col-sm-7" type="text">
+                    <label class="col-sm-5" for="couponAmount"></label>
+                </div>
+            </div>
+            <div class="form-group interestItem n-zhe">
+                <label class="col-sm-3 control-label" for="discountRate">
+                    <span class="required-msg">*</span>免息折扣率：
+                </label>
+                <div class="col-sm-9 row">
+                    <input id="discountRate" name="discountRate" class="form-control col-sm-7" type="text">
+                    <label class="col-sm-5" for="discountRate"></label>
+                </div>
+            </div>
+            <div class="form-group row useScene-area">
+                <label class="col-sm-3 control-label">
+                    <span class="required-msg">*</span>可用期数：
+                </label>
+                <div class="col-sm-9 row">
+                    <div class="col-sm-2 radio-div">
+                        <input id="firstDate" name="usableCycle" class="col-sm-1" type="radio" value="1" required checked>
+                        <label class="col-sm-11" for="firstDate">首期</label>
+                    </div>
+                    <div class="col-sm-2 radio-div">
+                        <input id="lastDate" name="usableCycle" class="col-sm-1" type="radio" value="-1">
+                        <label class="col-sm-11" for="lastDate">末期</label>
+                    </div>
+                    <div class="col-sm-2 radio-div">
+                        <input id="wholeDate" name="usableCycle" class="col-sm-1" type="radio" value="ALL">
+                        <label class="col-sm-11" for="lastDate">全期</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group maxFreeAmt">
+                <label class="col-sm-3 control-label" for="maxFreeAmt">
+                    <span class="required-msg">*</span>最大免息金额：
+                </label>
+                <div class="col-sm-9 row">
+                    <input id="maxFreeAmt" name="maxFreeAmt" class="form-control col-sm-7" type="text">
+                    <label class="col-sm-5" for="maxFreeAmt"></label>
+                </div>
+            </div>
+        </div>
+        <div class="cash-ticket ticketType">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="couponAmount">
+                    <span class="required-msg">*</span>券面额：
+                </label>
+                <div class="col-sm-9 row">
+                    <input id="couponAmount" name="couponAmount" class="form-control col-sm-7" type="text">
+                    <label class="col-sm-5" for="couponAmount"></label>
+                </div>
+            </div>
+        </div>
+        <div class="random-minus ticketType">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="maxReduceAmount">
+                    <span class="required-msg">*</span>最大优惠金额：
+                </label>
+                <div class="col-sm-9 row"><input id="maxReduceAmount" name="maxReduceAmount" class="form-control col-sm-7"
+                                                 type="text">
+                    <label class="col-sm-5"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="minReduceAmount">
+                    <span class="required-msg">*</span>最小优惠金额：
+                </label>
+                <div class="col-sm-9 row">
+                    <input id="minReduceAmount" name="minReduceAmount" class="form-control col-sm-7" type="text">
+                    <label class="col-sm-5"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="avgReduceAmount">
+                    <span class="required-msg">*</span>平均优惠金额：
+                </label>
+                <div class="col-sm-9 row"><input id="avgReduceAmount" name="avgReduceAmount" class="form-control col-sm-7"
+                                                 type="text" required>
+                    <label class="col-sm-5"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="reduceRate">
+                    <span class="required-msg">*</span>精度概率：
+                </label>
+                <div class="col-sm-9 row"><input id="reduceRate" name="reduceRate"
+                                                 class="form-control col-sm-7" type="text">
+                    <label class="col-sm-5"></label>
+                </div>
+            </div>
+        </div>
+        <div class="section-heading col-sm-8 col-sm-offset-2">
+            <span class="section-con">券基本规则配置</span>
+            <span onclick="openImgTag()">
+                    <span class="glyphicon glyphicon-picture"></span>
+                    <span>样式对照</span>
+                </span>
+        </div>
+        <div class="form-group row lineSelect">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>业务线选择：
+            </label>
+            <div class="col-sm-9 row">
+                <div class="col-sm-3 radio-div">
+                    <input id="naquhua" name="lineSelect" class="col-sm-2" type="radio" value="CASH" required>
+                    <label class="col-sm-10" for="naquhua">拿去花</label>
+                </div>
+                <div class="col-sm-3 radio-div">
+                    <input id="jiequhua" name="lineSelect" class="col-sm-2" type="radio" value="IOUS">
+                    <label class="col-sm-10" for="jiequhua">借去花</label>
+                </div>
+                <label class="col-sm-5 col-sm-offset-1"></label>
+            </div>
+        </div>
+
+
+        <div class="form-group row">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>券纬度：
+            </label>
+            <div class="col-sm-9 row">
+                <select class="form-control col-sm-7" onchange="changeSendChannel()" id="ticketLatitude" required>
+                    <option value="" selected>无</option>
+                    <option value="CUSTOMER">自然人</option>
+                    <option value="PLAT">平台维度</option>
+                </select>
+                <label class="col-sm-5 col-sm-offset-1"></label>
+            </div>
+        </div>
+        <div class="form-group row send-channel">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>发放渠道：
+            </label>
+            <div class="col-sm-9 row">
+                <div class="col-sm-2 radio-div">
+                    <input id="CTRIP" name="CTRIP" class="col-sm-1" type="checkbox" value="CTRIP" required>
+                    <label class="col-sm-11" for="CTRIP">CTRIP</label>
+                </div>
+                <div class="col-sm-2 radio-div">
+                    <input id="QUNAR" name="QUNAR" class="col-sm-1" type="checkbox" value="QUNAR">
+                    <label class="col-sm-11" for="QUNAR">QUNAR</label>
+                </div>
+                <div class="col-sm-2 radio-div">
+                    <input id="FINANCE" name="FINANCE" class="col-sm-1" type="checkbox" value="FINANCE">
+                    <label class="col-sm-11" for="FINANCE">FIANCE</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="delayDays">
+                券延迟生效时间（天）：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="delayDays" name="delayDays" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="delayDays">券生效时间延迟，单位为天，整数填写。不填写，默认无延迟</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="availableDays">
+                <span class="required-msg">*</span>券有效天数（天）：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="availableDays" name="availableDays" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="availableDays">优惠券的有效期，单位为天，整数填写</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="userUseNumLimit">
+                单用户最多使用张数：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="userUseNumLimit" name="userUseNumLimit" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="userUseNumLimit">一个用户最多使用相同优惠券张数，不填写，默认不限制。</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="userGrantNumLimit">
+                单用户最多发放张数：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="userGrantNumLimit" name="userGrantNumLimit" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="userGrantNumLimit">一个用户最多发放相同优惠券张数不填写，默认不限制。</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="userGrantNumLimit">
+                当天最大发放张数：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="dayGrantNumLimit" name="dayGrantNumLimit" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="dayGrantNumLimit">当天最多发放相同优惠券张数不填写，默认不限制。</label>
+            </div>
+        </div>
+        <div class="section-heading col-sm-8 col-sm-offset-2">
+            <span class="section-con">通知内容配置</span>
+        </div>
+        <div class="form-group row send-msg">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>发券是否给用户发送短信
+            </label>
+            <div class="col-sm-9 row">
+                <div class="col-sm-3 radio-div">
+                    <input id="isSend" name="isSendMessage" class="col-sm-2" type="radio" value="0" required>
+                    <label class="col-sm-10" for="isSend">是</label>
+                </div>
+                <div class="col-sm-3 radio-div">
+                    <input id="noSend" name="isSendMessage" class="col-sm-2" value="1" type="radio" checked>
+                    <label class="col-sm-10" for="noSend" >否</label>
+                </div>
+                <label class="col-sm-5 col-sm-offset-1"></label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="msgUrl">
+                <span class="required-msg">*</span>短信内链接地址：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="msgUrl" name="msgUrl" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="msgUrl">短信内容内跳转链接</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="msgContent">
+                <span class="required-msg">*</span>短信内容：
+            </label>
+            <div class="col-sm-9 row">
+                <textarea id="msgContent" name="msgContent" class="form-control col-sm-7" rows="3"></textarea>
+                <label class="col-sm-5 hint-tag" for="msgContent">短信模板展示</label>
+            </div>
+        </div>
+        <div class="form-group row qunar-show">
+            <label class="col-sm-3 control-label">
+                是否在QUNAR优惠券列表展示：
+            </label>
+            <div class="col-sm-9 row">
+                <div class="col-sm-3 radio-div">
+                    <input id="isShow" name="qunarisShow" class="col-sm-2" type="radio"  value="0">
+                    <label class="col-sm-10" for="isShow">是</label>
+                </div>
+                <div class="col-sm-3 radio-div">
+                    <input id="noShow" name="qunarisShow" class="col-sm-2" type="radio" value="1" checked>
+                    <label class="col-sm-10" for="noShow">否</label>
+                </div>
+                <label class="col-sm-5 col-sm-offset-1 hint-tag radio-tag" style="margin-left:37px">选择是，可展示在去哪儿旅行APP-我的-我的钱包-代金券列表</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-8 col-sm-offset-3">
+                <button type="button" class="btn btn-primary" onclick="chooseNav(null,2)">上一页</button>
+                <button type="submit" class="btn btn-primary">下一页</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script src="/static/appjs/newmarketing/coupon/add.js"></script>
+</body>
+
+</html>

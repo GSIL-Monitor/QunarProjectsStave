@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.ious.TblLoanCashReqDao">
+
+    <sql id="base_select">
+        tbl_loan_cash_req.id                  AS   id
+        ,tbl_loan_cash_req.org_channel        AS   orgChannel
+        ,tbl_loan_cash_req.serial_no          AS   serialNo
+        ,tbl_loan_cash_req.loan_provide_no    AS   loanProvideNo
+        ,tbl_loan_cash_req.amount             AS   amount
+        ,tbl_loan_cash_req.loan_term          AS   loanTerm
+        ,tbl_loan_cash_req.repay_type         AS   repayType
+        ,tbl_loan_cash_req.tpp_code           AS   tppCode
+        ,tbl_loan_cash_req.user_id            AS   userId
+        ,tbl_loan_cash_req.loan_rate          AS   loanRate
+        ,tbl_loan_cash_req.create_time        AS   requestTime
+        ,tbl_loan_cash_req.finish_time        AS   finishTime
+        ,tbl_loan_cash_req.status             AS   status
+        ,tbl_loan_cash_req.remit_status       AS   remitStatus
+        ,tbl_loan_cash_req.bank_name          AS   bankName
+        ,tbl_loan_cash_req.card_no            AS   cardNo
+        ,tbl_loan_cash_req.error_code         AS   errorCode
+        ,tbl_loan_cash_req.error_msg          AS   errorMsg
+        ,tbl_loan_cash_req.serv_loan_provide_id          AS   servLoanProvideId
+        ,tbl_loan_cash_req.settle_time          AS   settleTime
+        ,tbl_loan_cash_req.remit_finish_time          AS   remitFinishTime
+        ,tbl_loan_cash_req.qunar_trade_no             as   qunarTradeNo
+        ,tbl_loan_cash_req.product_no             as   productNo
+        ,tbl_loan_cash_req.start_interest_date            as   startInterestDate
+    </sql>
+
+    <sql id="wherecontation">
+        <trim suffixOverrides=",">
+            <if test="request.orgChannel != null and request.orgChannel != ''">
+                AND tbl_loan_cash_req.org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.userId != null and request.userId != ''">
+                AND tbl_loan_cash_req.user_id= #{request.userId}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tbl_loan_cash_req.tpp_code= #{request.tppCode}
+            </if>
+            <if test="request.productNo != null and request.productNo != ''">
+                AND tbl_loan_cash_req.product_no= #{request.productNo}
+            </if>
+            <if test="request.startTime != null ">
+                AND tbl_loan_cash_req.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null ">
+                AND tbl_loan_cash_req.create_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="countCashReqByRequest" parameterType="Object" resultType="Integer">
+        SELECT
+        COUNT(*)
+        FROM tbl_loan_cash_req
+        WHERE 1=1
+        <include refid="wherecontation"/>
+    </select>
+
+    <select id="pagingQueryCashReqRecordByRequest" parameterType="Object" resultType="QueryCashReqRecord">
+        SELECT
+        <include refid="base_select" />
+        FROM tbl_loan_cash_req
+        WHERE 1=1
+        <include refid="wherecontation"/>
+        ORDER BY tbl_loan_cash_req.create_time DESC
+        limit #{page.currentIndex},#{page.pageSize}
+    </select>
+
+    <select id="queryCashReqRecordByLoanProvideNo" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.QueryCashReqRecord">
+        select
+        <include refid="base_select"/>
+        FROM tbl_loan_cash_req
+        WHERE
+        loan_provide_no IN
+        <foreach collection="list" close=")" open="(" separator="," item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

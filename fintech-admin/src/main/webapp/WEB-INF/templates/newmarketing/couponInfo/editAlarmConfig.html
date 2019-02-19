@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body class="">
+<div class="heading">
+    <h3 class="green-heading">报警信息</h3>
+    <p class="warn-heading">活动账户金额预警信息</p>
+    <p class="required-msg">*带红星为必填信息</p>
+</div>
+<div class="ibox-content">
+    <form class="form-horizontal m-t" id="editAlarmConfig">
+        <div class="form-group receiver">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>报警联系人：
+            </label>
+            <div class="col-sm-9">
+                <input id="accountAlarmReceiver" name="accountAlarmReceiver" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="accountAlarmReceiver">提示</label>
+            </div>
+        </div>
+
+        <div class="form-group alertMode">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>通知方式：
+            </label>
+            <div>
+                <div class="col-sm-8">
+                    <label>
+                        <input type="checkbox" id="qtalk" value="1" required>qtalk提醒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </label>
+                    <label>
+                        <input type="checkbox" id="sms" value="2">短信&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </label>
+                    <label>
+                        <input type="checkbox" id="qmq" value="4">qmq消息&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </label>
+                    <label>
+                        <input type="checkbox" id="email" value="8">邮件
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group notifyInterval">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>通知时间间隔：
+            </label>
+            <div class="col-sm-8">
+                <input id="accountAlarmNotifyInterval" name="accountAlarmNotifyInterval" class="form-control" type="text">
+            </div>
+        </div>
+
+        <div class="form-group startTime">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>报警开始时间：
+            </label>
+            <div class="col-sm-8">
+                <input id="accountAlarmStartTime" name="accountAlarmStartTime" class="form-control layui-input alarm-time-start"
+                       lay-verify="date" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="form-group endTime">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>报警结束时间：
+            </label>
+            <div class="col-sm-8">
+                <input id="accountAlarmEndTime" name="accountAlarmEndTime" class="form-control col-sm-7 layui-input alarm-time-end"
+                       lay-verify="date" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="form-group amount">
+            <label class="col-sm-3 control-label">
+                <span class="required-msg">*</span>报警金额阈值：
+            </label>
+            <div class="col-sm-9">
+                <input id="accountAlarmAmount" name="accountAlarmAmount" class="form-control  col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="accountAlarmAmount">营销子账户资金到达阈值时开始报警</label>
+            </div>
+        </div>
+
+        <div class="form-group remark">
+            <label class="col-sm-3 control-label">说明：</label>
+            <div class="col-sm-8">
+                <input id="accountAlarmRemark" name="accountAlarmRemark" class="form-control" type="text">
+            </div>
+        </div>
+
+        <div class="form-group" class="operType">
+            <div class="col-sm-offset-6">
+                <button type="button" class="btn btn-primary" onclick="chooseNav(null,3)">上一页</button>
+                <button id="operType" type="button" class="btn btn-primary" value="0" onclick="submitCoupon()">保存</button>
+
+            </div>
+        </div>
+        <div class="form-group" class="closePage">
+            <div class="col-sm-offset-6">
+                <button type="button" class="btn btn-primary" onclick="chooseNav(null,3)">上一页</button>
+                <button id="operType" type="button" class="btn btn-primary" value="0" onclick="submitCoupon()">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

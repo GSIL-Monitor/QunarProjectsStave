@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="admin"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <File>${catalina.base}/logs/admin.log</File>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %X{QTRACER} %-5level %logger{0} - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.base}/logs/admin.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="admin_error"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <File>${catalina.base}/logs/admin_error.log</File>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %X{QTRACER} %logger{0} - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.base}/logs/admin_error.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="admin_monitor"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <File>${catalina.base}/logs/admin_monitor.log</File>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %X{QTRACER} %logger{0} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.base}/logs/admin_monitor.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="admin" />
+        <appender-ref ref="admin_error" />
+    </root>
+
+    <logger name ="com.qunar.pay.trade.commons.monitor"  level="INFO" additivity="false">
+        <appender-ref ref="admin_monitor" />
+    </logger>
+
+    <logger name ="java.sql" level="INFO">
+        <appender-ref ref="admin" />
+        <appender-ref ref="admin_error" />
+    </logger>
+
+    <logger name="org.apache.zookeeper" level="ERROR"/>
+    <logger name="com.alibaba.dubbo.remoting.exchange.support.header" level="ERROR"/>
+    <logger name="com.alibaba.dubbo" level="WARN"/>
+
+</configuration>

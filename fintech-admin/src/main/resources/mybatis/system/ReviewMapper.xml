@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.system.dao.mapper.ReviewMapper">
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.system.dao.entity.ReviewDO">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="content_key" property="contentKey" jdbcType="VARCHAR"/>
+        <result column="content_value" property="contentValue" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="comment" property="comment" jdbcType="VARCHAR"/>
+        <result column="review_user" property="reviewUser" jdbcType="VARCHAR"/>
+        <result column="commit_user" property="commitUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="oper_type" property="operType" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, content_key, content_value, status,comment,review_user,commit_user,create_time,update_time,oper_type
+    </sql>
+
+    <insert id="insert" parameterType="ReviewDO"
+            keyProperty="record.id" useGeneratedKeys="true">
+        insert into marketing_review
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="record.contentKey != null">
+                content_key,
+            </if>
+            <if test="record.contentValue != null">
+                content_value,
+            </if>
+            <if test="record.status != null">
+                status,
+            </if>
+            <if test="record.comment != null">
+                comment,
+            </if>
+            <if test="record.reviewUser != null">
+                review_user,
+            </if>
+            <if test="record.commitUser != null">
+                commit_user,
+            </if>
+            <if test="record.operType != null">
+                oper_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="record.contentKey != null">
+                #{record.contentKey,jdbcType=VARCHAR},
+            </if>
+            <if test="record.contentValue != null">
+                #{record.contentValue,jdbcType=VARCHAR},
+            </if>
+            <if test="record.status != null">
+                #{record.status,jdbcType=TINYINT},
+            </if>
+            <if test="record.comment != null">
+                #{record.comment,jdbcType=VARCHAR},
+            </if>
+            <if test="record.reviewUser != null">
+                #{record.reviewUser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.commitUser != null">
+                #{record.commitUser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.operType != null">
+                #{record.operType,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from marketing_review
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="queryReviewById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from marketing_review
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateReviewStatus" parameterType="Object">
+        update marketing_review
+        <set>
+          review_user = #{reviewUser},
+          status = #{targetStatus}
+        </set>
+        where id = #{id}
+        and status = #{sourceStatus}
+    </update>
+</mapper>

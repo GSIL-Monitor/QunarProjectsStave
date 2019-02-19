@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title></title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+<link rel="shortcut icon" href="favicon.ico">
+<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="/resources/css/animate.css" rel="stylesheet">
+<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+							<input id="id" name="id"
+								type="hidden" th:value="${couponInfo.id}" />
+                            <input id="activityCode" name="activityCode"
+                                   type="hidden" th:value="${couponInfo.activityCode}" />
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券code：</label>
+								<div class="col-sm-8">
+									<input id="couponCode" name="couponCode" class="form-control" type="text"
+										   th:value="${couponInfo.couponCode}" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券简称：</label>
+								<div class="col-sm-8">
+									<input id="couponName" name="couponName" class="form-control" type="text"
+										th:value="${couponInfo.couponName}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券描述：</label>
+								<div class="col-sm-8">
+									<input id="couponDesc" name="couponDesc" class="form-control" type="text"
+										th:value="${couponInfo.couponDesc}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券规则描述：</label>
+								<div class="col-sm-8">
+									<input id="couponDetail" name="couponDetail" class="form-control"
+										   type="text" th:value="${couponInfo.couponDetail}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">使用说明：</label>
+								<div class="col-sm-8">
+									<input id="instructions" name="instructions" class="form-control"
+										   type="text" th:value="${couponInfo.instructions}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">跳转链接：</label>
+								<div class="col-sm-8">
+									<input id="url" name="url" class="form-control"
+										type="text" th:value="${couponInfo.url}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券类型：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline"> <input type="radio"
+													th:field="*{couponInfo.couponType}" name="couponType" value="FREE_INT" onclick="showMore(this.value)" disabled="disabled" /> 免息券
+									</label> <label class="radio-inline"> <input type="radio"
+													th:field="*{couponInfo.couponType}" name="couponType" value="CASH" onclick="showMore(this.value)" disabled="disabled" /> 现金券
+									</label> <label class="radio-inline"> <input type="radio"
+													 th:field="*{couponInfo.couponType}" name="couponType" value="RANDOM_REDUCE" onclick="showMore(this.value)" disabled="disabled" /> 随机立减
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券维度：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline"> <input type="radio"
+													th:field="*{couponInfo.couponDimon}" name="couponDimon" value="CUSTOMER" disabled="disabled"/> 自然人维度
+									</label>
+									<label class="radio-inline"> <input type="radio"
+													th:field="*{couponInfo.couponDimon}" name="couponDimon" value="PLAT" disabled="disabled"/> 平台维度
+									</label>
+								</div>
+							</div>
+							<div class="form-group coupon-detail">
+								<!--<label class="col-sm-3 control-label">免息期数：</label>-->
+								<div class="col-sm-8">
+									<input id="freePeriod" name="freePeriod" class="form-control" type="hidden" readonly>
+								</div>
+							</div>
+							<div class="form-group coupon-detail free-int">
+								<label class="col-sm-3 control-label">免息天数：</label>
+								<div class="col-sm-8">
+									<input id="freeIntDay" name="freeIntDay" class="form-control"
+										   type="text" th:value="${couponInfo.freeIntDay}" readonly>
+								</div>
+							</div>
+							<div class="form-group coupon-detail discount">
+								<label class="col-sm-3 control-label">免息券折扣率：</label>
+								<div class="col-sm-8">
+									<input id="discountRate" name="discountRate" class="form-control"
+										   type="text" th:value="${couponInfo.discountRate}" readonly>
+								</div>
+							</div>
+							<div class="form-group coupon-detail cash">
+								<label class="col-sm-3 control-label">券面额：</label>
+								<div class="col-sm-8">
+									<input id="couponAmount" name="couponAmount" class="form-control"
+										   type="text" th:value="${couponInfo.couponAmount}" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券开始时间：</label>
+								<div class="col-sm-8 layui-input-inline">
+									<input id="startTime" name="startTime" class="form-control layui-input"  lay-verify="date" autocomplete="off" th:value="${couponInfo.startTime}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券延迟生效小时：</label>
+								<div class="col-sm-8">
+									<input id="delayHours" th:field="*{couponInfo.delayHours}" name="delayHours" class="form-control" type="text" >
+									<label style="float:right;width: 550px">
+										(注: 如果不填该字段，则默认"券有效开始时间"="上面设置的券开始时间"，如果填写，例如填写3小时，则"券有效开始时间"="给用户发券的当前时间"+"3小时")
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券结束时间：</label>
+								<div class="col-sm-8 layui-input-inline">
+									<input id="endTime" name="endTime" class="form-control layui-input"  lay-verify="date" autocomplete="off" th:value="${couponInfo.endTime}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券有效小时：</label>
+								<div class="col-sm-8">
+									<input id="availableHours" name="availableHours" class="form-control"
+										   type="text" th:value="${couponInfo.availableHours}">
+									<label style="float:right;width: 550px">
+										(注: 如果不填该字段，则默认"券有效结束时间"="上面设置的券结束时间"，如果填写，必须填写大于"72小时" 例如填写100小时，则"券有效结束时间"="券有效开始时间"+"100小时")
+									</label>
+								</div>
+							</div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">单用户最多使用张数：</label>
+                                <div class="col-sm-8 layui-input-inline">
+                                    <input id="userUseNum" name="userUseNum" class="form-control layui-input" autocomplete="off">
+                                </div>
+								<label style="float:right;width: 550px">
+									(注: 如果不填没有限制，请勿输入小于等于0，且更新不能理解生效，联系开发刷新缓存)
+								</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">单用户最多发放张数：</label>
+                                <div class="col-sm-8 layui-input-inline">
+                                    <input id="userCouponNum" name="userCouponNum" class="form-control layui-input" autocomplete="off" >
+                                </div>
+								<label style="float:right;width: 550px">
+									(注: 如果不填没有限制，请勿输入小于等于0，且更新不能理解生效，联系开发刷新缓存)
+								</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">活动单日最多发放张数：</label>
+                                <div class="col-sm-8 layui-input-inline">
+                                    <input id="activityCouponNum" name="activityCouponNum" class="form-control layui-input" autocomplete="off" >
+									<label style="float:right;width: 550px">
+										(注: 如果不填没有限制，请勿输入小于等于0，且更新不能理解生效，联系开发刷新缓存)
+									</label>
+                                </div>
+                            </div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券总金额：</label>
+								<div class="col-sm-8">
+									<input id="totalAmt" name="totalAmt" class="form-control"
+										   type="text" th:value="${couponInfo.totalAmt}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">券总数量：</label>
+								<div class="col-sm-8">
+									<input id="totalNum" name="totalNum" class="form-control"
+										   type="text" th:value="${couponInfo.totalNum}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">短信地址：</label>
+								<div class="col-sm-8">
+									<input id="msgUrl" name="msgUrl" class="form-control"
+										   type="text" />
+									<label style="float:right;width: 550px">
+										(注: 请勿输入双引号)
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">短信内容：</label>
+								<div class="col-sm-8">
+									<input id="msgContent" name="msgContent" class="form-control"
+										   type="text" />
+									<label style="float:right;width: 550px">
+										(注: 请勿输入双引号)
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">适用规则：</label>
+								<div class="col-sm-8">
+									<input id="ruleTips" name="ruleTips" class="form-control"
+										   type="text" />
+									<label style="float:right;width: 550px">
+										(注: 请勿输入双引号)
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">是否自动撤销：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline"> <input type="radio"
+												th:field="*{couponInfo.autoUnUse}" name="autoUnUse" value="0" /> 是
+									</label> <label class="radio-inline"> <input type="radio"
+												 th:field="*{couponInfo.autoUnUse}" name="autoUnUse" value="1" /> 否
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">是否用户感知：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline"> <input type="radio"
+												th:field="*{couponInfo.userPercept}" name="userPercept" value="0" /> 是
+									</label> <label class="radio-inline"> <input type="radio"
+												 th:field="*{couponInfo.userPercept}" name="userPercept" value="1" /> 否
+								</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">使用场景：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline"> <input type="radio"
+												th:field="*{couponInfo.couponScene}" name="couponScene" value="LOAN" /> 借款
+									</label> <label class="radio-inline"> <input type="radio"
+												 th:field="*{couponInfo.couponScene}" name="couponScene" value="REPAY" /> 还款
+								</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-info">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script src="/static/appjs/marketing/coupon/edit.js"></script>
+	<script src="/static/appjs/layui/layui.js"></script>
+	<script>
+        layui.use(['form', 'laydate'], function(){
+            var form = layui.form
+                ,laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '#startTime',
+				type: 'datetime',
+				format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            laydate.render({
+                elem: '#endTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+        });
+	</script>
+	<script th:inline="javascript">
+
+        $(function() {
+            var couponInfo = [[${couponInfo}]];
+            var ext = "";
+            // 扩展信息
+            if(couponInfo.ext){
+                // string 变成 json
+                ext = eval("("+couponInfo.ext+")");
+			}
+			if(ext){
+			    var msgUrl = ext.msgUrl;
+			    var msgContent = ext.couponContent;
+                var ruleTips = ext.ruleTips;
+                document.getElementById("msgUrl").value = msgUrl == undefined ? "" : msgUrl;
+                document.getElementById("ruleTips").value = ruleTips == undefined ? "" : ruleTips;
+                document.getElementById("msgContent").value = msgContent == undefined ? "" : msgContent;
+			}else {
+                document.getElementById("msgContent").value = "";
+                document.getElementById("msgUrl").value = "";
+                document.getElementById("ruleTips").value = "";
+			}
+			// 规则
+			var ruleParams = "";
+            if(couponInfo.ruleParams){
+                // string 变成 json
+                ruleParams = eval("("+couponInfo.ruleParams+")");
+            }
+            debugger;
+            if(ruleParams){
+                var freePeriod = ruleParams.freePeriod;
+                var userUseNum = ruleParams.userUseMax;
+                var userCouponNum = ruleParams.userGrantMax;
+                var activityCouponNum = ruleParams.activityDayGrantMax;
+                document.getElementById("freePeriod").value = freePeriod == undefined ? "" : freePeriod;
+                document.getElementById("userUseNum").value = userUseNum == undefined ? "" : userUseNum;
+                document.getElementById("userCouponNum").value = userCouponNum == undefined ? "" : userCouponNum;
+                document.getElementById("activityCouponNum").value = activityCouponNum == undefined ? "" : activityCouponNum;
+			}else {
+                document.getElementById("freePeriod").value ="";
+                document.getElementById("userUseNum").value ="";
+                document.getElementById("userCouponNum").value = "";
+                document.getElementById("activityCouponNum").value = "";
+			}
+		});
+	</script>
+</body>
+
+</html>

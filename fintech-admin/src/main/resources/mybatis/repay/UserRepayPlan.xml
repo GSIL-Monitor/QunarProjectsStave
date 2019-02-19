@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.UserRepayPlanDao">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.UserRepayPlan">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="product_no" property="productNo" jdbcType="VARCHAR"/>
+        <result column="tpp_code" property="tppCode" jdbcType="VARCHAR"/>
+        <result column="org_channel" property="orgChannel" jdbcType="VARCHAR"/>
+        <result column="loan_provide_no" property="loanProvideNo" jdbcType="VARCHAR"/>
+        <result column="due_date" property="dueDate" jdbcType="TIMESTAMP"/>
+        <result column="repay_index" property="repayIndex" jdbcType="TINYINT"/>
+        <result column="prcp_amt" property="prcpAmt" jdbcType="DECIMAL"/>
+        <result column="setl_prcp_amt" property="setlPrcpAmt" jdbcType="DECIMAL"/>
+        <result column="int_amt" property="intAmt" jdbcType="DECIMAL"/>
+        <result column="setl_int_amt" property="setlIntAmt" jdbcType="DECIMAL"/>
+        <result column="spreads_amt" property="spreadsAmt" jdbcType="DECIMAL"/>
+        <result column="setl_spreads_amt" property="setlSpreadsAmt" jdbcType="DECIMAL"/>
+        <result column="fine_amt" property="fineAmt" jdbcType="DECIMAL"/>
+        <result column="setl_fine_amt" property="setlFineAmt" jdbcType="DECIMAL"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="lock_status" property="lockStatus" jdbcType="TINYINT"/>
+        <result column="gate_status" property="gateStatus" jdbcType="TINYINT"/>
+        <result column="repay_flag" property="repayFlag" jdbcType="VARCHAR"/>
+        <result column="act_repay_date" property="actRepayDate" jdbcType="TIMESTAMP"/>
+        <result column="last_sync_time" property="lastSyncTime" jdbcType="TIMESTAMP"/>
+        <result column="lock_time" property="lockTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, user_id, product_no, tpp_code, org_channel, loan_provide_no, due_date, repay_index, prcp_amt, setl_prcp_amt,
+    int_amt, setl_int_amt, spreads_amt, setl_spreads_amt, fine_amt, setl_fine_amt, status, lock_status,
+    gate_status, repay_flag, act_repay_date, last_sync_time, lock_time, create_time, update_time
+    </sql>
+
+    <select id="selectByLoanProvideNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_plan
+        where loan_provide_no = #{loanProvideNo}
+        order by due_date ASC
+    </select>
+
+    <select id="countUserRepayPlanByReqVo" resultType="java.lang.Integer">
+        select
+          count(*)
+        from user_repay_plan
+        where user_id IN
+        <foreach item="item" index="index" collection="mainUserIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and status != 3
+        <if test="request.tppCode != null and request.tppCode != ''">
+            AND tpp_code= #{request.tppCode}
+        </if>
+        <if test="request.productNo != null and request.productNo != ''">
+            AND product_no= #{request.productNo}
+        </if>
+        <if test="request.startTime != null">
+            AND create_time <![CDATA[ >= ]]> #{request.startTime}
+        </if>
+        <if test="request.endTime != null">
+            AND create_time <![CDATA[ <= ]]> #{request.endTime}
+        </if>
+        <if test="orgChannelList != null">
+            AND org_channel in
+            <foreach item="item" index="index" collection="orgChannelList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryUserOverDueDetailByUIdAndTppCode" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_plan IGNORE INDEX(PRIMARY)
+        where
+        user_id = #{overDueReq.userId}
+        AND tpp_code = #{overDueReq.tppCode}
+        <if test="overDueReq.maxOverDueDate != null">
+            AND due_date <![CDATA[ <= ]]> #{overDueReq.maxOverDueDate}
+        </if>
+        ORDER BY id ASC
+    </select>
+
+    <select id="selectRepayPlanForUrge" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_plan
+        where user_id IN
+          <foreach item="item" index="index" collection="mainUserIdList" open="(" separator="," close=")">
+           #{item}
+          </foreach>
+        and status != 3
+        <if test="request.tppCode != null and request.tppCode != ''">
+            AND tpp_code= #{request.tppCode}
+        </if>
+        <if test="request.productNo != null and request.productNo != ''">
+            AND product_no= #{request.productNo}
+        </if>
+        <if test="request.startTime != null">
+            AND create_time <![CDATA[ >= ]]> #{request.startTime}
+        </if>
+        <if test="request.endTime != null">
+            AND create_time <![CDATA[ <= ]]> #{request.endTime}
+        </if>
+        <if test="orgChannelList != null">
+            AND org_channel in
+            <foreach item="item" index="index" collection="orgChannelList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by due_date
+        limit #{page.currentIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryUserMaxOverDueUserList" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.OverDueWithholdRecord">
+        SELECT
+        user_id as userId,
+        product_no as productNo,
+        tpp_code as tppCode,
+        MIN(due_date) as minOverDue
+        FROM tbl_schedule_detail as urp WHERE
+        urp.status = 0 
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.maxOverDueDate}
+        AND due_date <![CDATA[ >= ]]>  #{overDueReq.userMaxOverDueDate}
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.userMinOverDueDate}
+        <trim>
+            <if test="overDueReq.userId != null and overDueReq.userId != ''">
+                AND urp.user_id = #{overDueReq.userId}
+            </if>
+            <if test="overDueReq.productNo != null and overDueReq.productNo != ''">
+                AND urp.product_no = #{overDueReq.productNo}
+            </if>
+            <if test="overDueReq.orgChannel != null and  overDueReq.orgChannel != ''">
+                AND urp.org_channel= #{overDueReq.orgChannel}
+            </if>
+            <if test="overDueReq.tppCode != null and  overDueReq.tppCode != ''">
+                AND urp.tpp_code= #{overDueReq.tppCode}
+            </if>
+            <if test="overDueReq.tppCode == null || overDueReq.tppCode == ''">
+                <if test="overDueReq.userId == null || overDueReq.userId == ''">
+                    AND urp.tpp_code= ''
+                </if>
+            </if>
+            <if test="overDueReq.userIdList != null">
+                AND urp.user_id in
+                <foreach item="item" index="index" collection="overDueReq.userIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+        GROUP BY user_id
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryUserScheduleDetailByUserIds" parameterType="Object"
+            resultType="com.qunar.fintech.plat.admin.query.vo.OverDueWithholdRecord">
+        select
+        user_id AS userId,
+        product_no AS productNo,
+        tpp_code AS tppCode,
+        loan_provide_no AS loanProvideNo ,
+        SUM(urp.prcp_amt-urp.setl_prcp_amt+urp.int_amt-urp.setl_int_amt+urp.fine_amt-urp.setl_fine_amt+urp.spreads_amt-urp.setl_spreads_amt )
+                AS debtSumAmount ,
+        COUNT(*) AS debtNum
+        from user_repay_plan AS urp
+        where
+        	urp.status in (0,1)
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.maxOverDueDate}
+        AND due_date <![CDATA[ >= ]]>  #{overDueReq.userMaxOverDueDate}
+        AND due_date <![CDATA[ <= ]]>  #{overDueReq.userMinOverDueDate}
+        <trim>
+            <if test="overDueReq.userId != null and overDueReq.userId != ''">
+                AND urp.user_id = #{overDueReq.userId}
+            </if>
+            <if test="overDueReq.productNo != null and overDueReq.productNo != ''">
+                AND urp.product_no = #{overDueReq.productNo}
+            </if>
+            <if test="overDueReq.tppCode != null and overDueReq.tppCode != ''">
+                AND urp.tpp_code = #{overDueReq.tppCode}
+            </if>
+            <if test="overDueReq.orgChannel != null and  overDueReq.orgChannel != ''">
+                AND urp.org_channel= #{overDueReq.orgChannel}
+            </if>
+            <if test="userIdList != null">
+                AND urp.user_id in
+                <foreach item="item" index="index" collection="userIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+        GROUP BY urp.user_id,urp.tpp_code
+    </select>
+
+     <select id="queryUserCurrentAmt" parameterType="Object" resultType="java.math.BigDecimal">
+                 select
+                       SUM(urp.prcp_amt-urp.setl_prcp_amt+urp.int_amt-urp.setl_int_amt+urp.fine_amt-urp.setl_fine_amt+urp.spreads_amt-urp.setl_spreads_amt )
+                 from
+                                user_repay_plan AS urp
+                 where
+                                user_id = #{userId}
+                                AND
+                                tpp_code = #{tppCode}
+                                AND
+                                status = 0
+    </select>
+
+   <select id="queryUserMaxOverDueUserListCount" parameterType="Object" resultType="Integer">
+       SELECT COUNT(*) FROM
+       (SELECT
+       user_id
+       FROM tbl_schedule_detail as urp WHERE
+       urp.status = 0
+       AND due_date <![CDATA[ <= ]]>  #{overDueReq.maxOverDueDate}
+       AND due_date <![CDATA[ >= ]]>  #{overDueReq.userMaxOverDueDate}
+       AND due_date <![CDATA[ <= ]]>  #{overDueReq.userMinOverDueDate}
+       AND urp.tpp_code = #{overDueReq.tppCode}
+       <trim>
+           <if test="overDueReq.userId != null and overDueReq.userId != ''">
+               AND urp.user_id = #{overDueReq.userId}
+           </if>
+           <if test="overDueReq.productNo != null and overDueReq.productNo != ''">
+               AND urp.product_no = #{overDueReq.productNo}
+           </if>
+           <if test="overDueReq.orgChannel != null and  overDueReq.orgChannel != ''">
+               AND urp.org_channel= #{overDueReq.orgChannel}
+           </if>
+           <if test="overDueReq.userIdList != null">
+               AND urp.user_id in
+               <foreach item="item" index="index" collection="overDueReq.userIdList" open="(" separator="," close=")">
+                   #{item}
+               </foreach>
+           </if>
+           GROUP BY user_id) as temp;
+
+       </trim>
+    </select>
+
+
+    <select id="selectByLoanProvideNoDueDate" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_plan
+        where loan_provide_no = #{loanProvideNo}
+        and due_date = #{dueDate}
+        order by due_date ASC
+        </select>
+
+    <select id="queryLockPlanByLoanProvideNoOrTime" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_plan
+        where 1=1
+        <trim>
+            <if test="request.userId != null and request.userId != ''">
+                AND user_id = #{request.userId}
+            </if>
+            <if test="request.loanProvideNo != null and request.loanProvideNo != ''">
+                AND loan_provide_no = #{request.loanProvideNo}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND lock_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND lock_time <![CDATA[ < ]]> #{request.endTime}
+            </if>
+        </trim>
+        and lock_status!=0
+        order by loan_provide_no desc
+    </select>
+
+</mapper>

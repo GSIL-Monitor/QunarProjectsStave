@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<!-- 支持bootstrap 4.x. 您还可以使用bootstrap css 3.3.x版本 -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      rossorigin="anonymous">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css" media="all"
+      rel="stylesheet" type="text/CSS"/>
+<!-- 如果使用RTL（从右到左）方向，请在fileinput.css之后加载RTL CSS文件，方法是在下面取消注释 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput-rtl.min.css" media="all"
+      rel="stylesheet" type="text/css"/>
+<!-- 字体真棒图标库，如果使用`fas`主题（或Bootstrap 4.x）。请注意，插件中使用的默认图标是仅与Bootstrap 3.x捆绑在一起的glyphicons。 -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rossorigin=”anonymous“>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<!-- piexif.min.js需要自动定位图像文件或在重新调整大小的图像中恢复exif数据时
+    希望在上传之前调整图片大小。必须在fileinput.min.js 之前加载 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js"
+        type="text/javascript"></script>
+<!--仅当您希望在初始预览中对文件进行排序/重新排列时，才需要  sortable.min.js。 必须在fileinput.min.js  - >之前加载-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/sortable.min.js"
+        type="text/javascript"></script>
+<!-- 只有您希望在预览中纯化HTML内容时，才需要<！ -  purify.min.js     HTML文件。必须在fileinput.min.js  - >之前加载-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/purify.min.js"
+        type="text/javascript"></script>
+<!--如果您希望在详细模式中缩放和预览文件内容，则需要<！ -  bootstrap.min.js
+    对话。支持bootstrap 4.x. 您还可以使用bootstrap js 3.3.x版本。 -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+        crossorigin=”anonymous“></script>
+<!-- 主文件输入插件文件 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/fileinput.min.js"></script>
+<!--需要使用以下主题脚本来使用Font Awesome 5.x主题（`fas`）-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fas/theme.min.js"></script>
+<!-- 可选择如果您需要翻译您的语言，那么请包含下面提到的语言环境文件（将LANG.js替换为您的语言区域设置）-->
+
+<body class="">
+<input id="input-id" type="file" class="file" data-preview-file-type="text" multiple>
+
+</body>
+<script>
+    $("#input-id").fileinput({
+        previewFileType: 'any', //预览文件类型
+        initialPreview: "<div class='file-preview-text'>" +
+            "<h3><i class='glyphicon glyphicon-file'></i></h3>" +
+            "Filename.xlsx" + "</div>", //初始化展示
+        showRemove: true, //展示移除按钮
+        theme: "fas", //主题
+        language: 'zh',                                 //中文
+        uploadUrl: '<%=basePath%>/commodity/addCommodityPic', //上传地址
+        initialPreviewDownloadUrl: '<%=basePath%>/commodity/addCommodityPic', //c服务器文件下载url
+        showPreview: true,				//展前预览
+        showUpload: true,				//不显示上传按钮
+        showCaption: true,				//不显示文字表述
+        uploadAsync: false,                             //采用同步上传
+        removeFromPreviewOnError: true,                 //当文件不符合规则，就不显示预览
+        maxFileCount: 0,  //限制文件上传个数，0表示不限制
+        maxFileSize: 1024 * 10,                          //单位为kb，如果为0表示不限制文件大小
+        // uploadExtraData: function(previewId, index) {   //额外参数 返回json数组
+        //           return {
+        //                   'id':commId
+        //                  };
+        //           }
+        // }).on("filebatchuploadsuccess", function(event, data) {	//当上传成功回调函数
+        //         var response = data.response;
+        //         if(response.resultCode=='0'){
+        //                 $("#closedAddWin").click();
+        //         table.ajax.reload();
+        // }       上传文件执行函数
+    });
+
+</script>
+</html>

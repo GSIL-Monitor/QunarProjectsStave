@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/resources/css/animate.css" rel="stylesheet">
+    <link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="/resources/css/marketing/add.css" rel="stylesheet">
+</head>
+<body class="">
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="process-area row">
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon-active.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow-active.png"/>
+                <p>创建优惠券</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>B岗产品审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>QA审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>法务审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>财务审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>负责人审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <p>产品待发布</p>
+            </div>
+            <ul class="nav nav-pills nav-justified">
+                <li class="active"><a class="nav-tab1">活动内容创建</a></li>
+                <li><a class="nav-tab2">优惠券预算信息</a></li>
+                <li><a class="nav-tab3">优惠券配置信息</a></li>
+                <li><a class="nav-tab4">报警信息</a></li>
+            </ul>
+            <div class="nav-item nav-1">
+
+            </div>
+            <div class="nav-item nav-2">
+
+            </div>
+            <div class="nav-item nav-3">
+
+            </div>
+            <div class="nav-item nav-4">
+
+            </div>
+        </div>
+    </div>
+    <div th:include="include::footer"></div>
+    <script>
+        $('.nav-1').load('./activityAdd.html', function () {
+            document.getElementById('userInfoFile').onchange = function (e) {
+                console.log(this.files)
+                var reader = new FileReader();
+                reader.readAsText(this.files[0], 'UTF-8');
+                reader.onload = function (e) {
+                    // urlData就是对应的文件内容
+                    var urlData = this.result;
+                    console.log(urlData)
+                };
+            }
+        })
+        $('.nav-2').load('./ticketBudget.html')
+        $('.nav-3').load('./ticketConfig.html')
+        $('.nav-4').load('./editAlarmConfig.html', function () {
+            $('.closePage').addClass('hide');
+            $("input[id='email']").attr("checked", true);
+            $("input[id='qmq']").attr("checked", true);
+            $("input[id='sms']").attr("checked", true);
+            $("input[id='qtalk']").attr("checked", true);
+        })
+    </script>
+    <script src="/static/appjs/newmarketing/coupon/add.js"></script>
+    <script src="/static/appjs/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'laydate'], function () {
+            var form = layui.form
+                , laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '.budget-time-start',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            laydate.render({
+                elem: '.budget-time-end',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            laydate.render({
+                elem: '.alarm-time-start',
+                type: 'time'
+            });
+            laydate.render({
+                elem: '.alarm-time-end',
+                type: 'time'
+            });
+        });
+    </script>
+</body>
+
+</html>

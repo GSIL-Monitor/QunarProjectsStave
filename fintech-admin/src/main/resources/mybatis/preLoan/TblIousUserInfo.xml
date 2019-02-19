@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.preloan.IousUserInfoDao">
+
+    <sql id="base_select">
+        SELECT
+        tiui.id                          as id
+        ,tiui.user_id                    as userId
+        ,tiui.product_no                 as productNo
+        ,tiui.tpp_code                   as tppCode
+        ,tiui.mobile                     as mobile
+        ,tiui.identity_type              as identityType
+        ,tiui.identity_code              as identityCode
+        ,tiui.user_name                  as userName
+
+        ,tiui.ious_begin_time            as iousBeginTime
+        ,tiui.ious_end_time              as iousEndTime
+        ,tiui.contract_no                as contractNo
+        ,tiui.credit_amount              as creditAmount
+        ,tiui.create_time                as createTime
+        ,tiui.apply_time                 as applyTime
+        ,tiui.sign_time                  as signTime
+        ,tiui.update_time                as updateTime
+        ,tiui.annual_rate                as annualRate
+        ,tiui.term_six_rate              as rate6
+        ,tiui.term_nine_rate             as rate9
+        ,tiui.term_twelve_rate           as rate12
+        ,tiui.use_status                 as useStatus
+        ,tiui.user_group                 as userGroup
+        ,tivc.auto_repay_sign_status     as autoRepaySignStatus
+        ,tiui.org_channel				 as channel
+        ,tivc.pay_switch                 as paySwitch
+        ,tivc.update_time                as updateTime
+        ,tivc.contract_status            as contractStatus
+    </sql>
+
+    <sql id="wherecontation">
+        <trim suffixOverrides=",">
+            tiui.status in (2,9)
+            <if test="request.userId != null and request.userId != ''">
+                AND tiui.user_id = #{request.userId}
+            </if>
+            <if test="request.mobile != null and request.mobile != ''">
+                AND tiui.mobile = #{request.mobile}
+            </if>
+            <if test="request.identity != null and request.identity != ''">
+                AND tiui.identity_code = #{request.identity}
+            </if>
+            <if test="request.userName != null and request.userName != ''">
+                AND tiui.user_name = #{request.userName}
+            </if>
+            <if test="request.productNo != null and request.productNo != ''">
+                AND tiui.product_no = #{request.productNo}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tiui.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.mainChannel != null and  request.mainChannel != ''">
+                AND tiui.org_channel= #{request.mainChannel}
+            </if>
+            <if test="request.startTime != null">
+                AND tiui.sign_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND tiui.sign_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryIousAccountByRequest" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        <include refid="base_select"/>
+        FROM tbl_ious_user_info tiui
+        LEFT JOIN tbl_ious_virtual_contract tivc ON tiui.user_id = tivc.user_id AND tiui.product_no = tivc.product_no
+        WHERE
+        <include refid="wherecontation"/>
+        order by tiui.sign_time desc
+        <if test="page != null">
+            limit #{page.currentIndex},#{page.pageSize}
+        </if>
+    </select>
+
+    <select id="queryMainAmtByRequest" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        select tiui.credit_amount
+        FROM tbl_ious_user_info tiui
+        WHERE tiui.use_status = #{useStatus} and
+        <include refid="wherecontation"/>
+    </select>
+
+    <select id="countIousAccountByRequest" parameterType="Object" resultType="Integer">
+        SELECT count(*)
+        from tbl_ious_user_info tiui
+        LEFT JOIN tbl_ious_virtual_contract tivc ON tiui.user_id = tivc.user_id AND tiui.product_no = tivc.product_no
+        WHERE
+        <include refid="wherecontation"/>
+    </select>
+
+    <select id="getIousUserInfoCount" parameterType="Object" resultType="Integer">
+        SELECT count(*)
+        from tbl_ious_user_info tiui
+        WHERE
+        <trim suffixOverrides=",">
+            use_status=1
+            <if test="request.userId != null and request.userId != ''">
+                AND tiui.user_id = #{request.userId}
+            </if>
+            <if test="request.mobile != null and request.mobile != ''">
+                AND tiui.mobile = #{request.mobile}
+            </if>
+            <if test="request.userName != null and request.userName != ''">
+                AND tiui.user_name = #{request.userName}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tiui.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND tiui.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND tiui.create_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+        </trim>
+    </select>
+
+
+
+    <select id="queryIousUserInfoByRequest" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        <include refid="base_select"/>
+        WHERE
+        <foreach collection="request" item="item" separator="OR" open="(" close=")">
+            <if test="item.userId != null and item.userId != '' and item.tppCode != null">
+                user_id = #{item.userId} AND tpp_code = #{item.tppCode}
+            </if>
+        </foreach>
+    </select>
+
+    <select id="getIousUserInfoList" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        SELECT
+        id                          as id
+        ,user_id                    as userId
+        ,tpp_code                   as tppCode
+        ,mobile                     as mobile
+        ,identity_type              as identityType
+        ,identity_code              as identityCode
+        ,user_name                  as userName
+        ,create_time                as createTime
+        from tbl_ious_user_info as tiui
+        WHERE
+        <trim suffixOverrides=",">
+            use_status=1
+            <if test="request.userId != null and request.userId != ''">
+                AND tiui.user_id = #{request.userId}
+            </if>
+            <if test="request.mobile != null and request.mobile != ''">
+                AND tiui.mobile = #{request.mobile}
+            </if>
+            <if test="request.userName != null and request.userName != ''">
+                AND tiui.user_name = #{request.userName}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tiui.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND tiui.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND tiui.create_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+        </trim>
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="getIousUserInfoListByMobile" parameterType="String" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        SELECT
+        user_id                    as userId
+        ,mobile                     as mobile
+        ,user_name                  as userName
+        from tbl_ious_user_info as tiui
+        WHERE tiui.mobile = #{mobile}
+    </select>
+
+
+    <select id="getIousUserInfoListByRequest" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        SELECT
+        user_id as userId
+        ,mobile as mobile
+        ,user_name as userName
+        from tbl_ious_user_info as tiui
+        WHERE tiui.user_id in
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+    </select>
+    <select id="selectByUniqueKey" parameterType="map" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        <include refid="base_select"/>
+        from tbl_ious_user_info as tiui
+        LEFT JOIN tbl_ious_virtual_contract tivc ON tiui.user_id = tivc.user_id AND tiui.product_no = tivc.product_no
+        WHERE
+        tiui.user_id = #{userId}
+        AND tiui.product_no = #{productNo}
+        AND tiui.tpp_code = #{tppCode} limit 1
+    </select>
+
+    <update id="updateByUidSelective" parameterType="com.qunar.fintech.plat.admin.query.entity.TblIousUserInfo">
+        UPDATE tbl_ious_user_info
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            update_time = now()
+        </set>
+        WHERE
+        user_id = #{userId}
+        AND product_no = #{productNo}
+        AND tpp_code = #{tppCode}
+    </update>
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.hank.mapper.MultiTableRelateMapper">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.hank.entity.MultiTableRelate">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="task_type" jdbcType="VARCHAR" property="taskType"/>
+        <result column="source_table" jdbcType="VARCHAR" property="sourceTable"/>
+        <result column="target_table" jdbcType="VARCHAR" property="targetTable"/>
+        <result column="multi_field" jdbcType="VARCHAR" property="multiField"/>
+        <result column="query_terms" jdbcType="VARCHAR" property="queryTerms"/>
+        <result column="match_relate" jdbcType="TINYINT" property="matchRelate"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+         id, task_type, source_table, target_table, multi_field, query_terms, match_relate, status
+    </sql>
+
+    <!-- 根据 id 查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from multi_table_relate where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据 taskType 查询 -->
+    <select id="selectByTable" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from multi_table_relate where task_type = #{taskType,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="select" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from multi_table_relate
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 条件查询数量 -->
+    <select id="count" parameterType="java.lang.Object" resultType="int">
+        select count(*) from multi_table_relate
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入 -->
+    <insert id="insertSelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.MultiTableRelate">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into multi_table_relate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="sourceTable != null">
+                source_table,
+            </if>
+            <if test="targetTable != null">
+                target_table,
+            </if>
+            <if test="multiField != null">
+                multi_field,
+            </if>
+            <if test="queryTerms != null">
+                query_terms,
+            </if>
+            <if test="matchRelate != null">
+                match_relate,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceTable != null">
+                #{sourceTable,jdbcType=VARCHAR},
+            </if>
+            <if test="targetTable != null">
+                #{targetTable,jdbcType=VARCHAR},
+            </if>
+            <if test="multiField != null">
+                #{multiField,jdbcType=VARCHAR},
+            </if>
+            <if test="queryTerms != null">
+                #{queryTerms,jdbcType=VARCHAR},
+            </if>
+            <if test="matchRelate != null">
+                #{matchRelate,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.MultiTableRelate">
+        update multi_table_relate
+        <set>
+            <if test="taskType != null">
+                task_type = #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceTable != null">
+                source_table = #{sourceTable,jdbcType=VARCHAR},
+            </if>
+            <if test="targetTable != null">
+                target_table = #{targetTable,jdbcType=VARCHAR},
+            </if>
+            <if test="multiField != null">
+                multi_field = #{multiField,jdbcType=VARCHAR},
+            </if>
+            <if test="queryTerms != null">
+                query_terms = #{queryTerms,jdbcType=VARCHAR},
+            </if>
+            <if test="matchRelate != null">
+                match_relate = #{matchRelate,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

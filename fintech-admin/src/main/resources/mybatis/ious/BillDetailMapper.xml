@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.ious.BillDetailDao" >
+  <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.BillDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+    <result column="user_group" property="userGroup" jdbcType="TINYINT" />
+    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+    <result column="loan_provide_no" property="loanProvideNo" jdbcType="VARCHAR" />
+    <result column="due_date" property="dueDate" jdbcType="TIMESTAMP" />
+    <result column="bill_date" property="billDate" jdbcType="DATE" />
+    <result column="bill_prcp_amount" property="billPrcpAmount" jdbcType="DECIMAL" />
+    <result column="bill_int_amount" property="billIntAmount" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="settle_type" property="settleType" jdbcType="TINYINT" />
+    <result column="repay_index" property="repayIndex" jdbcType="TINYINT" />
+    <result column="loan_term" property="loanTerm" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, product_no, user_group, bill_no, loan_provide_no, due_date, bill_date, 
+    bill_prcp_amount, bill_int_amount, create_time, update_time,settle_type,repay_index,loan_term
+  </sql>
+
+
+  <select id="selectBillDetailByPage" resultMap="BaseResultMap" parameterType="java.lang.Object">
+    select
+    <include refid="Base_Column_List"/>
+    from tbl_bill_detail
+    where  bill_no = #{billNo,jdbcType=VARCHAR}
+    <if test="page !=null and page.currentIndex != null and page.pageSize != null">
+      limit #{page.currentIndex},#{page.pageSize}
+    </if>
+  </select>
+
+  <select id="selectBillDetailCount" resultType="java.lang.Integer" >
+    select
+    count(*)
+    from tbl_bill_detail
+    where
+    bill_no = #{billNo,jdbcType=VARCHAR}
+  </select>
+
+
+</mapper>

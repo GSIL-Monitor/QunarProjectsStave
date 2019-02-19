@@ -1,0 +1,49 @@
+/* marketing添加新建活动样式*/
+.float-e-margins .process-area .process-bt{
+	margin-left: 15px;
+	margin-right: -40px;
+}
+.float-e-margins .process-area .btn{
+	margin-top: 8px;
+}
+.float-e-margins .nav-item .green-heading,
+.float-e-margins .nav-item .warn-heading,
+.float-e-margins .nav-item .required-msg{
+	text-align: center
+}
+.float-e-margins .nav-item .green-heading{
+	color: #006621;
+	font-size: 25px;
+}
+.float-e-margins .nav-item .warn-heading{
+	color: #ccc;
+}
+.float-e-margins .nav-item .required-msg{
+	color: rgb(255,0,29)
+}
+.float-e-margins .nav-item .form-group .form-control{
+	width: 300px;
+}
+/* .float-e-margins .nav-4 .form-group .form-control{
+	width: 150px;
+} */
+.float-e-margins .nav-item .form-group .hint-tag{
+	background-color: rgb(207,225,113);
+	margin-left: 20px;
+	line-height: 30px;
+}
+.float-e-margins .nav-3 .ibox-content .section-heading{
+	border-bottom: #222 solid 1px;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+.float-e-margins .nav-3 .ibox-content .section-con{
+	color: rgb(255,0,29);
+	margin-right: 10px;
+}
+.float-e-margins .nav-item .form-group .radio-tag{
+	margin-left: 28px
+}
+.float-e-margins .nav-item .radio-div{
+	margin-top: 6px;
+}

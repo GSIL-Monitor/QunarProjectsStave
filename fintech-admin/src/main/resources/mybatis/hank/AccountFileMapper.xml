@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.hank.mapper.AccountFileMapper">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.hank.entity.AccountFileLaunch">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="req_user" jdbcType="VARCHAR" property="reqUser"/>
+        <result column="task_type" jdbcType="VARCHAR" property="taskType"/>
+        <result column="receiver" jdbcType="VARCHAR" property="receiver"/>
+        <result column="account_date" jdbcType="DATE" property="accountDate"/>
+        <result column="run_time" jdbcType="TIMESTAMP" property="runTime"/>
+        <result column="last_run_time" jdbcType="TIMESTAMP" property="lastRunTime"/>
+        <result column="req_nums" jdbcType="TINYINT" property="reqNums"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="err_code" jdbcType="VARCHAR" property="errCode"/>
+        <result column="err_msg" jdbcType="VARCHAR" property="errMsg"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, req_user, task_type, receiver, account_date, run_time, last_run_time,
+        req_nums, status, err_code, err_msg
+    </sql>
+
+    <!-- 条件查询 taskType -->
+    <select id="selectTaskType" parameterType="java.lang.String" resultType="java.lang.String">
+        select distinct task_type from tpp_config
+        <where>
+            <if test="receiver != null and receiver != ''">
+                receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by task_type
+    </select>
+
+    <!-- 条件查询 receiver -->
+    <select id="selectReceiver" parameterType="java.lang.String" resultType="java.lang.String">
+        select distinct receiver from tpp_config
+        <where>
+            <if test="taskType != null and taskType != ''">
+                task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by receiver
+    </select>
+
+    <!-- 根据taskType & receiver 查询fileName -->
+    <select id="selectFileName" parameterType="java.lang.String" resultType="java.lang.String">
+        select file_name from tpp_config
+        <where>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 条件查询列表 -->
+    <select id="selectAccountFileLaunchList" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from account_file_launch
+        <where>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+            <if test="reqUser != null and reqUser != ''">
+                and req_user = #{reqUser,jdbcType=VARCHAR}
+            </if>
+            <if test="startRunTime != null and endRunTime != null">
+                <![CDATA[
+                  and run_time >= #{startRunTime,jdbcType=TIMESTAMP}
+                  and run_time <= #{endRunTime,jdbcType=TIMESTAMP}
+                ]]>
+            </if>
+        </where>
+        order by id desc
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 条件查询数量 -->
+    <select id="selectAccountFileLaunchListCount" parameterType="java.lang.Object" resultType="int">
+        select count(*) from account_file_launch
+        <where>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+            <if test="reqUser != null and reqUser != ''">
+                and req_user = #{reqUser,jdbcType=VARCHAR}
+            </if>
+            <if test="startRunTime != null and endRunTime != null">
+                <![CDATA[
+                  and run_time >= #{startRunTime,jdbcType=TIMESTAMP}
+                  and run_time <= #{endRunTime,jdbcType=TIMESTAMP}
+                ]]>
+            </if>
+        </where>
+    </select>
+
+</mapper>

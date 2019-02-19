@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.system.dao.mapper.ReviewNodeMapper">
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.system.dao.entity.ReviewNode">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="review_no" property="reviewNo" jdbcType="VARCHAR"/>
+        <result column="flow_no" property="flowNo" jdbcType="VARCHAR"/>
+        <result column="review_menu_id" property="reviewMenuId" jdbcType="VARCHAR"/>
+        <result column="reviewer" property="reviewer" jdbcType="VARCHAR"/>
+        <result column="cur_role_id" property="curRoleId" jdbcType="VARCHAR"/>
+        <result column="next_role_id" property="nextRoleId" jdbcType="VARCHAR"/>
+        <result column="review_order" property="reviewOrder" jdbcType="TINYINT"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="comment" property="comment" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, review_no,review_menu_id, status,reviewer, cur_role_id,next_role_id,role_name,comment,create_time,update_time,review_order
+    </sql>
+
+    <update id="updateStatus" parameterType="Object">
+        update review_node
+        <set>
+            status=#{targetStatus,jdbcType=VARCHAR},
+        </set>
+        where review_no = #{reviewNo,jdbcType=VARCHAR}
+        and status = #{sourceStatus,jdbcType=VARCHAR}
+        and review_order = #{reviewOrder,jdbcType=TINYINT}
+    </update>
+
+    <update id="updateInfoByStatusAndId" parameterType="Object">
+        update review_node
+        <set>
+            status=#{targetStatus,jdbcType=VARCHAR},
+            comment = #{comment,jdbcType=VARCHAR},
+            reviewer = #{reviewer,jdbcType=VARCHAR}
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+        and status = #{sourceStatus,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByReviewNo" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from review_node
+        where review_no IN
+        <foreach item="item" index="index" collection="reviewNos" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByReviewerAndStatus" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from review_node
+        where reviewer = #{reviewer,jdbcType=VARCHAR} and status in
+        <foreach item="item" index="index" collection="statusList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByReviewNoAndOrder" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from review_node
+        where review_no = #{reviewNo,jdbcType=VARCHAR} and review_order = #{order,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="com.qunar.fintech.plat.admin.system.dao.entity.ReviewNode"
+            keyProperty="record.id" useGeneratedKeys="true">
+        insert into review_node
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="record.reviewNo != null">
+                review_no,
+            </if>
+            <if test="record.flowNo != null">
+                flow_no,
+            </if>
+            <if test="record.reviewMenuId != null">
+                review_menu_id,
+            </if>
+            <if test="record.reviewer != null">
+                reviewer,
+            </if>
+            <if test="record.curRoleId != null">
+                cur_role_id,
+            </if>
+            <if test="record.nextRoleId != null">
+                next_role_id,
+            </if>
+            <if test="record.roleName != null">
+                role_name,
+            </if>
+            <if test="record.comment != null">
+                comment,
+            </if>
+            <if test="record.reviewOrder != null">
+                review_order,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="record.reviewNo != null">
+                #{record.reviewNo,jdbcType=VARCHAR},
+            </if>
+            <if test="record.flowNo != null">
+                #{record.flowNo,jdbcType=VARCHAR},
+            </if>
+            <if test="record.reviewMenuId != null">
+                #{record.reviewMenuId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.reviewer != null">
+                #{record.reviewer,jdbcType=VARCHAR},
+            </if>
+            <if test="record.curRoleId != null">
+                #{record.curRoleId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.nextRoleId != null">
+                #{record.nextRoleId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.roleName != null">
+                #{record.roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.comment != null">
+                #{record.comment,jdbcType=VARCHAR},
+            </if>
+            <if test="record.reviewOrder != null">
+                #{record.reviewOrder,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

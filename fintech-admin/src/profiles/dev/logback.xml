@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %X{QTRACER} %-5level %logger{0} - %msg%n"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.base}/logs/admin.log</file>
+        <encoder charset="UTF-8">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${catalina.base}/logs/admin.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+      
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="utf-8">
+            <pattern>${LOG_PATTERN}</pattern>  
+        </encoder>
+    </appender>
+
+    <logger name="com.alibaba.dubbo" level="WARN"/>
+    <logger name="org.apache.zookeeper" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="org.mybatis.spring" level="WARN"/>
+    <logger name="qunar.tc.qmq.producer" level="WARN"/>
+    <logger name="com.qunar.ucenter" level="WARN"/>
+    <logger name="org.I0Itec.zkclient" level="WARN"/>
+    <logger name="com.qunar.ucenter.xmemcached.yanf4j" level="ERROR"/>
+    <logger name="org.apache.velocity" level="ERROR"/>
+    <logger name="com.google.code.yanf4j" level="ERROR"/>
+    <logger name="net.rubyeye.xmemcached" level="ERROR"/>
+
+    <!-- set the logger NOW DEBUG -->
+    <logger name="java.sql" level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="com.qunar.finance" level="INFO"/>
+    <logger name="com.qunar.pay.finance" level="INFO"/>
+    <logger name="com.qunar.fintech.plat.admin" level="DEBUG"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

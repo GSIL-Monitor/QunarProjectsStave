@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title></title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+<link rel="shortcut icon" href="favicon.ico">
+<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="/resources/css/animate.css" rel="stylesheet">
+<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+							<input id="id" name="id"
+								type="hidden" th:value="${activity.id}" />
+							<input id="newAccount" name="newAccount"
+								   type="hidden" th:value="${activity.newAccount}" />
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动code：</label>
+								<div class="col-sm-8">
+									<input id="" name="" class="form-control" type="text"
+										   th:value="${activity.activityCode}" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动简称：</label>
+								<div class="col-sm-8">
+									<input id="activityName" name="activityName" class="form-control" type="text"
+										th:value="${activity.activityName}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动描述：</label>
+								<div class="col-sm-8">
+									<input id="activityDesc" name="activityDesc" class="form-control" type="text"
+										th:value="${activity.activityDesc}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动地址：</label>
+								<div class="col-sm-8">
+									<input id="activityUrl" name="activityUrl" class="form-control"
+										type="text" th:value="${activity.activityUrl}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动详情：</label>
+								<div class="col-sm-8">
+									<input id="activityDetail" name="activityDetail" class="form-control"
+										   type="text" th:value="${activity.activityDetail}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">开关状态：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline"> <input type="radio"
+											th:field="*{activity.switchStatus}" name="type" value="OPEN" /> 开启
+									</label> <label class="radio-inline"> <input type="radio"
+											th:field="*{activity.switchStatus}" name="type" value="CLOSE" /> 关闭
+								</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动开始时间：</label>
+								<div class="col-sm-8 layui-input-inline">
+									<input id="startTime" name="startTime" class="form-control layui-input"  lay-verify="date" autocomplete="off" th:value="${activity.startTime}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动结束时间：</label>
+								<div class="col-sm-8 layui-input-inline">
+									<input id="endTime" name="endTime" class="form-control layui-input"  lay-verify="date" autocomplete="off" th:value="${activity.endTime}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">活动总金额：</label>
+								<div class="col-sm-8">
+									<input id="totalAmt" name="totalAmt" class="form-control"
+										   type="text" th:value="${activity.totalAmt}" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">商户号：</label>
+								<div class="col-sm-8">
+									<input id="merchantCode" name="" class="form-control" type="text"
+										   th:value="${activity.merchantCode}" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-info">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script src="/static/appjs/marketing/activity/edit.js"></script>
+	<script src="/static/appjs/layui/layui.js"></script>
+	<script>
+        layui.use(['form', 'laydate'], function(){
+            var form = layui.form
+                ,laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '#startTime',
+				type: 'datetime',
+				format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            laydate.render({
+                elem: '#endTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+        });
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.hank.mapper.FtpConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.hank.entity.FtpConfig">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+        <result column="receiver" jdbcType="VARCHAR" property="receiver" />
+        <result column="protocol" jdbcType="VARCHAR" property="protocol" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="host" jdbcType="VARCHAR" property="host" />
+        <result column="port" jdbcType="VARCHAR" property="port" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="dir_mode" jdbcType="TINYINT" property="dirMode" />
+        <result column="compress_mode" jdbcType="TINYINT" property="compressMode" />
+        <result column="encrypt_mode" jdbcType="VARCHAR" property="encryptMode" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, task_type, receiver, protocol, user_name, password, host, port, path, dir_mode, compress_mode, encrypt_mode, status
+    </sql>
+
+    <!-- 根据 id 查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from ftp_config where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据 taskType 和 receiver 查询 -->
+    <select id="selectByTaskTypeAndReceiver" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ftp_config
+        where task_type = #{taskType,jdbcType=VARCHAR} and receiver = #{receiver,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="select" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from ftp_config
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcTyp=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 条件查询数量 -->
+    <select id="count" parameterType="java.lang.Object" resultType="int">
+        select count(*) from ftp_config
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcTyp=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入 -->
+    <insert id="insertSelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.FtpConfig">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into ftp_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="receiver != null">
+                receiver,
+            </if>
+            <if test="protocol != null">
+                protocol,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="host != null">
+                host,
+            </if>
+            <if test="port != null">
+                port,
+            </if>
+            <if test="path != null">
+                path,
+            </if>
+            <if test="dirMode != null">
+                dir_mode,
+            </if>
+            <if test="compressMode != null">
+                compress_mode,
+            </if>
+            <if test="encryptMode != null">
+                encrypt_mode,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="receiver != null">
+                #{receiver,jdbcType=VARCHAR},
+            </if>
+            <if test="protocol != null">
+                #{protocol,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null">
+                #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null">
+                #{port,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null">
+                #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="dirMode != null">
+                #{dirMode,jdbcType=TINYINT},
+            </if>
+            <if test="compressMode != null">
+                #{compressMode,jdbcType=TINYINT},
+            </if>
+            <if test="encryptMode != null">
+                #{encryptMode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.FtpConfig">
+        update ftp_config
+        <set>
+            <if test="taskType != null">
+                task_type = #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="receiver != null">
+                receiver = #{receiver,jdbcType=VARCHAR},
+            </if>
+            <if test="protocol != null">
+                protocol = #{protocol,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null">
+                port = #{port,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null">
+                path = #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="dirMode != null">
+                dir_mode = #{dirMode,jdbcType=TINYINT},
+            </if>
+            <if test="compressMode != null">
+                compress_mode = #{compressMode,jdbcType=TINYINT},
+            </if>
+            <if test="encryptMode != null">
+                encrypt_mode = #{encryptMode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

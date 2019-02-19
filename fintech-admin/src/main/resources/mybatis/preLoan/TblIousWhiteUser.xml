@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="TblIousWhiteUser">
+
+    <sql id="base_select">
+        SELECT
+        id                          as id
+        ,user_id                    as userId
+        ,user_name                  as userName
+        ,identity_type              as identityType
+        ,identity_code              as identityCode
+        ,mosaic_ident_code          as mosaicIdentCode
+        ,bank_card_no               as bankCardNo
+        ,mosaic_bank_card_no        as mosaicBankCardNo
+        ,mobile                     as mobile
+        ,tpp_code                   as tppCode
+        ,pre_credit_status          as preCreditStatus
+        ,create_time                as createTime
+        ,update_time                as updateTime
+        ,card_type                  as cardType
+        ,tpp_code                   as tppCode
+        FROM tbl_ious_white_user
+    </sql>
+
+    <sql id="wherecontation">
+        <trim suffixOverrides=",">
+            <if test="request.userId != null and request.userId != ''">
+                AND user_id = #{request.userId}
+            </if>
+            <if test="request.mobile != null and request.mobile != ''">
+                AND mobile = #{request.mobile}
+            </if>
+            <if test="request.userName != null and request.userName != ''">
+                AND user_name = #{request.userName}
+            </if>
+            <if test="request.startTime != null and  request.startTime != ''">
+                AND create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null and  request.endTime != ''">
+                AND create_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tpp_code = #{request.tppCode}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryIousWhiteUserByRequest" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousWhiteUser">
+        <include refid="base_select"/>
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="countIousWhiteUserByRequest" parameterType="Object" resultType="Integer">
+        SELECT count(*)
+        from tbl_ious_white_user
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+    </select>
+
+
+</mapper>

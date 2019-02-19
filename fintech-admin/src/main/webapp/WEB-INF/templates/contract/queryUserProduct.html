@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+	<script src="/static/appjs/contract/popUp.js"></script>
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content" style="overflow-x: scroll;width:100%;white-space: nowrap;">
+		<div class="row" >
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="form-horizontal m-t">
+							<input id="queryType" name="queryType"
+								   type="hidden" th:value="${type}" />
+							<div class="form-inline">
+								<span class="platId">
+									<label class="control-label">用户platId：</label><input id="platId" name="platId" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span class="customId">
+									<label class="control-label">用户customId：</label><input id="customId" name="customId" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							</div><br>
+							<div class="form-inline">
+								<span>
+									<label class="control-label">业务来源：</label>
+									<select id="orgChannel" name="orgChannel" class="form-control">
+										<option value="" selected="selected">All</option>
+										<option value="QUNAR">QUNAR</option>
+										<option value="CTRIP">CTRIP</option>
+									</select>
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<span>
+									<label class="control-label">产品线：</label>
+									<select id="productNo" name="productNo" class="form-control">
+										<option value="IOUS">拿去花</option>
+									</select>
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</div><br>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<span>
+										<button class="btn btn-primary" id="queryUp">查询</button>
+									</span>
+									<span>
+										<button class="btn btn-primary" id="clearAll">清空</button>
+									</span>
+								</div>
+							</div>
+							<div>
+								<p style="font-family:verdana;color:#ff0000">使用提示：</p><br>
+								<p style="font-family:verdana;font-size:80%;color:#1d6180;line-height:20%">1. 用户platId和用户customId不能为空</p><br>
+							</div>
+						</div>
+					</div>
+					<!--<div id="ious" style="display: none;font-size: 15px;color: black;">拿去花信息</div>-->
+					<div class="ibox-body" style="overflow: scroll">
+						<table id="platContract" data-mobile-responsive="true">
+						</table>
+					</div><br><br>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script src="/static/appjs/contract/queryUserProduct.js"></script>
+</body>
+
+</html>

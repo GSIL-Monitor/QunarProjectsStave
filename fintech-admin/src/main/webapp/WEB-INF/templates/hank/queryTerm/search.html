@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pull-left">
+                        <button shiro:hasPermission="hank:queryTerm:add" type="button" class="btn  btn-primary"
+                                onclick="add()">
+                            <i class="fa fa-plus" aria-hidden="true"></i>添加
+                        </button>
+                    </div>
+                    <div class="columns pull-right" role="group">
+                        <button class="btn btn-success" onclick="search()">
+                            <i class="fa fa-search" aria-hidden="true"></i>查询
+                        </button>
+                    </div>
+                    <div class="pull-right search col-md-2">
+                        <span>
+                            <select id="searchQueryMode" class="form-control">
+                                <option value="" selected>请选择查询模式</option>
+                                <option value="1">ID</option>
+                                <option value="2">TIME</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class="pull-right search col-md-2">
+                        <input id="searchTaskType" type="text" class="form-control"
+                               placeholder="任务类型">
+                    </div>
+                    <div class="pull-right search col-md-2">
+                        <input id="searchId" type="text" class="form-control"
+                               placeholder="Id">
+                    </div>
+                </div>
+                <table id="exampleTable" data-mobile-responsive="true">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script src="/static/appjs/hank/queryTerm/search.js"/>
+</body>
+</html>

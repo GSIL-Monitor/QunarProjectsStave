@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/resources/css/animate.css" rel="stylesheet">
+    <link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content" style="overflow-x: scroll;width:100%;white-space: nowrap;">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-horizontal m-t">
+                        <div class="form-inline">
+								<span>
+									<label class="control-label">业务线：</label>
+									<select id="source" name="source" class="form-control">
+                                        <option value="" selected="selected">全部</option>
+										<option th:each="source:${sourceList}" th:value="${source.value}"
+                                                th:text="${source.key}"></option>
+
+									</select>
+								</span>&nbsp&nbsp&nbsp&nbsp
+                            <span>
+									<label class="control-label">一致性结果：</label>
+									<select id="status" name="status" class="form-control">
+										<option value="" selected="selected">全部</option>
+                                        <option value="0">初始</option>
+                                        <option value="1">人脸采集成功</option>
+                                        <option value="2">人脸采集失败</option>
+                                        <option value="3">校验成功</option>
+                                        <option value="4">校验失败</option>
+									</select>
+								</span>&nbsp&nbsp&nbsp&nbsp
+                            <span>
+									<label class="control-label">人脸识别方式：</label>
+									<select id="faceType" name="faceType" class="form-control">
+										<option value="" selected="selected">全部</option>
+                                        <option value="0">有源</option>
+                                        <option value="1">无源</option>
+                                        <option value="2">无源+有源</option>
+									</select>
+								</span>&nbsp&nbsp&nbsp&nbsp
+                            <span>
+									<label class="control-label">检验方通道：</label>
+									<select id="checkChannel" name="checkChannel" class="form-control">
+                                        <option value="" selected="selected">全部</option>
+										<option th:each="checkChannel:${checkChannelList}"
+                                                th:value="${checkChannel.value}"
+                                                th:text="${checkChannel.key}"></option>
+
+									</select>
+								</span>
+                        </div>
+                        <br>
+                        <div class="form-inline">
+								<span class="token">
+									<label class="control-label">请求号：</label><input id="token" name="token"
+                                                                                    class="form-control"/>
+								</span>&nbsp&nbsp&nbsp&nbsp
+                            <span class="platOpenId">
+									<label class="control-label">用户ID：</label><input id="platOpenId" name="platOpenId"
+                                                                                     class="form-control"/>
+								</span>&nbsp&nbsp&nbsp&nbsp
+                            <span class="idCode">
+									<label class="control-label">身份证号：</label><input id="idCode"
+                                                                                     name="idCode"
+                                                                                     class="form-control"/>
+								</span>
+
+                        </div>
+                        <br>
+                        <div class="form-inline">
+								<span class="startTime">
+									<label class="control-label"><span class="sTime">开始时间：</span></label>
+									<input id="startTime" name="startTime" class="form-control layui-input"
+                                           lay-verify="date" autocomplete="off">
+								</span>&nbsp&nbsp&nbsp&nbsp
+                            <span class="endTime">
+									<label class="control-label"><span class="eTime">结束时间：</span></label>
+									<input id="endTime" name="endTime" class="form-control layui-input"
+                                           lay-verify="date" autocomplete="off">
+								</span>
+                        </div>
+                        <br>
+                        <div class="form-inline">
+                            <span>
+										<button id="queryAuditInfo" class="btn btn-primary" data-loading-text="查询中..."
+                                                onclick="queryFace()">查询</button>
+									</span>
+                            <span>
+										<button class="btn btn-primary" onclick="clearAll()">清空</button>
+									</span>
+
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox-body">
+                    <div id="face" style="display: none;font-size: 15px;color: black;">
+                        <table id="faceTable" data-mobile-responsive="true">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="models"></div>
+<div th:include="include::footer"></div>
+<script src="/static/appjs/query/queryFace.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+    });
+</script>
+</body>
+
+</html>

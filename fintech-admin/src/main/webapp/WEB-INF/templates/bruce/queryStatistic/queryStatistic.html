@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/resources/css/animate.css" rel="stylesheet">
+    <link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<div id='loading' style='display:none;width:80%;height:100%;text-align:center;padding-top:20%; position: absolute;alpha(opacity=45); opacity:0.45;background-color:#FFFFFF;z-index:1000;'>
+    <table style='margin:auto;'>
+        <div class="col-sm-8 col-sm-offset-3">
+            <p>
+                <i id='icon'></i>
+            </p>
+        </div>
+    </table>
+</div>
+<body class="gray-bg">
+<div class="wrapper wrapper-content" style="overflow-x: scroll;width:100%;white-space: nowrap;">
+    <div class="row" >
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                        <div class="form-horizontal m-t">
+                            <input id="queryType" name="queryType"
+                                   type="hidden" th:value="${type}" />
+                            <div class="form-inline">
+                                <span>
+                                        <label class="control-label">贷款提供方：</label>
+                                        <select id="tppCode" name="tppCode" class="form-control">
+                                            <option value="" selected="selected">请选择</option>
+                                        </select>
+                                    </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span>
+                                        <label class="control-label">渠道来源：</label>
+                                        <select id="orgChannel" name="orgChannel" class="form-control">
+                                            <option value="" selected="selected">All</option>
+                                            <option value="QUNAR">QUNAR</option>
+                                            <option value="CTRIP">CTRIP</option>
+                                        </select>
+                                    </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div><br>
+                            <div class="form-inline">
+                                    <span class="startTime">
+                                        <label class="control-label"><span class="stime">时间：</span></label>
+                                        <input id="startTime" name="startTime" class="form-control layui-input"  lay-verify="date" autocomplete="off">
+                                    </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="endTime">
+                                        <label class="control-label"><span class="etime">至：</span></label>
+                                        <input id="endTime" name="endTime" class="form-control layui-input"  lay-verify="date" autocomplete="off">
+                                    </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div><br>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                        <span>
+                                            <button class="btn btn-primary" onclick="queryStatistic()">查询</button>
+                                        </span>
+                                    <span>
+                                            <button class="btn btn-primary" onclick="clearAll()">清空</button>
+                                        </span>
+                                    <span>
+                                        <button class="btn btn-primary" onclick="exportFile()">导出</button>
+                                    </span>
+
+                                 </div>
+                            </div>
+                        </div>
+
+                </div>
+                <div id='queryTable' class="ibox-body" style="display:none;overflow: scroll">
+                    <table id="queryStatisticTable" data-mobile-responsive="true">
+                    </table>
+                </div><br><br>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:include="include::footer"></div>
+<script src="/static/appjs/bruce/queryStatistic/queryStatistic.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function(){
+        var form = layui.form
+            ,laydate = layui.laydate;
+        //日期
+        var startDate= laydate.render({//渲染开始时间选择
+            elem: '#startTime',//通过id绑定html中插入的start
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            max:"2099-12-31 00:00:00",//设置一个默认最大值
+            min:"1970-1-1 00:00:00",//设置min默认最小值
+            done: function (value, dates) {
+                endDate.config.max = {
+                    year: dates.year,
+                    month: dates.month, //关键
+                    date: dates.date,
+                    hours: dates.hours,
+                    minutes: dates.minutes,
+                    seconds : dates.seconds
+                };
+            }
+        });
+        var endDate= laydate.render({//渲染结束时间选择
+            elem: '#endTime',//通过id绑定html中插入的end
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            min: "1970-1-1 00:00:00",//设置min默认最小值
+            max: "2099-12-31 00:00:00"//设置一个默认最大值
+        });
+    });
+</script>
+</body>
+
+</html>

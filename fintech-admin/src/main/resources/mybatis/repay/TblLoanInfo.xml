@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.LoanInfoDao">
+
+
+    <sql id="base_select">
+        tbl_loan_info.id                      AS   id
+        ,tbl_loan_info.busi_type_id           AS   busiTypeId
+        ,tbl_loan_info.busi_type_name         AS   busiTypeName
+        ,tbl_loan_info.merchant_code          AS   merchantCode
+        ,tbl_loan_info.order_no               AS   orderNo
+        ,tbl_loan_info.busi_order_no          AS   busiOrderNo
+        ,tbl_loan_info.qunar_trade_no         AS   qunarTradeNo
+        ,tbl_loan_info.pay_amount             AS   payAmount
+        ,tbl_loan_info.ious_pay_amount        AS   iousPayAmount
+        ,tbl_loan_info.refunded_amount        AS   refunedAmount
+        ,tbl_loan_info.pay_id                 AS   payId
+        ,tbl_loan_info.loan_provide_no        AS   loanProvideNo
+        ,tbl_loan_info.user_id                AS   userId
+        ,tbl_loan_info.req_user_id            AS   reqUserId
+        ,tbl_loan_info.product_no             AS   productNo
+        ,tbl_loan_info.tpp_code               AS   tppCode
+        ,tbl_loan_info.pay_time               AS   payTime
+        ,tbl_loan_info.status                 AS   payStatus
+        ,tbl_loan_info.loan_term              AS   loanTerm
+        ,tbl_loan_info.repay_type             AS   repayType
+        ,tbl_loan_info.remark                 AS   remark
+        ,tbl_loan_info.create_time            AS   createTime
+        ,tbl_loan_info.update_time            AS   updateTime
+        ,tbl_loan_info.loan_rate              AS   intRate
+        ,tbl_loan_info.trans_from             AS   transFrom
+        ,tbl_loan_info.org_channel            AS   orgChannel
+        ,tbl_loan_info.settle_status          AS   settleStatus
+        ,tbl_loan_info.end_date               AS   endDate
+        ,tbl_loan_info.order_time             AS   orderTime
+        ,tbl_loan_info.product_name           AS   productName
+    </sql>
+
+    <sql id="wherecontation">
+        <trim suffixOverrides=",">
+            <if test="request.userId != null and request.userId != ''">
+                AND tbl_loan_info.user_id = #{request.userId}
+            </if>
+            <if test="request.orgChannel != null and  request.orgChannel != ''">
+                AND tbl_loan_info.org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.productNo != null and request.productNo != ''">
+                AND tbl_loan_info.product_no = #{request.productNo}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tbl_loan_info.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.startTime != null ">
+                AND tbl_loan_info.pay_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null ">
+                AND tbl_loan_info.pay_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryLoanInfoByRequest" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblLoanInfo">
+        SELECT
+        <include refid="base_select"/>
+        FROM tbl_loan_info
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+        order by tbl_loan_info.pay_time desc
+        limit #{page.currentIndex},#{page.pageSize}
+    </select>
+
+    <select id="countLoanInfoByRequest" parameterType="Object" resultType="Integer">
+        SELECT
+        count(*)
+        FROM tbl_loan_info
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+    </select>
+
+    <select id="queryLoanInfoByLoanProvideNo" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblLoanInfo">
+        SELECT
+        <include refid="base_select"/>
+        FROM
+        tbl_loan_info
+        WHERE
+        loan_provide_no = #{loanProvideNo}
+        order by pay_time desc
+    </select>
+
+    <select id="queryLoanInfoByBusiOrderNo" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblLoanInfo">
+        SELECT
+        <include refid="base_select"/>
+        FROM tbl_loan_info
+        WHERE  busi_order_no = #{busiOrderNo}
+    </select>
+
+</mapper>

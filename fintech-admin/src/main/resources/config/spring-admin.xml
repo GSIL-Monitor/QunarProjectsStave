@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:property-placeholder location="classpath:admin.properties" ignore-unresolvable="true"/>
+    <context:annotation-config/>
+    <aop:aspectj-autoproxy/>
+    <context:component-scan base-package="com.qunar.fintech.plat.admin"/>
+
+    <import resource="spring-datasource-admin.xml"/>
+    <import resource="spring-datasource-other.xml"/>
+    <import resource="spring-cache.xml"/>
+    <import resource="spring-shiro.xml"/>
+    <import resource="dubbo-consumer.xml"/>
+    <import resource="spring-monitor.xml"/>
+    <import resource="qconfig.xml"/>
+    <import resource="spring-httpclient.xml"/>
+
+    <!-- 配置文件上传解析器 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设定默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <!-- 设定文件上传的最大值10MB，10*1024*1024 -->
+        <property name="maxUploadSize" value="10485760"></property>
+        <!-- 指定允许文件被写入内存的最大值为10MB-->
+        <property name="maxInMemorySize" value="10485760"></property>
+    </bean>
+
+    <!--tc安全存储 dev配置DEV,beta配置BETA，不管你在哪个机房线上环境配置CN8-->
+    <bean id="infoEncryptClient" class="com.qunar.tc.core.info.client.encrypt.InfoEncryptClientImpl">
+        <constructor-arg name="environment" value="${secure.storage.env.encrypto}"/>
+        <constructor-arg name="group">
+            <null/>
+        </constructor-arg>
+        <constructor-arg name="timeout" value="${secure.storage.timeout.encrypto}"/>
+    </bean>
+
+    <!--tc安全存储 DEV环境填DEV，beta填BETA.线上你的应用在哪个机房就配置哪个机房。可选值有CN1,CN6,CN8。如果你不在在3个机房中的一个就随便选一个-->
+    <bean id="infoDecryptClient" class="com.qunar.tc.core.info.client.decrypt.InfoDecryptClientImpl">
+        <constructor-arg name="environment" value="${secure.storage.env.decrypto}"/>
+        <constructor-arg name="group">
+            <null/>
+        </constructor-arg>
+        <constructor-arg name="timeout" value="${secure.storage.timeout.encrypto}"/>
+    </bean>
+
+    <bean id="httpClient" class="com.ctrip.finance.utils.http.HttpClientFactory" factory-method="createQunarHttpClient" lazy-init="false">
+        <constructor-arg name="connTimeout" value="${httpclient.conn.timeout}" index="0" type="int"/>
+        <constructor-arg name="readTimeout" value="${httpclient.read.timeout}" index="1" type="int"/>
+        <constructor-arg name="maxTotal" value="${httpclient.max.total}" index="2" type="int"/>
+        <constructor-arg name="maxPerRoute" value="${httpclient.max.per.route}" index="3" type="int"/>
+        <constructor-arg name="host" value="${httpclient.proxy.url}" index="4" type="java.lang.String"/>
+        <constructor-arg name="port" value="${httpclient.request.port}" index="5" type="int"/>
+    </bean>
+
+    <bean id="httpClientProvider" class="com.ctrip.finance.utils.http.QunarHttpClientProvider" lazy-init="false">
+        <property name="qunarHttpClient" ref="httpClient"/>
+    </bean>
+
+    <bean id="infoTransformClient" class="com.qunar.tc.core.info.client.transform.InfoTransformClientImpl"/>
+
+    <bean id="esBusiKeyIndexServiceImpl" class="com.qunar.es.service.impl.EsBusiKeyIndexServiceImpl">
+        <property name="client" ref="esClient"/>
+    </bean>
+
+    <!-- es query configuration -->
+    <bean id = "esClient" class="com.qunar.es.base.ESClientFactory">
+        <property name="urls" value="${es.servers}"/>
+        <property name="clusterName" value="${es.cluster.name}"/>
+        <property name="timeout" value="${es.ping_timeout}"/>
+    </bean>
+
+    <!--设置工具类-->
+    <!-- 调用静态方法设置远程的serialno服务 -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.qunar.fintech.toolclient.serialno.SerialNoClient.setSerialNoService"/>
+        <property name="arguments" ref="serialNoFacade"/>
+    </bean>
+</beans>

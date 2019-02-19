@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.hank.mapper.TppMatchMapper">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.hank.entity.TppMatch">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+        <result column="receiver" jdbcType="VARCHAR" property="receiver" />
+        <result column="match_group" jdbcType="TINYINT" property="matchGroup" />
+        <result column="match_order" jdbcType="TINYINT" property="matchOrder" />
+        <result column="match_key" jdbcType="VARCHAR" property="matchKey" />
+        <result column="match_value" jdbcType="VARCHAR" property="matchValue" />
+        <result column="match_command" jdbcType="VARCHAR" property="matchCommand" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, task_type, receiver, match_group, match_order, match_key, match_value, match_command, status
+    </sql>
+
+    <!-- 根据 id 查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpp_match where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据 taskType 和 receiver 查询 -->
+    <select id="selectByTaskTypeAndReceiver" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tpp_match
+        where task_type = #{taskType,jdbcType=VARCHAR} AND receiver = #{receiver,jdbcType=VARCHAR}
+        order by id
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="select" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpp_match
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 条件查询数量 -->
+    <select id="count" parameterType="java.lang.Object" resultType="int">
+        select count(*) from tpp_match
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入 -->
+    <insert id="insertSelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.TppMatch">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into tpp_match
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="receiver != null">
+                receiver,
+            </if>
+            <if test="matchGroup != null">
+                match_group,
+            </if>
+            <if test="matchOrder != null">
+                match_order,
+            </if>
+            <if test="matchKey != null">
+                match_key,
+            </if>
+            <if test="matchValue != null">
+                match_value,
+            </if>
+            <if test="matchCommand != null">
+                match_command,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="receiver != null">
+                #{receiver,jdbcType=VARCHAR},
+            </if>
+            <if test="matchGroup != null">
+                #{matchGroup,jdbcType=TINYINT},
+            </if>
+            <if test="matchOrder != null">
+                #{matchOrder,jdbcType=TINYINT},
+            </if>
+            <if test="matchKey != null">
+                #{matchKey,jdbcType=VARCHAR},
+            </if>
+            <if test="matchValue != null">
+                #{matchValue,jdbcType=VARCHAR},
+            </if>
+            <if test="matchCommand != null">
+                #{matchCommand,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.TppMatch">
+        update tpp_match
+        <set>
+            <if test="taskType != null">
+                task_type = #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="receiver != null">
+                receiver = #{receiver,jdbcType=VARCHAR},
+            </if>
+            <if test="matchGroup != null">
+                match_group = #{matchGroup,jdbcType=TINYINT},
+            </if>
+            <if test="matchOrder != null">
+                match_order = #{matchOrder,jdbcType=TINYINT},
+            </if>
+            <if test="matchKey != null">
+                match_key = #{matchKey,jdbcType=VARCHAR},
+            </if>
+            <if test="matchValue != null">
+                match_value = #{matchValue,jdbcType=VARCHAR},
+            </if>
+            <if test="matchCommand != null">
+                match_command = #{matchCommand,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

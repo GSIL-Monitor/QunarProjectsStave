@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<form class="form-horizontal m-t" id="signupForm">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">用户ID：</label>
+							<div class="col-sm-8">
+								<input id="userId" name="userId" class="form-control" type="text"
+									   th:value="${userId}" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">用户姓名：</label>
+							<div class="col-sm-8">
+								<input id="userName" name="userName" class="form-control" type="text"
+									   th:value="${userName}" readonly >
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">原手机号：</label>
+							<div class="col-sm-8">
+								<input id="oldMobile" name="oldMobile" class="form-control" type="text"
+									   th:value="${mobile}" readonly >
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">新手机号：</label>
+							<div class="col-sm-8">
+								<input id="newMobile" name="newMobile" class="form-control" type="text">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-8 col-sm-offset-3">
+								<span>
+									<input type="button" id="save" value="保存" class="btn btn-primary" />
+								</span>
+								<span>
+									<input type="button" id="cancel" value="取消" class="btn btn-primary" />
+								</span>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div th:include="include::footer"></div>
+<script src="/static/appjs/query/phone.js"></script>
+</body>
+
+</html>

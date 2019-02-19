@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.system.dao.mapper.ReviewFlowConfigMapper">
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.system.dao.entity.ReviewFlowConfig">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="flow_no" property="flowNo" jdbcType="VARCHAR"/>
+        <result column="review_menu_id" property="reviewMenuId" jdbcType="VARCHAR"/>
+        <result column="query_menu_id" property="queryMenuId" jdbcType="VARCHAR"/>
+        <result column="review_menu_name" property="reviewMenuName" jdbcType="VARCHAR"/>
+        <result column="match_rule" property="matchRule" jdbcType="VARCHAR"/>
+        <result column="flow_desc" property="flowDesc" jdbcType="VARCHAR"/>
+        <result column="flow_node_role" property="flowNodeRole" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, flow_no,review_menu_id, query_menu_id, review_menu_name, match_rule,flow_desc,flow_node_role,create_time,update_time
+    </sql>
+
+    <select id="selectByReviewMenuId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from review_flow_config
+        where review_menu_id = #{reviewMenuId,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

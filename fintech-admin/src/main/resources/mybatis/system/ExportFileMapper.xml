@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.system.dao.mapper.ExportFileMapper" >
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.system.dao.entity.ExportFile" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_id" property="userId" jdbcType="BIGINT" />
+        <result column="file_seq" property="fileSeq" jdbcType="VARCHAR" />
+        <result column="export_task_type" property="exportTaskType" jdbcType="INTEGER" />
+        <result column="export_task_desc" property="exportTaskDesc" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="attachment_title" property="attachmentTitle" jdbcType="VARCHAR" />
+        <result column="extend" property="extend" jdbcType="VARCHAR" />
+        <result column="export_status" property="exportStatus" jdbcType="INTEGER" />
+        <result column="export_status_desc" property="exportStatusDesc" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, user_id, file_seq, export_task_type, export_task_desc, url, attachment_title,
+        extend, export_status, export_status_desc, start_time, end_time
+    </sql>
+
+    <select id="selectByFileSeq" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from export_file
+        where file_seq = #{fileSeq,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="com.qunar.fintech.plat.admin.system.dao.entity.ExportFile" >
+        insert into export_file (id, user_id, file_seq,
+          export_task_type, export_task_desc, url,
+          attachment_title, extend, export_status,
+          export_status_desc, start_time, end_time
+          )
+        values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{fileSeq,jdbcType=VARCHAR},
+          #{exportTaskType,jdbcType=INTEGER}, #{exportTaskDesc,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
+          #{attachmentTitle,jdbcType=VARCHAR}, #{extend,jdbcType=VARCHAR}, #{exportStatus,jdbcType=INTEGER},
+          #{exportStatusDesc,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}
+          )
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.qunar.fintech.plat.admin.system.dao.entity.ExportFile" >
+        update export_file
+        set user_id = #{userId,jdbcType=BIGINT},
+          file_seq = #{fileSeq,jdbcType=VARCHAR},
+          export_task_type = #{exportTaskType,jdbcType=INTEGER},
+          export_task_desc = #{exportTaskDesc,jdbcType=VARCHAR},
+          url = #{url,jdbcType=VARCHAR},
+          attachment_title = #{attachmentTitle,jdbcType=VARCHAR},
+          extend = #{extend,jdbcType=VARCHAR},
+          export_status = #{exportStatus,jdbcType=INTEGER},
+          export_status_desc = #{exportStatusDesc,jdbcType=VARCHAR},
+          start_time = #{startTime,jdbcType=TIMESTAMP},
+          end_time = #{endTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectExportFileByPage" resultMap="BaseResultMap" parameterType="com.qunar.fintech.plat.admin.system.dao.entity.ExportFile" >
+        select
+        <include refid="Base_Column_List" />
+        from export_file
+        where user_id = #{userId,jdbcType=BIGINT}
+        order by start_time desc
+        limit #{page.currentIndex},#{page.pageSize}
+    </select>
+
+    <select id="selectExportFileTotal" parameterType="Object" resultType="Integer">
+        select
+          count(*)
+        from export_file
+        where user_id = #{userId}
+    </select>
+</mapper>

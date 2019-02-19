@@ -1,0 +1,147 @@
+create table sys_dept (
+    id bigint(20) unsigned not null auto_increment comment '主键id',
+	dept_id bigint(20) not null default '0' comment '部门id',
+	parent_id bigint(20) not null default '0' comment '上级部门ID，一级部门为0',
+	name varchar(50) not null default '' comment '部门名称',
+	order_num int(11) not null default '99' comment '排序',
+	del_flag tinyint(2) not null default '0' comment '是否删除  -1：已删除  0：正常',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+    update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `unique_dept_id` (`dept_id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='部门管理';
+
+create table sys_dict (
+	id bigint(20) unsigned not null auto_increment comment '编号',
+	name varchar(100) not null default '' comment '标签名',
+	value varchar(100) not null default '' comment '数据值',
+	type varchar(100) not null default '' comment '类型',
+	description varchar(100) not null default '' comment '描述',
+	sort decimal not null default '0.0' comment '排序（升序）',
+	parent_id bigint(20) not null default '0' null comment '父级编号',
+	create_by bigint(20) not null default '0' comment '创建者',
+	update_by bigint(20) not null default '0' comment '更新者',
+	remarks varchar(255) not null default '' comment '备注信息',
+	del_flag char(1) default '0' not null comment '删除标记',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+	update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+	PRIMARY KEY (`id`),
+	KEY `idx_name` (`name`),
+	KEY `idx_value` (`value`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='字典表';
+
+create table sys_file (
+	id bigint(20) unsigned not null auto_increment comment '主键id',
+	type int(11) not null default '0' comment '文件类型',
+	url varchar(200) not null default '' comment 'URL地址',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+    update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='文件上传';
+
+create table sys_log (
+	id bigint(20) unsigned not null auto_increment comment '主键id',
+	user_id bigint(20) not null default '0' comment '用户id',
+	username varchar(50) not null default '' comment '用户名',
+	operation varchar(50) not null default '' comment '用户操作',
+	time int(11) not null default '0' comment '响应时间',
+	method varchar(200) not null default '' comment '请求方法',
+	params varchar(5000) not null default '' comment '请求参数',
+	ip varchar(64) not null default '' comment 'IP地址',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='系统日志';
+
+create table sys_menu (
+    id bigint(20) unsigned not null auto_increment comment '主键id',
+	menu_id bigint(20) not null default '0' comment '菜单id',
+	parent_id bigint(20) not null default '0' comment '父菜单ID，一级菜单为0',
+	name varchar(50) not null default '' comment '菜单名称',
+	url varchar(200) not null default '' comment '菜单URL',
+	perms varchar(500) not null default '' comment '授权(多个用逗号分隔，如：user:list,user:create)',
+	type int(11) not null default '0' comment '类型   0：目录   1：菜单   2：按钮',
+	icon varchar(50) not null default '' comment '菜单图标',
+	order_num int(11) not null default '99' comment '排序',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+	update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `uniq_menu_id` (`menu_id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='菜单管理';
+
+create table sys_role (
+    id bigint(20) unsigned not null auto_increment comment '主键id',
+	role_id bigint(20) not null default '0' comment '角色id',
+	role_name varchar(100) not null default '' comment '角色名称',
+	role_sign varchar(100) not null default '' comment '角色标识',
+	remark varchar(100) not null default '' comment '备注',
+	user_id_create bigint(255) not null default '0' comment '创建用户id',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+    update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `unique_role_id` (`role_id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='角色';
+
+create table sys_role_menu (
+	id bigint(20) unsigned not null auto_increment comment '主键id',
+	role_id bigint(20) not null default '0' comment '角色ID',
+	menu_id bigint(20) not null default '0' comment '菜单ID',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+    update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='角色与菜单对应关系';
+
+create table sys_task (
+	id bigint(20) unsigned not null auto_increment comment '主键id',
+	cron_expression varchar(255) not null default '' comment 'cron表达式',
+	method_name varchar(255) not null default '' comment '任务调用的方法名',
+	is_concurrent varchar(255) not null default '' comment '任务是否有状态',
+	description varchar(255) not null default '' comment '任务描述',
+	update_by varchar(64) not null default '' comment '更新者',
+	bean_class varchar(255) not null default '' comment '任务执行时调用哪个类的方法 包名+类名',
+	job_status varchar(255) not null default '' comment '任务状态',
+	job_group varchar(255) not null default '' comment '任务分组',
+	create_by varchar(64) not null default '' comment '创建者',
+	spring_bean varchar(255) not null default '' comment 'Spring bean',
+	job_name varchar(255) not null default '' comment '任务名',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+    update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='任务';
+
+create table sys_user (
+    id bigint(20) unsigned not null auto_increment comment '主键id',
+	user_id bigint(20) not null default '0' unique comment '用户id',
+	username varchar(50) not null default '' comment '用户名',
+	name varchar(100) not null default '' comment '角色名称',
+	password varchar(50) not null default '' comment '密码',
+	dept_id bigint(20) not null default '0' comment '部门id',
+	email varchar(100) not null default '' comment '邮箱',
+	mobile varchar(100) not null default '' comment '手机号',
+	status tinyint(2) not null default '0' comment '状态 0:禁用，1:正常',
+	user_id_create bigint(255) not null default '0' comment '创建用户id',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+    update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `unique_user_id` (`user_id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='用户';
+
+create table sys_user_role (
+	id bigint(20) unsigned not null auto_increment comment '主键id',
+	user_id bigint(20) not null default '0' comment '用户ID',
+	role_id bigint(20) not null default '0' comment '角色ID',
+	create_time datetime not null default CURRENT_TIMESTAMP comment '创建时间',
+    update_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='用户与角色对应关系';
+
+
+
+
+
+
+
+
+
+
+
+

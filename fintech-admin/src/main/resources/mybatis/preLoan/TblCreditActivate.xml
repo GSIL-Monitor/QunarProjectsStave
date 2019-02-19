@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="TblCreditActivate">
+
+    <resultMap id="tblCreditActivateMap" type="com.qunar.fintech.plat.admin.query.entity.TblCreditActivate">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="credit_no" property="creditNo" jdbcType="VARCHAR"/>
+        <result column="apply_no" property="applyNo" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="org_channel" property="orgChannel" jdbcType="VARCHAR"/>
+        <result column="tpp_code" property="tppCode" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="identity_type" property="identityType" jdbcType="VARCHAR"/>
+        <result column="identity_code" property="identityCode" jdbcType="VARCHAR"/>
+        <result column="mosaic_ident_code" property="mosaicIdentCode" jdbcType="VARCHAR"/>
+        <result column="bank_card_no" property="bankCardNo" jdbcType="VARCHAR"/>
+        <result column="card_type" property="cardType" jdbcType="BINARY"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="activate_status" property="activateStatus" jdbcType="BINARY"/>
+        <result column="rate" property="rate" jdbcType="DECIMAL"/>
+        <result column="rate_type" property="rateType" jdbcType="BINARY"/>
+        <result column="activate_amt" property="activateAmt" jdbcType="DECIMAL"/>
+        <result column="start_eff_time" property="startEffTime" jdbcType="TIMESTAMP"/>
+        <result column="end_eff_time" property="endEffTime" jdbcType="TIMESTAMP"/>
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="accounting_status" property="accountingStatus" jdbcType="BINARY"/>
+        <result column="error_code" property="errorCode" jdbcType="VARCHAR"/>
+        <result column="error_msg" property="errorMsg" jdbcType="VARCHAR"/>
+        <result column="contract_no" property="contractNo" jdbcType="VARCHAR"/>
+        <result column="serv_activate_no" property="servActivateNo" jdbcType="VARCHAR"/>
+        <result column="credit_src" property="creditSrc" jdbcType="VARCHAR"/>
+        <result column="req_channel" property="reqChannel" jdbcType="VARCHAR"/>
+        <result column="term_six_rate" property="termSixRate" jdbcType="DECIMAL"/>
+        <result column="term_nine_rate" property="termNineRate" jdbcType="DECIMAL"/>
+        <result column="term_twelve_rate" property="termTwelveRate" jdbcType="DECIMAL"/>
+        <result column="product_no" property="productNo" jdbcType="VARCHAR"/>
+        <result column="day_rate" property="dayRate" jdbcType="DECIMAL"/>
+        <result column="credit_type" property="creditType" jdbcType="BINARY"/>
+    </resultMap>
+    <sql id="allColumn">
+        id,credit_no,apply_no,user_id,org_channel,tpp_code,user_name,identity_type,
+        identity_code,mosaic_ident_code,bank_card_no,card_type,mobile,activate_status,
+        rate,rate_type,activate_amt,start_eff_time,end_eff_time,finish_time,create_time,
+        update_time,accounting_status,error_code,error_msg,contract_no,serv_activate_no,credit_src,
+        req_channel,term_six_rate,term_nine_rate,term_twelve_rate,product_no,day_rate,credit_type
+    </sql>
+    <select id="queryByUserIdTppCode" parameterType="Object" resultMap="tblCreditActivateMap">
+        select
+        <include refid="allColumn"/>
+        from tbl_credit_activate
+        where user_id=#{userId} and tpp_code=#{tppCode} and activate_status = 2
+        order by update_time desc
+        limit 1
+    </select>
+</mapper>

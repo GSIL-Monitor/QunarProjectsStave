@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.ious.TblRouteProductDao">
+
+    <select id="selectTppCodeAndName" resultType="com.qunar.fintech.plat.admin.query.vo.TppInfo" >
+        select
+        DISTINCT tpp_code as tppCode,tpp_name as tppName
+        from tbl_route_product
+    </select>
+</mapper>

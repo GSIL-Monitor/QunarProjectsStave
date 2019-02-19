@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-body">
+					<table class="table table-striped" id="busiTable" data-mobile-responsive="true">
+						<tr>
+							<th>业务线类型</th>
+							<th>用户id</th>
+							<th>订单号</th>
+							<th>订单金额</th>
+							<th>订单内容</th>
+							<th>订单日期</th>
+						</tr>
+						<tr th:each="data,dataStat:${list}">
+							<td th:text="${data.busiTypeName}"></td>
+							<td th:text="${data.userId}"></td>
+							<td th:text="${data.busiOrderNo}"></td>
+							<td th:text="${data.payAmount}"></td>
+							<td th:text="${data.productName}"></td>
+							<td th:text="${#dates.format(data.orderTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

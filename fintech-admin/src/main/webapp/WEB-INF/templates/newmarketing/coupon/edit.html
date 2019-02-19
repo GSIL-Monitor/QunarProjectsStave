@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/resources/css/animate.css" rel="stylesheet">
+    <link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="/resources/css/marketing/add.css" rel="stylesheet">
+</head>
+<body class="">
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="row">
+            <h3 class="col-sm-3  col-sm-offset-5" style="font-size: 30px">编辑优惠券</h3>
+        </div>
+        <ul class="nav nav-pills nav-justified" onclick="chooseNav(event)">
+            <li class="active"><a class="nav-tab1">活动内容创建</a></li>
+            <li><a class="nav-tab2">优惠券预算信息</a></li>
+            <li><a class="nav-tab3">优惠券配置信息</a></li>
+            <li><a class="nav-tab4">报警信息</a></li>
+        </ul>
+        <div class="nav-1 nav-item">
+
+        </div>
+        <div class="nav-item nav-2">
+
+        </div>
+        <div class="nav-item nav-3">
+
+        </div>
+        <div class="nav-item nav-4" style="width: 834px;">
+
+        </div>
+    </div>
+</div>
+<div th:include="include::footer"></div>
+<script src="/static/appjs/newmarketing/coupon/add.js"></script>
+<script src="/static/appjs/newmarketing/coupon/content.js"></script>
+<script src="/static/appjs/newmarketing/couponInfo/setCoupon.js"></script>
+<script src="/static/appjs/newmarketing/coupon/edit.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    $('.nav-1').load('./activityAdd', function () {
+        $('.copy-activity').hide()
+        $('.nav-1 input,.nav-1 textarea,.nav-1 select').attr('disabled', true)
+    })
+    $('.nav-2').load('./ticketBudget')
+    $('.nav-3').load('./ticketConfig', function () {
+        $('.nav-3 input,.nav-3 textarea,.nav-3 select').attr('disabled', true)
+    })
+    $('.nav-4').load('./editAlarmConfig', function () {
+        $('.operType').addClass('hide')
+        // $('.nav-4 input,.nav-4 textarea,.nav-4 select').attr('disabled', false)
+    })
+</script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+    });
+</script>
+</body>
+
+</html>

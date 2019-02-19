@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>showImg</title>
+
+    <script type="application/javascript" src="/resources/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/resources/js/jquery.Jcrop.min.js"></script>
+    <script type="application/javascript" src="/resources/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/resources/css/jquery.Jcrop.min.css"/>
+    <link rel="stylesheet" href="/resources/css/colorbox.css"/>
+
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <script type="application/javascript" src="/resources/js/jquery.colorbox-min.js"></script>
+    <style>
+        .blueCell {
+            background: #a9cbee 0pt 0pt;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="widget-box">
+    <div class="widget-body">
+        <div class="widget-main">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-12"><h4>上传照片</h4></div>
+
+                    <div class="col-xs-12">
+
+
+                        <ul th:each="image:${ocrImgs}" class="ace-thumbnails">
+
+                            <li>
+                                <a th:href="'#'+${image.type}" th:attr="title=${image.type}" data-rel="colorbox1">
+                                    <img width="150px" height="150px" src=""
+                                         th:attr="src='data:image/jpeg;base64,'+${image.imgUrl}"/>
+                                    <div style="display: none">
+                                        <img th:id="${image.type}" id="test" src=""
+                                             th:attr="src='data:image/jpeg;base64,'+${image.imgUrl}"
+                                             width="400px" height="400px"/>
+                                    </div>
+                                    <div class="tags">
+                                            <span class="label-holder">
+                                                <span class="label label-info" span th:text="${image.type}"></span>
+                                            </span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var colorbox_params = {
+            inline: true,
+            opacity: 0.4,
+            reposition: true,
+            scalePhotos: true,
+            scrolling: false,
+            previous: '<i class="icon-arrow-left"></i>',
+            next: '<i class="icon-arrow-right"></i>',
+            close: '&times;',
+            current: '{current} of {total}',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            onOpen: function () {
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed: function () {
+                document.body.style.overflow = 'auto';
+            },
+            onComplete: function () {
+                $.colorbox.resize();
+            }
+        };
+
+        $('.ace-thumbnails [data-rel="colorbox1"]').colorbox(colorbox_params);
+    });
+</script>
+</body>
+</html>

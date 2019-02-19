@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.ious.TblLoanCashRemitMapper">
+
+    <sql id="base_sql">
+       tlcr.id                      AS id,
+       tlcr.org_channel             AS orgChannel,
+       tlcr.serial_no               AS serialNo,
+       tlcr.loan_provide_no         AS loanProvideNo,
+       tlcr.amount                  AS requestAmount,
+       tlcr.loan_term               AS loanTerm,
+       tlcr.user_id                 AS userId,
+       tlcr.tpp_code                AS tppCode,
+       tro.remit_request_no         AS remitRequestNo,
+       tro.status                   AS remitOrderStatus,
+       tro.amount                   AS remitAmount,
+       tro.actual_amount            AS actualAmount,
+       tro.target_merchant_code     AS targetMerchantCode,
+       tro.account_type             AS accountType,
+       tro.bank_name                AS bankName,
+       tro.card_no                  AS cardNo,
+       tro.create_time              AS requestTime,
+       tro.finish_time              AS finishTime,
+       tro.error_code               AS errorCode,
+       tro.error_msg                AS errorMsg
+   </sql>
+
+    <sql id="wherecontation">
+        <trim suffixOverrides=",">
+            <if test="request.orgChannel != null and request.orgChannel != ''">
+                AND tlcr.org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.userId != null and request.userId != ''">
+                AND tlcr.user_id= #{request.userId}
+            </if>
+            <if test="request.serialNo != null and request.serialNo != ''">
+                AND tlcr.serial_no= #{request.serialNo}
+            </if>
+            <if test="request.loanProvideNo != null and request.loanProvideNo != ''">
+                AND tlcr.loan_provide_no= #{request.loanProvideNo}
+            </if>
+            <if test="request.remitRequestNo != null and request.remitRequestNo != ''">
+                AND tro.remit_request_no= #{request.remitRequestNo}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tlcr.tpp_code= #{request.tppCode}
+            </if>
+            <if test="request.requestTime != null and request.requestTime != ''">
+                AND tro.create_time <![CDATA[ >= ]]> #{request.requestTime}
+            </if>
+            <if test="request.requestEndTime != null and request.requestEndTime != ''">
+                AND tro.create_time <![CDATA[ <= ]]> #{request.requestEndTime}
+            </if>
+            <if test="request.finishTime != null and request.finishTime != ''">
+                AND tro.finish_time <![CDATA[ >= ]]> #{request.finishTime}
+            </if>
+            <if test="request.finishEndTime != null and request.finishEndTime != ''">
+                AND tro.finish_time <![CDATA[ <= ]]> #{request.finishEndTime}
+            </if>
+            <if test="request.status != null and request.status != ''">
+                AND tro.status= #{request.status}
+            </if>
+            <if test="request.manual != null and request.manual != ''">
+                AND tro.loan_serial_no NOT IN (
+                SELECT loan_serial_no
+                FROM tbl_remit_order
+                WHERE STATUS=1)
+                and tlcr.status=1
+            </if>
+        </trim>
+    </sql>
+    <select id="queryCashRemitByRequest" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.CashRemit">
+        SELECT
+        <include refid="base_sql"/>
+        FROM tbl_loan_cash_req tlcr
+        LEFT JOIN tbl_remit_order tro ON tlcr.serial_no = tro.loan_serial_no
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+        order by tro.create_time desc
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="countCashRemitByRequest" parameterType="Object" resultType="Integer">
+        SELECT
+        count(*)
+        FROM tbl_loan_cash_req tlcr
+        LEFT JOIN tbl_remit_order tro ON tlcr.serial_no = tro.loan_serial_no
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+    </select>
+</mapper>

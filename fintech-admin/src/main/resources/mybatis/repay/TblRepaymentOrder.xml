@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.RepaymentOrderDao">
+    <sql id="Base_Column_List">
+         tro.id                     AS   id
+        ,tro.loan_provide_no        AS   loanProvideNo
+        ,tro.user_id                AS   userId
+        ,tro.product_no             AS   productNo
+        ,tro.tpp_code               AS   tppCode
+        ,tro.repay_type             AS   repayType
+        ,tro.repay_index            AS   repayIndex
+        ,tro.repay_amount           AS   repayAmount
+        ,tro.status                 AS   status
+        ,tro.err_msg                AS   errMsg
+        ,tro.err_code               AS   errCode
+        ,tro.origin_order_no        AS   reqSerialNo
+        ,tro.order_time             AS   repayTime
+        ,tro.org_channel            AS   orgChannel
+        ,tro.repay_withhold_mode    AS   repayWithholdMode
+    </sql>
+
+    <sql id="wherecontation">
+        <trim suffixOverrides=",">
+            <if test="request.userId != null and request.userId != ''">
+                AND tro.user_id = #{request.userId}
+            </if>
+            <if test="request.orgChannel != null and  request.orgChannel != ''">
+                AND tro.org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.startTime != null">
+                AND tro.order_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND tro.order_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tro.tpp_code = #{request.tppCode}
+            </if>
+            <if test="request.productNo != null and request.productNo != ''">
+                AND tro.product_no = #{request.productNo}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryRepaymentOrderByRequest" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.QueryRepayRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        tbl_repayment_order AS tro
+        <where>
+            <include refid="wherecontation"/>
+        </where>
+        order by tro.product_no,tro.order_time desc
+        limit #{page.currentIndex},#{page.pageSize}
+    </select>
+
+    <select id="queryRepaymentOrderByOrderNo" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.QueryRepayRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        tbl_repayment_order AS tro
+        where order_no = #{orderNo}
+    </select>
+    <select id="countRepaymentOrderByRequest" parameterType="Object" resultType="Integer">
+        SELECT
+        count(1)
+        FROM
+        tbl_repayment_order AS tro
+        <where>
+            <include refid="wherecontation"/>
+        </where>
+    </select>
+
+    <select id="queryRepaymentOrderDetail" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.vo.QueryRepayRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        tbl_repayment_order AS tro
+        WHERE
+        tro.loan_provide_no = #{loanProvideNo}
+        order by tro.id desc
+    </select>
+
+</mapper>

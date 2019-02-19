@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+<link rel="shortcut icon" href="favicon.ico">
+<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="/resources/css/animate.css" rel="stylesheet">
+<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+<link href="/resources/css/marketing/activity.css" rel="stylesheet">
+<body class="">
+<div class="wrapper wrapper-content ">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <!-- <div class="searchArea">
+                    <div class="form-group row">
+                        <label class="control-label" for="ticketCode">活动code：</label>
+                        <input id="ticketCode" name="ticketCode" class="form-control" type="text">
+                    </div>
+                    <div class="form-group row">
+                        <button class="btn btn-primary" onclick="searchData()">查询</button>
+                    </div>
+            </div> -->
+            <div class="ibox-body">
+                <table id="exampleTable" data-mobile-responsive="true">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/static/appjs/newmarketing/coupon/copyTicket.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-body">
+					<table class="table table-striped" id="exampleTable" data-mobile-responsive="true">
+						<tr>
+							<th>还款期序</th>
+							<th>还款时间</th>
+							<th>还款金额</th>
+							<th>逾期天数</th>
+							<th>还款状态</th>
+						</tr>
+						<tr th:each="schedule,scheduleStat:${scheduleDetails}">
+							<td th:text="${schedule.repayIndex}"></td>
+							<td th:text="${#dates.format(schedule.dueDate,'yyyy年MM月dd日')}"></td>
+							<td th:text="${schedule.totalAmount}"></td>
+							<td th:text="${schedule.dueDay}"></td>
+							<td th:text="${schedule.statusName}"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

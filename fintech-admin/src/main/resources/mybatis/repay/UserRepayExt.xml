@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.UserRepayExtDao">
+    <!-- 结果映射-->
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.UserRepayExt">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="serial_no" property="serialNo" jdbcType="VARCHAR"/>
+        <result column="oper_type" property="operType" jdbcType="TINYINT"/>
+        <result column="loan_provide_no" property="loanProvideNo" jdbcType="VARCHAR"/>
+        <result column="due_date" property="dueDate" jdbcType="VARCHAR"/>
+        <result column="repay_amt" property="repayAmt" jdbcType="DECIMAL"/>
+        <result column="suc_amount" property="sucAmount" jdbcType="DECIMAL" />
+        <result column="fail_amount" property="failAmount" jdbcType="DECIMAL" />
+        <result column="repay_prcp_amt" property="repayPrcpAmt" jdbcType="DECIMAL" />
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="err_code" property="errCode" jdbcType="VARCHAR"/>
+        <result column="err_msg" property="errMsg" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP"/>
+        <result column="tpp_code" property="tppCode" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, serial_no, oper_type, loan_provide_no, due_date, repay_amt, suc_amount, fail_amount, repay_prcp_amt, status,
+        err_code, err_msg, create_time, update_time, finish_time,tpp_code
+    </sql>
+
+    <select id="queryUserRepayExt" parameterType="Object" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_repay_ext
+        WHERE
+        serial_no = #{serialNo}
+        ORDER BY id ASC
+    </select>
+
+    <select id="selectForBackRefund" resultMap="BaseResultMap" parameterType="java.lang.Object">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_ext
+        where user_id = #{userId}
+        and loan_provide_no = #{loanProvideNo}
+        and oper_type = 0
+        and status = 1
+        order by id desc
+    </select>
+
+    <select id="queryUserRepayExtByLockQuery" resultMap="BaseResultMap" parameterType="java.lang.Object">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_ext
+        where 1=1
+        <trim>
+            <if test="request.serialNo != null and  request.serialNo != ''">
+                AND serial_no = #{request.serialNo}
+            </if>
+            <if test="request.loanProvideNo != null and  request.loanProvideNo != ''">
+                AND loan_provide_no = #{request.loanProvideNo}
+            </if>
+            <if test="request.userId != null and  request.userId != ''">
+                AND user_id = #{request.userId}
+            </if>
+        </trim>
+        order by id desc
+    </select>
+</mapper>

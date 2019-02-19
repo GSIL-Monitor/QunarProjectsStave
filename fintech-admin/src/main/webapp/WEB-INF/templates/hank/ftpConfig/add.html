@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <input id="id" name="id" type="hidden">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">任务类型：</label>
+                            <div class="col-sm-8">
+                                <input id="taskType" name="taskType" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">文件接收方：</label>
+                            <div class="col-sm-8">
+                                <input id="receiver" name="receiver" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">协议类型:</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline"> <input type="radio"
+                                                                    name="protocol" value="SFTP" checked/> SFTP
+                                </label> <label class="radio-inline"> <input type="radio"
+                                                                             name="protocol" value="FTP" /> FTP
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户名：</label>
+                            <div class="col-sm-8">
+                                <input id="userName" name="userName" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">密码：</label>
+                            <div class="col-sm-8">
+                                <input id="password" name="password" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">主机：</label>
+                            <div class="col-sm-8">
+                                <input id="host" name="host" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">端口号：</label>
+                            <div class="col-sm-8">
+                                <input id="port" name="port" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">路径：</label>
+                            <div class="col-sm-8">
+                                <input id="path" name="path" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">文件夹创建模式:</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline"> <input type="radio"
+                                                                    name="dirMode" value="0" checked/> 不创建
+                                </label> <label class="radio-inline"> <input type="radio"
+                                                                             name="dirMode" value="1" /> 按天
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">压缩模式:</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline"> <input type="radio"
+                                                                    name="compressMode" value="1" checked/> 不压缩
+                                </label> <label class="radio-inline"> <input type="radio"
+                                                                             name="compressMode" value="2" /> 压缩
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">文件加密模式:</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline"> <input type="radio"
+                                                                    name="encryptMode" value="md5" checked/> MD5
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">配置状态:</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline"> <input type="radio"
+                                                                    name="status" value="1" checked/> 有效
+                                </label> <label class="radio-inline"> <input type="radio"
+                                                                             name="status" value="2" /> 无效
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript" src="/static/appjs/hank/ftpConfig/add.js">
+</script>
+</body>
+</html>

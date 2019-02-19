@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>faceAudit</title>
+
+    <script type="application/javascript" src="/resources/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/resources/js/jquery.Jcrop.min.js"></script>
+    <script type="application/javascript" src="/resources/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/resources/css/jquery.Jcrop.min.css"/>
+    <link rel="stylesheet" href="/resources/css/colorbox.css"/>
+
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+
+    <style>
+        .blueCell {
+            background: #a9cbee 0pt 0pt;
+        }
+    </style>
+</head>
+<body>
+
+<div id="tableDiv">
+    <div class="widget-box">
+        <div class="widget-body">
+            <div class="widget-main">
+                <div class="row">
+                    <div class="col-xs-12">
+
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <td colspan="4"><h3>基础信息</h3></td>
+                            </tr>
+                            <tr>
+                                <td class="blueCell">token（请求号）:</td>
+                                <td id="token" th:text="${faceObj.token}"></td>
+                                <td class="blueCell">faceOccurTime（人脸识别发生时间）:</td>
+                                <td th:text="${faceObj.createTime}"></td>
+                            </tr>
+                            <tr>
+                                <td class="blueCell">platOpenId（用户ID）:</td>
+                                <td th:text="${faceObj.platOpenId}"></td>
+                                <td class="blueCell">source（业务类型ID）:</td>
+                                <td th:text="${faceObj.source}"></td>
+                            </tr>
+
+                            <tr>
+                                <td class="blueCell">idCode（身份证号）:</td>
+                                <td id="idCode" th:text="${faceObj.idCode}"></td>  <!--+'('+${faceObj.gender}+')'-->
+                                <td class="blueCell">realName（用户名）:</td>
+                                <td th:text="${faceObj.idName}"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><h3>Face++ 识别结果信息</h3></td>
+                            </tr>
+                            <tr>
+                                <td class="blueCell">confidence（人脸识别评分）:</td>
+                                <td th:text="${faceObj.confidence}"></td>
+                                <td class="blueCell">status（人脸识别结果）:</td>
+                                <td th:text="${faceObj.status}"></td>
+                            </tr>
+                            <tr>
+                                <td class="blueCell">faceErrorCode（状态码）:</td>
+                                <td th:text="${faceObj.errorCode}"></td>
+                                <td class="blueCell">faceErrorInfo（状态信息）:</td>
+                                <td th:text="${faceObj.errorMsg}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h3>活体照片<span th:switch="${faceObj.faceType}">
+                            <span th:case="0">（有源）</span>
+                            <span th:case="1">（无源）</span>
+                            <span th:case="2">（无源+有源）</span>
+                        </span>
+                        </h3>
+                        <div class="col-xs-12">
+                            <br>
+                            <span th:switch="${faceObj.faceType}">
+                            <h4 th:case="1">对比照片</h4>
+                            <h4 th:case="2">对比照片</h4>
+                            <ul th:each="image:${cpFaceImages}" class="ace-thumbnails">
+                                <li style="float: left;margin-left: 6px;margin-right: 6px;">
+                                    <a href="#recon_$velocityCount" th:attr="title=${image.sourceType}"
+                                       data-rel="colorbox2">
+                                        <img width="150px" height="150px" src=""
+                                             th:attr="src='data:image/jpeg;base64,'+${image.imgUrl}"/>
+
+
+                                    </a>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-12">
+                            <br>
+                            <h4>人脸识别采集照片</h4>
+                            <ul th:each="image:${faceImages}" class="ace-thumbnails">
+                                <li style="float: left;margin-left: 6px;margin-right: 6px;">
+                                    <a href="#recon_$velocityCount" th:attr="title=${image.action}"
+                                       data-rel="colorbox2">
+                                        <img width="150px" height="150px" src=""
+                                             th:attr="src='data:image/jpeg;base64,'+${image.imgUrl}"/>
+
+
+                                    </a>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-12" style="margin-top: 25px;">
+                            <h3>人工打标</h3>
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="token" class="col-sm-1 control-label">人工审核结果：</label>
+                                    <div class="col-sm-10">
+                                        <label>
+                                            <input type="radio" class="ace" name="auditResult" value="1"
+                                                   onclick="showNoUpload()">
+                                            <span class="lbl">一致</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" class="ace" name="auditResult" value="2"
+                                                   onclick="showNoUpload()">
+                                            <span class="lbl">不一致</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" class="ace" name="auditResult" value="3"
+                                                   onclick="showNoUpload()">
+                                            <span class="lbl">疑似</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" class="ace" name="auditResult" value="4"
+                                                   onclick="hideNoUpload()">
+                                            <span class="lbl">线下审核一致<button type="button" class="btn btn-primary"
+                                                                            data-toggle="modal"
+                                                                            data-target="#uploadModal">上传图片</button></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group no_upload">
+                                    <label for="token" class="col-sm-1 control-label">审核备注：</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" cols="12" id="auditRemark"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group no_upload">
+                                    <label for="token" class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-10">
+                                        <button type="button" class="btn btn-primary" onclick="doAudit()"
+                                                data-loading-text="提交中..." id="submitBtn">提交
+                                        </button>
+                                        <button type="reset" class="btn">清空</button>
+                                        <button type="button" class="btn btn-yellow" onclick="window.close()">关闭
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width: 550px;height: 900px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">文件上传：</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="activeForm" style="display: block;">
+                        <div class="form-group">
+
+
+                            <label class="col-sm-3 control-label">
+                                证件人手持证件图片
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="file" id="upHoldIdImg" placeholder="证件人手持证件图片">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                证件人证件反面图片
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="file" id="upNegativeIdImg" placeholder="证件人证件图片">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                证件人证件正面图片
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="file" id="upPositiveIdImg" placeholder="证件人证件图片">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-sm-12 text-center" id="previewDiv">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                备注
+                            </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" cols="12" id="upAuditRemark"></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-app btn-primary" onclick="okModal()">确定</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/appjs/query/faceAudit.js"></script>
+</body>
+</html>

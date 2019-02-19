@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="hostnameVerifier" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField"
+                  value="org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER"/>
+    </bean>
+
+    <!--face ocr client-->
+    <bean name="qcreditHttpClient" class="com.qunar.fintech.util.http.QunarHttpClientFactory"
+          factory-method="createHttpsClient">
+        <constructor-arg name="connTimeout" value="3000" index="0" type="int"/>
+        <constructor-arg name="readTimeout" value="10000" index="1" type="int"/>
+        <constructor-arg name="maxTotal" value="20" index="2" type="int"/>
+        <constructor-arg name="MaxPerRoute" value="20" index="3" type="int"/>
+        <constructor-arg name="trustManagers" index="4">
+            <array>
+                <bean class="com.qunar.fintech.util.http.TrustAnyTrustManager"/>
+            </array>
+        </constructor-arg>
+        <constructor-arg name="hostnameVerifier" index="5" ref="hostnameVerifier"/>
+    </bean>
+
+    <bean name="creditHttpCaller" class="com.qunar.fintech.util.http.HttpCaller">
+        <property name="httpClient" ref="qcreditHttpClient"/>
+    </bean>
+
+</beans>

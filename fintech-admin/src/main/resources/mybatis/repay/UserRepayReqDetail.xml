@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.UserRepayReqDetailDao">
+
+    <!-- 结果映射-->
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.UserRepayReqDetail">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="req_serial_no" property="reqSerialNo"/>
+        <result column="serial_no" property="serialNo"/>
+        <result column="qunar_trade_no" property="qunarTradeNo"/>
+        <result column="repay_amt" property="repayAmt"/>
+        <result column="request_time" property="requestTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="channel" property="channel"/>
+        <result column="repay_entry" property="repayEntry"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, product_no,user_id, mobile, user_name,identity_code
+    </sql>
+
+    <select id="queryUserRepayReqDetail" parameterType="Object" resultMap="BaseResultMap">
+        SELECT id, user_id, req_serial_no,serial_no,channel,repay_entry, qunar_trade_no, repay_amt, request_time, create_time, update_time
+        FROM user_repay_req_detail
+        WHERE
+        req_serial_no = #{reqSerialNo}
+        ORDER BY id ASC
+    </select>
+
+    <select id="queryMobileByUserId"  parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_ious_virtual_contract
+        where user_id IN
+        <foreach item="item" index="index" collection="userIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

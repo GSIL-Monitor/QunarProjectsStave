@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/resources/css/animate.css" rel="stylesheet">
+    <link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="/resources/css/marketing/add.css" rel="stylesheet">
+</head>
+<body class="">
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="process-area row">
+            <h3 class="col-sm-3  col-sm-offset-5" style="font-size: 30px">审核优惠券</h3>
+            <!-- <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon-active.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow-active.png"/>
+                <p>创建优惠券</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>B岗产品审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>QA审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>法务审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>财务审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+                <p>负责人审核</p>
+            </div>
+            <div class="process-bt col-sm-2">
+                <img src="../../../../resources/img/marketing/admin-icon.png"/>
+                <p>产品待发布</p>
+            </div> -->
+            <button class="btn btn-primary col-sm-offset-2" onclick="showActivityManage()">审核管理</button>
+        </div>
+        <ul class="nav nav-pills nav-justified" onclick="chooseNav(event)">
+            <li class="active"><a class="nav-tab1">活动内容创建</a></li>
+            <li><a class="nav-tab2">优惠券预算信息</a></li>
+            <li><a class="nav-tab3">优惠券配置信息</a></li>
+            <li><a class="nav-tab4">报警信息</a></li>
+        </ul>
+        <div class="nav-item nav-1">
+
+        </div>
+        <div class="nav-item nav-2">
+
+        </div>
+        <div class="nav-item nav-3">
+
+        </div>
+        <div class="nav-item" style="width: 834px;">
+            <div class="nav-4"></div>
+            <div class="check-area form-horizontal hide">
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">审批结果：</label>
+                    <div class="col-sm-9 row">
+                        <div class="col-sm-3">
+                            <input id="pass" name="commentStatus" class="col-sm-2 commentStatus" type="radio" value="PASS" required>
+                            <label class="col-sm-10" for="pass">通过</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="reject" name="commentStatus" class="col-sm-2 commentStatus" type="radio" value="REJECT" checked>
+                            <label class="col-sm-10" for="reject">不通过</label>
+                        </div>
+                        <label class="col-sm-5 col-sm-offset-1"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label" for="checkMarket">备注：</label>
+                    <div class="col-sm-9 row">
+                        <textarea id="checkMarket" name="checkMarket" class="form-control col-sm-7" rows="3"
+                                  style="width:300px"></textarea>
+                        <label class="col-sm-5"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-5 col-sm-offset-4">
+                        <button type="submit" class="btn btn-primary" onclick="submitReview()">提交</button>
+                        <button class="btn btn-primary" onclick="closeNow()">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</div>
+<div th:include="include::footer"></div>
+<script>
+    $('.nav-1').load('/newmarketing/coupon/activityAdd', function () {
+        $('.copy-activity').hide()
+        $('.nav-1 input,.nav-1 textarea,.nav-1 select').each(function () {
+            $(this).attr('disabled', true)
+        })
+    })
+    $('.nav-2').load('/newmarketing/coupon/ticketBudget', function () {
+        $('.nav-2 input,.nav-2 textarea,.nav-2 select').each(function () {
+            $(this).attr('disabled', true)
+        })
+    })
+    $('.nav-3').load('/newmarketing/coupon/ticketConfig', function () {
+        $('.nav-3 input,.nav-3 textarea,.nav-3 select').each(function () {
+            $(this).attr('disabled', true)
+            $('.free-type').hide();
+            $('.n-day').show()
+            $('.n-yuan').show()
+            $('.n-zhe').show()
+        })
+    })
+    $('.nav-4').load('/newmarketing/coupon/editAlarmConfig', function () {
+        $('.operType').addClass('hide');
+        $('.closePage').addClass('hide');
+        $('.nav-4 input,.nav-4 textarea,.nav-4s select').each(function () {
+            $(this).attr('disabled', true)
+        })
+    })
+</script>
+<script src="/static/appjs/newmarketing/coupon/add.js"></script>
+<script src="/static/appjs/newmarketing/check/check.js"></script>
+<script src="/static/appjs/newmarketing/couponInfo/setCoupon.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+    });
+</script>
+</body>
+
+</html>

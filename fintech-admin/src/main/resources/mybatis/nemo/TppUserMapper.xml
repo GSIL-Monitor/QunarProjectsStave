@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.nemo.TppUserMapper">
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.vo.NemoQueryVo">
+        <result column="customer_id" property="customerId" jdbcType="VARCHAR"/>
+        <result column="tpp_openid" property="tppOpenId" jdbcType="VARCHAR"/>
+        <result column="tpp_code" property="tppCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+       tpp_openid, tpp_code, customer_id
+    </sql>
+
+    <select id="selectByCidOrTid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpp_user
+        <where>
+            <if test="nemoQuery.exportType == 3 ">
+                and customer_id = #{nemoQuery.customerId,jdbcType=VARCHAR}
+            </if>
+            <if test="nemoQuery.exportType == 4 ">
+                and tpp_openid = #{nemoQuery.tppOpenId,jdbcType=VARCHAR}
+            </if>
+            <if test="nemoQuery.tppCode != '' and  nemoQuery.tppCode != null">
+                and tpp_code = #{nemoQuery.tppCode,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

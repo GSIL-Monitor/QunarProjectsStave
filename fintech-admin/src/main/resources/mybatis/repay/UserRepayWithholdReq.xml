@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.UserRepayWithholdReqDao">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.UserRepayWithholdReq">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="product_no" property="productNo" jdbcType="VARCHAR"/>
+        <result column="org_channel" property="orgChannel" jdbcType="VARCHAR"/>
+        <result column="req_serial_no" property="reqSerialNo" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="req_order_no" property="reqOrderNo" jdbcType="VARCHAR"/>
+        <result column="order_date" property="orderDate" jdbcType="TIMESTAMP"/>
+        <result column="order_amount" property="orderAmount" jdbcType="DECIMAL"/>
+        <result column="pay_scene" property="payScene" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="VARCHAR"/>
+        <result column="busi_type_id" property="busiTypeId" jdbcType="VARCHAR"/>
+        <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR"/>
+        <result column="trans_type_id" property="transTypeId" jdbcType="VARCHAR"/>
+        <result column="share_data" property="shareData" jdbcType="VARCHAR"/>
+        <result column="payment_merchant" property="paymentMerchant" jdbcType="VARCHAR"/>
+        <result column="qunar_trade_no" property="qunarTradeNo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="coupon_no" property="couponNo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id,user_id,product_no,org_channel,req_serial_no,order_no,req_order_no,order_date,order_amount,pay_scene,
+      version,busi_type_id,merchant_code,trans_type_id,share_data,payment_merchant,qunar_trade_no,create_time,update_time,coupon_no
+    </sql>
+
+    <select id="queryUserRepayWithholdReqByOrderNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_repay_withhold_req
+        where order_no = #{orderNo,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

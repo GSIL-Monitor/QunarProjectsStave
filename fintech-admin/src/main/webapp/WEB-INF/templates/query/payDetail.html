@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-body">
+					<input id="orderNo" name="orderNo"
+						   type="hidden" th:value="${orderNo}" />
+					<div id="tips" style="font-size: 20px"></div>
+					<!--<table class="table table-striped" id="exampleTable" data-mobile-responsive="true">-->
+						<!--<tr>-->
+							<!--<th>支付发起时间</th>-->
+							<!--<th>支付结束时间</th>-->
+							<!--<th>银行</th>-->
+							<!--<th>银行卡号</th>-->
+							<!--<th>错误信息</th>-->
+							<!--<th>支付状态</th>-->
+							<!--<th>退款金额</th>-->
+							<!--<th>退款发起时间</th>-->
+							<!--<th>退款结束时间</th>-->
+						<!--</tr>-->
+						<!--<tr th:if="${not #lists.isEmpty(payDetail)}">-->
+							<!--<td th:text="${#lists.isEmpty(payDetail.startTime)}?'':${#dates.format(payDetail.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>-->
+							<!--<td th:text="${#lists.isEmpty(payDetail.endTime)}?'':${#dates.format(payDetail.endTime,'yyyy-MM-dd HH:mm:ss')}"></td>-->
+							<!--<td th:text="${payDetail.bankName}"></td>-->
+							<!--<td th:text="${payDetail.cardNo}"></td>-->
+							<!--<td th:text="${payDetail.errorMsg}"></td>-->
+							<!--<td th:text="${payDetail.statusName}"></td>-->
+							<!--<td th:text="${payDetail.refundAmount}"></td>-->
+							<!--<td th:text="${#lists.isEmpty(payDetail.refundStartTime)}?'':${#dates.format(payDetail.refundStartTime,'yyyy-MM-dd HH:mm:ss')}"></td>-->
+							<!--<td th:text="${#lists.isEmpty(payDetail.refundEndTime)}?'':${#dates.format(payDetail.refundEndTime,'yyyy-MM-dd HH:mm:ss')}"></td>-->
+						<!--</tr>-->
+					<!--</table>-->
+					<!--<div th:each="data,dataStat:${primaryKeys}">-->
+						<!--<iframe src="http://tradeadmin.corp.qunar.com/orderInfo/queryPayInfo.do?orderNo=${primaryKey.orderNo}&batchOrderId=${primaryKey.batchOrderId}&orderTime=${#dates.format(-->
+            					<!--$!primaryKey.createTime),'yyyy-MM-dd HH:mm:ss')}&batchOrderNo=${primaryKey.batchOrderNo}"-->
+								<!--width="100%" height="180" frameborder="0">-->
+						<!--</iframe>-->
+					<!--</div>-->
+					<iframe src="" width="100%" height="180" frameborder="0">
+					</iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script src="/static/appjs/query/payDetail.js"></script>
+</body>
+</html>

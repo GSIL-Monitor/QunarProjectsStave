@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox-content">
+                <form class="form-horizontal m-t" id="signupForm">
+                    <input id="id" name="id" th:value="${multiTableRelate.id}"
+                           type="hidden">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">任务类型：</label>
+                        <div class="col-sm-8">
+                            <input id="taskType" name="taskType" class="form-control" type="text"
+                                   th:value="${multiTableRelate.taskType}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">源表 库.表：</label>
+                        <div class="col-sm-8">
+                            <input id="sourceTable" name="sourceTable" class="form-control"
+                                   type="text" th:value="${multiTableRelate.sourceTable}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">目标表 库.表：</label>
+                        <div class="col-sm-8">
+                            <input id="targetTable" name="targetTable" class="form-control" type="text"
+                                   th:value="${multiTableRelate.targetTable}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">关联域：</label>
+                        <div class="col-sm-8">
+                            <input id="multiField" name="multiField" class="form-control" type="text"
+                                   th:value="${multiTableRelate.multiField}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">查询条件：</label>
+                        <div class="col-sm-8">
+                            <input id="queryTerms" name="queryTerms" class="form-control" type="text"
+                                   th:value="${multiTableRelate.queryTerms}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">对应关系:</label>
+                        <div class="col-sm-8">
+                            <label class="radio-inline"> <input
+                                    th:field="*{multiTableRelate.matchRelate}" type="radio" name="matchRelate" value="1" />
+                                一对一
+                            </label> <label class="radio-inline"> <input
+                                th:field="*{multiTableRelate.matchRelate}" type="radio" name="matchRelate" value="2" />
+                            一对多
+                        </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">配置状态:</label>
+                        <div class="col-sm-8">
+                            <label class="radio-inline"> <input
+                                    th:field="*{multiTableRelate.status}" type="radio" name="status" value="1" />
+                                正常
+                            </label> <label class="radio-inline"> <input
+                                th:field="*{multiTableRelate.status}" type="radio" name="status" value="2" />
+                            无效
+                        </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript" src="/static/appjs/hank/multiTableRelate/edit.js">
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+	<script src="/static/appjs/contract/popUp.js"></script>
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content" style="overflow-x: scroll;width:100%;white-space: nowrap;">
+		<div class="row" >
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="form-horizontal m-t">
+							<input id="queryType" name="queryType"
+								   type="hidden" th:value="${type}" />
+							<div class="form-inline">
+								<span class="reqNo">
+									<label class="control-label">申请流水：</label><input id="reqNo" name="reqNo" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span class="customId">
+									<label class="control-label">用户customId：</label><input id="customId" name="customId" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span>
+									<label class="control-label">产品线：</label>
+									<select id="productNo" name="productNo" class="form-control">
+										<option value="IOUS">拿去花</option>
+									</select>
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							</div><br>
+							<div class="form-inline">
+								<span class="startTime">
+									<label class="control-label"><span class="stime">申请时间开始：</span></label>
+									<input id="startTime" name="startTime" class="form-control layui-input"  lay-verify="date" autocomplete="off">
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span class="endTime">
+									<label class="control-label"><span class="etime">申请结束开始：</span></label>
+									<input id="endTime" name="endTime" class="form-control layui-input"  lay-verify="date" autocomplete="off">
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							</div><br>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<span>
+										<button class="btn btn-primary" id="queryContractChangeReq">查询</button>
+									</span>
+									<span>
+										<button class="btn btn-primary" id="clearAll">清空</button>
+									</span>
+								</div>
+							</div>
+							<div>
+								<p style="font-family:verdana;color:#ff0000">使用提示：</p><br>
+								<p style="font-family:verdana;font-size:80%;color:#1d6180;line-height:20%">1. 申请流水和用户customId不能为空</p><br>
+							</div>
+						</div>
+					</div>
+					<!--<div id="ious" style="display: none;font-size: 15px;color: black;">拿去花信息</div>-->
+					<div class="ibox-body" style="overflow: scroll">
+						<table id="platContract" data-mobile-responsive="true">
+						</table>
+					</div><br><br>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script src="/static/appjs/contract/queryChangeReq.js"></script>
+	<script src="/static/appjs/layui/layui.js"></script>
+	<script>
+        layui.use(['form', 'laydate'], function(){
+            var form = layui.form,laydate = layui.laydate;
+            //日期
+            laydate.render({
+                elem: '#startTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            laydate.render({
+                elem: '#endTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+        });
+	</script>
+</body>
+
+</html>

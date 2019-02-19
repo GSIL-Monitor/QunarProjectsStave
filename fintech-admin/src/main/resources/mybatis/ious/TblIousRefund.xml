@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.ious.IousRefundDao">
+
+    <sql id="base_select">
+         tir.user_id                AS   userId
+        ,tir.order_time             AS   orderTime
+        ,tir.request_time           AS   requestTime
+        ,tir.org_channel            AS   orgChannel
+        ,tir.refund_amount          AS   refundAmount
+        ,tir.refund_time            AS   refundTime
+        ,tir.product_no             AS   productNo
+        ,tir.tpp_code               AS   tppCode
+        ,tir.status                 AS   status
+        ,tir.error_msg              AS   errorMsg
+        ,tir.error_code             AS   errorCode
+        ,tip.busi_order_no          AS   busiOrderNo
+        ,tip.loan_provide_no        AS   loanProvideNo
+        ,tip.busi_type_name         AS   busiName
+        ,tip.pay_time               AS   payTime
+        ,tip.ious_pay_amount        AS   iousPayAmount
+        ,tip.pay_amount             AS   orderAmount
+    </sql>
+
+    <sql id="Base_Column_List">
+        tir.id                     AS   id
+        ,tir.user_id                AS   userId
+        ,tir.pay_id                 AS   payId
+        ,tir.order_no               AS   orderNo
+        ,tir.order_time             AS   orderTime
+        ,tir.request_time           AS   requestTime
+        ,tir.refund_id              AS   refundId
+        ,tir.ref_order_no           AS   refOrderNo
+        ,tir.refund_amount          AS   refundAmount
+        ,tir.qunar_trade_no         AS   qunarTradeNo
+        ,tir.serv_refund_amount     AS   servRefundAmount
+        ,tir.balance_refund_amount  AS   balanceRefundAmount
+        ,tir.refund_time            AS   refundTime
+        ,tir.pm_code                AS   pmCode
+        ,tir.product_no            AS   productNo
+        ,tir.tpp_code               AS   tppCode
+        ,tir.remark                 AS   remark
+        ,tir.refund_type            AS   refundType
+        ,tir.status                 AS   status
+        ,tir.error_code             AS   errorCode
+        ,tir.error_msg              AS   errorMsg
+        ,tir.accounting_sequence    AS   accountingSequence
+        ,tir.accounting_status      AS   accountingStatus
+        ,tir.req_num                AS   reqNum
+        ,tir.create_time            AS   createTime
+        ,tir.update_time            AS   updateTime
+        ,tir.loan_provide_no        AS   loanProvideNo
+        ,tir.version                AS   version
+    </sql>
+
+    <sql id="wherecontation">
+        <trim suffixOverrides=",">
+            <if test="request.userId != null and request.userId != ''">
+                AND tir.user_id = #{request.userId}
+            </if>
+            <if test="request.orgChannel != null and  request.orgChannel != ''">
+                AND tir.org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.startTime != null">
+                AND tir.create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND tir.create_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+            <if test="request.productNo != null and request.productNo != ''">
+                AND tir.product_no = #{request.productNo}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tir.tpp_code = #{request.tppCode}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryIousRefundByRequest" resultType="com.qunar.fintech.plat.admin.query.vo.QueryRefundRecord">
+        SELECT
+        <include refid="base_select"/>
+        FROM tbl_ious_refund tir
+        LEFT JOIN tbl_ious_pay tip ON tir.pay_id = tip.pay_id
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+        ORDER BY refund_time DESC
+        limit #{page.currentIndex},#{page.pageSize}
+    </select>
+
+    <select id="queryIousRefundByOrderNo" resultType="com.qunar.fintech.plat.admin.query.vo.QueryRefundRecord">
+        SELECT
+        refund_amount as refundAmount, request_time as requestTime, refund_time as refundTime
+        FROM tbl_ious_refund
+        WHERE
+        order_no = #{orderNo}
+    </select>
+
+    <select id="countIousRefundByRequest" resultType="Integer">
+        SELECT count(*)
+        FROM tbl_ious_refund tir
+        LEFT JOIN tbl_ious_pay tip ON tir.pay_id = tip.pay_id
+        WHERE
+        1=1
+        <include refid="wherecontation"/>
+    </select>
+
+    <select id="queryIousPayAmount" parameterType="Object" resultType="BigDecimal">
+        <if test="request.refundType == 2">
+            SELECT DISTINCT (confirm_amount)
+            FROM tbl_ious_auth_confirm WHERE apply_serial_no = #{request.payId}
+        </if>
+        <if test="request.refundType == 1">
+            SELECT ious_pay_amount
+            FROM tbl_loan_info WHERE loan_provide_no = #{request.payId}
+        </if>
+    </select>
+    <select id="queryIousRefundDetail" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousRefund">
+        SELECT
+             tir.id                     AS id
+            ,tir.user_id                AS userId
+            ,tir.pay_id                 AS payId
+            ,tir.order_no               AS orderNo
+            ,tir.order_time             AS orderTime
+            ,tir.request_time           AS requestTime
+            ,tir.refund_id              AS refundId
+            ,tir.ref_order_no           AS refOrderNo
+            ,tir.refund_amount          AS refundAmount
+            ,tir.qunar_trade_no         AS qunarTradeNo
+            ,tir.serv_refund_amount     AS servRefundAmount
+            ,tir.balance_refund_amount  AS balanceRefundAmount
+            ,tir.refund_time            AS refundTime
+            ,tir.pm_code                AS pmCode
+            ,tir.tpp_code               AS tppCode
+            ,tir.remark                 AS remark
+            ,tir.refund_type            AS refundType
+            ,tir.status                 AS status
+            ,tir.error_code             AS errorCode
+            ,tir.error_msg              AS errorMsg
+            ,tir.accounting_sequence    AS accountingSequence
+            ,tir.accounting_status      AS accountingStatus
+            ,tir.req_num                AS reqNum
+            ,tir.create_time            AS createTime
+            ,tir.update_time            AS updateTime
+            ,tir.loan_provide_no        AS loanProvideNo
+            ,trd.refund_principal       AS refundPrincipal
+            ,trd.refund_interest        AS refundInterest
+            ,trd.refund_fine            AS refundFine
+            ,tip.loan_provide_no        AS gwLoanNo
+            FROM tbl_ious_refund tir
+            left join tbl_ious_refund_detail trd on tir.refund_id = trd.refund_id
+            left join tbl_ious_pay tip on tir.pay_id = tip.pay_id
+        WHERE
+          tir.pay_id = #{payId}
+        order by tir.id desc
+    </select>
+
+    <select id="queryIousRefundByRefundId" parameterType="Object" resultType="com.qunar.fintech.plat.admin.query.entity.TblIousRefund">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from tbl_ious_refund as tir
+        where tir.refund_id = #{refundId}
+    </select>
+
+</mapper>

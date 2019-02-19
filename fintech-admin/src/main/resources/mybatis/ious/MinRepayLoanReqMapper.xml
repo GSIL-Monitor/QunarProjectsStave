@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.ious.MinRepayLoanReqMapper" >
+  <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.MinRepayLoanReq" >
+      <id column="id" property="id" jdbcType="BIGINT" />
+      <result column="user_id" property="userId" jdbcType="VARCHAR" />
+      <result column="org_channel" property="orgChannel" jdbcType="VARCHAR" />
+      <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+      <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+      <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
+      <result column="due_date" property="dueDate" jdbcType="TIMESTAMP" />
+      <result column="new_tppcode" property="newTppcode" jdbcType="VARCHAR" />
+      <result column="new_fund_org_code" property="newFundOrgCode" jdbcType="VARCHAR" />
+      <result column="process_type" property="processType" jdbcType="VARCHAR" />
+      <result column="process_status" property="processStatus" jdbcType="TINYINT" />
+      <result column="total_trans_amount" property="totalTransAmount" jdbcType="DECIMAL" />
+      <result column="fix_due_date" property="fixDueDate" jdbcType="TIMESTAMP" />
+      <result column="qunar_trade_no" property="qunarTradeNo" jdbcType="VARCHAR" />
+      <result column="ext" property="ext" jdbcType="VARCHAR" />
+      <result column="error_code" property="errorCode" jdbcType="VARCHAR" />
+      <result column="error_msg" property="errorMsg" jdbcType="VARCHAR" />
+      <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+      <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+    <sql id="Base_Column_List" >
+    id, user_id, org_channel, product_no, bill_no, serial_no, due_date, new_tppcode,
+    new_fund_org_code, process_type, process_status, total_trans_amount, fix_due_date,
+    qunar_trade_no, ext, error_code, error_msg, finish_time, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from min_repay_loan_req
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+    <select id="selectByPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from min_repay_loan_req
+        where 1=1
+        <if test="userIdList !=null and userIdList.size()!=0">
+            and user_id in
+            <foreach collection="userIdList" item="userId"  open="(" separator="," close=")">
+                #{userId}
+            </foreach>
+        </if>
+        <if test="minRepayTpp !=null">
+            and new_tppcode = #{minRepayTpp}
+        </if>
+        <if test="startDate !=null">
+            <![CDATA[
+        AND	create_time >= #{startDate}
+		]]>
+        </if>
+        <if test="endDate !=null">
+            <![CDATA[
+		AND create_time < #{endDate}
+		]]>
+        </if>
+        <if test="processStatus !=null">
+          and  process_status = #{processStatus,jdbcType=TINYINT}
+        </if>
+        order by id DESC
+        limit #{page.currentIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryBySerialNo"  resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from min_repay_loan_req
+    where  serial_no = #{serialNo}
+  </select>
+</mapper>

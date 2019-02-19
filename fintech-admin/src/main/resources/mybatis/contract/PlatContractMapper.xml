@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.contract.dao.mapper.PlatContractDao" >
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.contract.dao.entity.PlatContract">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="plat_contract_no" jdbcType="VARCHAR" property="platContractNo"/>
+        <result column="custom_id" jdbcType="VARCHAR" property="customId"/>
+        <result column="org_channel" jdbcType="VARCHAR" property="orgChannel"/>
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="user_group" jdbcType="VARCHAR" property="userGroup"/>
+        <result column="proc_status" jdbcType="TINYINT" property="procStatus"/>
+        <result column="plat_status" jdbcType="TINYINT" property="platStatus"/>
+        <result column="tpp_code" jdbcType="VARCHAR" property="tppCode"/>
+        <result column="custom_name" jdbcType="VARCHAR" property="customName"/>
+        <result column="identity_type" jdbcType="VARCHAR" property="identityType"/>
+        <result column="identity_code" jdbcType="VARCHAR" property="identityCode"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="pay_switch" jdbcType="TINYINT" property="paySwitch"/>
+        <result column="auto_repay_switch" jdbcType="TINYINT" property="autoRepaySwitch"/>
+        <result column="close_payswitch_partner" jdbcType="VARCHAR" property="closePaySwitchPartner"/>
+        <result column="fixed_due_date" jdbcType="TINYINT" property="fixedDueDate"/>
+        <result column="user_amount" jdbcType="DECIMAL" property="userAmount"/>
+        <result column="max_amount" jdbcType="DECIMAL" property="maxAmount"/>
+        <result column="rate_type" jdbcType="TINYINT" property="rateType"/>
+        <result column="three_term_rate" jdbcType="DECIMAL" property="threeTermRate"/>
+        <result column="six_term_rate" jdbcType="DECIMAL" property="sixTermRate"/>
+        <result column="nine_term_rate" jdbcType="DECIMAL" property="nineTermRate"/>
+        <result column="twelve_term_rate" jdbcType="DECIMAL" property="twelveTermRate"/>
+        <result column="twenty_four_term_rate" jdbcType="DECIMAL" property="twentyFourTermRate"/>
+        <result column="eff_start_time" jdbcType="TIMESTAMP" property="effStartTime"/>
+        <result column="eff_end_time" jdbcType="TIMESTAMP" property="effEndTime"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+        <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, plat_contract_no, custom_id, org_channel, product_no, user_group, proc_status, plat_status, tpp_code,
+    custom_name,identity_type,identity_code, mobile, pay_switch, auto_repay_switch, close_payswitch_partner, fixed_due_date,user_amount, max_amount, rate_type, three_term_rate, six_term_rate,
+    nine_term_rate, twelve_term_rate, twenty_four_term_rate, eff_start_time, eff_end_time, version, finish_time, create_time, update_time
+    </sql>
+
+    <select id="queryByIdentityCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plat_contract
+        where identity_code = #{identityCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryByMobile" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plat_contract
+        where mobile = #{mobile,jdbcType=VARCHAR}
+        <if test="productNo != null">
+            AND product_no = #{productNo,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="queryByCusIdAndPrd" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plat_contract
+        where custom_id = #{customId,jdbcType=VARCHAR}
+        AND product_no = #{productNo,jdbcType=VARCHAR}
+    </select>
+</mapper>

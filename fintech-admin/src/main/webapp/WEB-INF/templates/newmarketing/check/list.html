@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+<link rel="shortcut icon" href="favicon.ico">
+<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="/resources/css/animate.css" rel="stylesheet">
+<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+<link href="/resources/css/marketing/review.css" rel="stylesheet">
+<body class="">
+<div class="wrapper wrapper-content">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-search">
+                <h4>筛选条件</h4>
+                <div class="row">
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="couponCode">券code</label>
+                        <input id="couponCode" name="couponCode" class="form-control col-sm-4 col-md-8" type="text">
+                    </div>
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="lineBusiness">业务线</label>
+                        <select class="form-control col-sm-4 col-md-8" id="lineBusiness">
+                            <option selected value=""></option>
+                            <option value="CASH">借去花</option>
+                            <option value="IOUS">拿去花</option>
+                            <option value="FINANCE">金融APP</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="startTime">开始时间</label>
+                        <input id="startTime" name="startTime"
+                               class="form-control col-sm-4 col-md-8 col-sm-7 layui-input" lay-verify="date"
+                               autocomplete="off">
+                    </div>
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="endTime">结束时间</label>
+                        <input id="endTime" name="endTime" class="form-control col-sm-4 col-md-8 col-sm-7 layui-input"
+                               lay-verify="date" autocomplete="off">
+                    </div>
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="activityName">活动名称</label>
+                        <input id="activityName" name="activityName" class="form-control col-sm-4 col-md-8 "
+                               type="text">
+                    </div>
+
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="MoneyRangeFrom">账务总金额下限</label>
+                        <input id="MoneyRangeFrom" name="MoneyRangeFrom" class="form-control col-sm-4 col-md-8"
+                               type="text">
+                    </div>
+                    <div class="form-group col-sm-3 row ">
+                        <label class="col-sm-6 col-md-4 control-label" for="MoneyRangeTo">账务总金额上限</label>
+                        <input id="MoneyRangeTo" name="MoneyRangeTo" class="form-control col-sm-4 col-md-8" type="text">
+                    </div>
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="ticketType">优惠券类型</label>
+                        <select class="form-control col-sm-4 col-md-8" id="ticketType">
+                            <option selected value=""></option>
+                            <option value="freeInterest">免息券</option>
+                            <option value="cashTicket">现金券</option>
+                            <option value="randomMinus">随机立减</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="activityMaster">负责人</label>
+                        <input id="activityMaster" name="activityMaster" class="form-control col-sm-4 col-md-8"
+                               type="text">
+                    </div>
+                    <div class="form-group col-sm-3 row">
+                        <label class="col-sm-6 col-md-4 control-label" for="sizerType">筛选器类型</label>
+                        <select class="form-control col-sm-4 col-md-8" id="sizerType">
+                            <option selected value="0">所有数据</option>
+                            <option value="1">待我审核</option>
+                            <option value="3">由我提交</option>
+                            <option value="2">我已审核</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-4 col-sm-offset-8 row">
+                        <button type="submit" class="btn btn-primary col-sm-4" onclick="filterData()">查询</button>
+                        <button type="submit" class="btn btn-primary col-sm-7  col-sm-offset-1" onclick="clearFilter()">
+                            清除查询条件
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-body">
+                <div id="exampleToolbar" role="group">
+                    <!-- <button type="button"class="btn btn-primary" title="添加活动" onclick="">
+                        待我审核
+                    </button>
+                    <button type="button"class="btn btn-primary" title="添加活动" onclick="">
+                        待我提交
+                    </button> -->
+                    <button type="button" class="btn btn-primary" title="添加活动" onclick="batchSubmit()">
+                        批量提交
+                    </button>
+                </div>
+                <table id="exampleTable" data-mobile-responsive="true">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/static/appjs/newmarketing/check/review.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+    });
+</script>
+</body>
+</html>

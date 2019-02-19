@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="">
+<div class="heading">
+    <h3 class="green-heading">活动信息</h3>
+    <p class="warn-heading">所有内容必须与经审批通过后的活动内容一致，否则活动不予通过</p>
+    <p class="required-msg">*带红星为必填信息</p>
+    <button class="btn btn-primary copy-activity col-sm-offset-2" onclick="copyOldActivity()">复制已有优惠券信息</button>
+</div>
+<div class="ibox-content">
+    <form class="form-horizontal m-t" id="signupForm1">
+        <input id="activityId" name="activityId" class="form-control col-sm-7" type="hidden">
+        <input id="couponId" name="couponId" class="form-control col-sm-7" type="hidden">
+        <input id="couponSwitchStatus" name="couponSwitchStatus" class="form-control col-sm-7" type="hidden">
+        <input id="reviewNo" name="reviewNo" class="form-control col-sm-7" type="hidden">
+
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="activityCode">
+                <span class="required-msg">*</span>活动code：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="activityCode" name="activityCode" class="form-control col-sm-7" type="text" disabled>
+                <label class="col-sm-5"></label>
+            </div>
+            <label></label>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="activityName">
+                <span class="required-msg">*</span>活动简称：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="activityName" name="activityName" class="form-control col-sm-7" type="text"
+                       th:value="${activityName}">
+                <label class="col-sm-5 hint-tag" for="activityName">简单描述创建活动内容与优惠券类型</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="activityDesc">
+                <span class="required-msg">*</span>活动概述：
+            </label>
+            <div class="col-sm-9 row">
+                <textarea id="activityDesc" name="activityDesc" class="form-control col-sm-7" rows="3"
+                          th:value="${activityDesc}"></textarea>
+                <label class="col-sm-5 hint-tag" for="activityDesc">概括描述营销活动的具体内容</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="userDesc">
+                <span class="required-msg">*</span>活动目标：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="userDesc" name="userDesc" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="userDesc">例：拉新、促活</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="userFeature">
+                <span class="required-msg">*</span>目标客群特征描述：
+            </label>
+            <div class="col-sm-9 row">
+                <textarea id="userFeature" name="userFeature" class="form-control col-sm-7" rows="3"></textarea>
+                <label class="col-sm-5 hint-tag" for="userFeature">描述本次活动目标客户的特征点，具体是针对什么样的用户</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="activityTotalAmt">
+                <span class="required-msg">*</span>活动总预算：
+            </label>
+            <div class="col-sm-9 row">
+                <input id="activityTotalAmt" name="activityTotalAmt" class="form-control col-sm-7" type="text">
+                <label class="col-sm-5 hint-tag" for="activityTotalAmt">
+                    1、一个活动只有一张优惠券，活动总预算等于单个优惠券预算。<br>
+                    2、一个活动对应多张优惠券，活动总预算等于本次活动对应优惠券预算之和。大于总预算，优惠券不能提交审批</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label" for="userInfoFile">客群信息上传：</label>
+            <div class="col-sm-9 row">
+                <input type="file" id="userInfoFile" class="form-control col-sm-7" name="userInfoFile"
+                       multiple="multiple">
+                <label class="col-sm-5 hint-tag" for="userInfoFile">上传本次营销活动筛选出的客群用户列表</label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-8 col-sm-offset-3">
+                <button type="submit" class="btn btn-primary">下一页</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

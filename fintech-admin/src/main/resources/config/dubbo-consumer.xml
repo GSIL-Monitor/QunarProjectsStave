@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd	
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://code.alibabatech.com/schema/dubbo 
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties" ignore-unresolvable="true"/>
+
+    <dubbo:consumer>
+        <dubbo:parameter key="currentSystemName" value="fintech_admin"/>
+        <dubbo:parameter key="qloglevel" value="4"/>
+        <dubbo:parameter key="consumerRCFetchCls"
+                         value="com.qunar.fintech.plat.admin.support.monitor.DubboConsumerErrorCodeFetcher"/>
+    </dubbo:consumer>
+
+    <dubbo:application name="fintech_admin" owner="wei.duan" organization="fintech"/>
+
+    <!-- 营销系统 -->
+    <dubbo:registry id="marketing" address="${marketing-registry-address}"
+                    protocol="zookeeper"/>
+    <!-- 账务系统 -->
+    <dubbo:registry id="payAccountingCn1" address="${accounting-registry-address-cn1}"
+                    protocol="zookeeper"/>
+
+    <!-- 拿去花服务 start -->
+    <dubbo:registry id="iousRegistry" address="${ious-registry-address}" protocol="zookeeper"/>
+
+
+    <dubbo:reference check="false" id="activityFacade"
+                     interface="com.qunar.fintech.marketing.api.admin.facade.ActivityFacade"
+                     group="${marketing-service-group}" version="${marketing-service-version}"
+                     timeout="${marketing-service-timeout}" registry="marketing"/>
+
+    <dubbo:reference check="false" id="couponFacade"
+                     interface="com.qunar.fintech.marketing.api.admin.facade.CouponFacade"
+                     group="${marketing-service-group}" version="${marketing-service-version}"
+                     timeout="${marketing-service-timeout}" registry="marketing"/>
+    <dubbo:reference check="false" id="marketingFacade"
+                     interface="com.qunar.fintech.marketing.api.facade.MarketingFacade"
+                     group="${marketing-service-group}" version="${marketing-service-version}"
+                     timeout="${marketing-service-timeout}" registry="marketing"/>
+    <dubbo:reference check="false" id="userCouponFacade"
+                     interface="com.qunar.fintech.marketing.api.admin.facade.UserCouponFacade"
+                     group="${marketing-service-group}" version="${marketing-service-version}"
+                     timeout="${marketing-service-timeout}" registry="marketing"/>
+
+    <dubbo:reference check="false" id="couponAccountingFacade"
+                     interface="com.qunar.pay.g2.api.account.service.coupon.CouponAccountingFacade"
+                     group="${accounting-service-group}" version="1.0.0"
+                     timeout="${accounting-service-timeout}" registry="payAccountingCn1">
+    </dubbo:reference>
+
+    <dubbo:reference check="false" id="couponAccountManagementFacade"
+                     interface="com.qunar.pay.g2.api.account.service.coupon.CouponAccountManagementFacade"
+                     group="${accounting-service-group}" version="1.0.0" timeout="${accounting-service-timeout}"
+                     registry="payAccountingCn1">
+    </dubbo:reference>
+
+    <!--加解密服务-->
+    <dubbo:registry id="infoConvertRegister" protocol="zookeeper" address="${fintech-coreinfo-registry-address}"
+                    group="${fintech-coreinfo-service-group}"/>
+    <dubbo:reference id="infoConvertFacade" registry="infoConvertRegister"
+                     interface="com.qunar.fintech.coreinfo.api.facade.InfoConvertFacade"
+                     version="${fintech-coreinfo-service-version}" check="false">
+    </dubbo:reference>
+
+    <dubbo:reference check="false" id="merchantAccountQueryFacade"
+                     interface="com.qunar.pay.g2.api.account.service.MerchantAccountQueryFacade"
+                     group="${accounting-service-group}" version="1.0.0" timeout="${accounting-service-timeout}"
+                     registry="payAccountingCn1">
+    </dubbo:reference>
+
+    <dubbo:reference check="false" id="creditSigningManagementFacade"
+                     interface="com.qunar.pay.g2.api.account.service.credit.CreditSigningManagementFacade"
+                     group="${accounting-service-group}" version="${accounting-service-version}"  registry="payAccountingCn1">
+    </dubbo:reference>
+
+    <dubbo:reference id="iousManageFacade" interface="com.qunar.pay.g2.api.ious.facade.IousManageFacade"
+                     group="${ious-service-group}" version="${ious-service-version}" check="false" registry="iousRegistry"/>
+
+
+    <!-- 短信网关 -->
+    <dubbo:registry address="${gwmessage-registry-address}" protocol="zookeeper" id="commonRegistry"/>
+    <dubbo:reference check="false" id="gwMessageFacade"
+                     interface="com.qunar.pay.g2.api.message.GwMessageFacade"
+                     group="${gwmessage-service-group}"
+                     version="${gwmessage-service-version}"
+                     timeout="${gwmessage-service-timeout}"
+                     registry="commonRegistry">
+    </dubbo:reference>
+
+    <!-- 还款核心 -->
+    <dubbo:registry id="repayKernelRegistry" address="${repay-registry-address}" protocol="zookeeper"/>
+    <dubbo:reference id="userRepayIndAgentFacade" interface="com.qunar.pay.finance.repaykernel.api.manage.facade.UserRepayIndAgentFacade"
+                     group="${repay-service-group}"
+                     registry="repayKernelRegistry" version="${repay-service-version}"	timeout="${repay-service-timeout}" check="false">
+    </dubbo:reference>
+    <dubbo:reference id="repayKernelManageFacade" interface="com.qunar.pay.finance.repaykernel.api.manage.facade.RepayKernelManageFacade"
+                     group="${repay-service-group}"
+                     registry="repayKernelRegistry" version="${repay-service-version}"	timeout="${repay-service-timeout}" check="false">
+    </dubbo:reference>
+
+    <!--加密-->
+    <dubbo:registry id="transRegister" protocol="zookeeper" address="${zkAddress}" group="${group}" />
+
+    <dubbo:reference id="coreinfoService" registry="transRegister" interface="com.qunar.seccenter.coreinfo.api.CoreinfoService"
+                     version="1.0.0" check="false">
+
+    </dubbo:reference>
+
+    <!--获取platOpenId-->
+    <dubbo:registry id="nemoRegistry" address="${nemo-registry-address}" protocol="zookeeper" group="${nemo-group}"/>
+
+    <dubbo:reference id="userIdFacade" version="${nemo-version}" registry="nemoRegistry" check="false"
+                   interface="com.qunar.fintech.nemo.api.facade.UserIdFacade" />
+    <dubbo:reference id="finUserIdFacade"
+                     interface="com.qunar.fintech.nemo.api.facade.FinUserIdFacade"
+                     registry="nemoRegistry"
+                     version="${nemo-version}"
+                     timeout="${nemo-service-timeout}"
+                     check="false"/>
+
+    <!-- 贷前系统 -->
+    <dubbo:registry id="preloan-zk-address" protocol="zookeeper" address="${preloan-registry-address}" group="${preloan-service-group}"/>
+    <dubbo:reference check="false" id="preLoanQueryFacade" registry="preloan-zk-address" interface="com.qunar.pay.finance.preloan.api.facade.PreLoanQueryFacade"
+                     version="${preloan-service-version}"
+                     timeout="${preloan-service-timeout}">
+    </dubbo:reference>
+
+    <!--查询拿去花不可用原因-->
+    <dubbo:registry id="capetownRegistry" protocol="zookeeper" address="${capetown-registry-address}" group="${capetown-service-group}"/>
+    <dubbo:reference check="false" id="finOrderLogQueryFacade" registry="capetownRegistry" interface="com.qunar.finance.capetown.api.facade.FinOrderLogQueryFacade"
+                     version="${capetown-service-version}" timeout="${capetown-service-timeout}" group="${capetown-service-group}">
+    </dubbo:reference>
+
+    <dubbo:registry id="basic-info-registry" address="${routeInfo-registry-address}" group="${routeInfo-service-group}" protocol="zookeeper"/>
+    <dubbo:reference  id="channelQueryFacade"  interface="com.qunar.pay.finance.basicInfo.api.route.facade.ChannelQueryFacade"
+                      version="${routeInfo-service-version}" timeout="${routeInfo-service-timeout}" check="false"  registry="basic-info-registry" >
+    </dubbo:reference>
+    <dubbo:reference id="serialNoFacade" interface="com.qunar.pay.finance.basicInfo.api.basic.facade.SerialNoFacade"
+                     version="${routeInfo-service-version}" timeout="${routeInfo-service-timeout}" check="false" registry="basic-info-registry">
+    </dubbo:reference>
+
+    <!-- contract -->
+    <dubbo:registry id="contractRegistry" protocol="zookeeper" address="${contract-registry-address}"
+                    group="${contract-service-group}"/>
+    <dubbo:reference id="contractFacade"
+                     registry="contractRegistry"
+                     interface="com.qunar.fintech.contract.api.facade.ContractFacade"
+                     version="${contract-service-version}"
+                     timeout="${contract-service-timeout}"
+                     group="${contract-service-group}"
+                     check="false">
+    </dubbo:reference>
+    <dubbo:reference id="contractQueryFacade"
+                     registry="contractRegistry"
+                     interface="com.qunar.fintech.contract.api.facade.ContractQueryFacade"
+                     version="${contract-service-version}"
+                     timeout="${contract-service-timeout}"
+                     group="${contract-service-group}"
+                     check="false">
+    </dubbo:reference>
+    <dubbo:reference id="manageFacade"
+                     registry="contractRegistry"
+                     interface="com.qunar.fintech.contract.api.facade.ManageFacade"
+                     version="${contract-service-version}"
+                     timeout="${contract-service-timeout}"
+                     group="${contract-service-group}"
+                     check="false">
+    </dubbo:reference>
+    
+    <!-- hank 系统-->
+    <dubbo:registry id="hankRegistry" protocol="zookeeper" address="${hank-registry-address}"
+                    group="${hank-service-group}"/>
+    <dubbo:reference id="accountFileLaunchFacade"
+                     registry="hankRegistry"
+                     interface="com.qunar.fintech.hank.api.accountfile.facade.AccountFileLaunchFacade"
+                     version="${hank-service-version}"
+                     timeout="${contract-service-timeout}"
+                     group="${hank-service-group}"
+                     check="false">
+    </dubbo:reference>
+
+
+</beans>

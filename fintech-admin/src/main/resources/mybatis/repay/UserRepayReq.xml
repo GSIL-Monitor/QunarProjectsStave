@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.repay.UserRepayReqDao">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.UserRepayReq">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="req_user_id" jdbcType="VARCHAR" property="reqUserId"/>
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="org_channel" jdbcType="VARCHAR" property="orgChannel"/>
+        <result column="serial_no" jdbcType="VARCHAR" property="serialNo"/>
+        <result column="repay_amt" jdbcType="DECIMAL" property="repayAmt"/>
+        <result column="repay_prcp_amt" jdbcType="DECIMAL" property="repayPrcpAmt"/>
+        <result column="withhold_amt" jdbcType="DECIMAL" property="withholdAmt"/>
+        <result column="repay_req_amt" jdbcType="DECIMAL" property="repayReqAmt"/>
+        <result column="repay_succ_amt" jdbcType="DECIMAL" property="repaySuccAmt"/>
+        <result column="repay_failed_amt" jdbcType="DECIMAL" property="repayFailedAmt"/>
+        <result column="refund_amt" jdbcType="DECIMAL" property="refundAmt"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="repay_launch_time" jdbcType="TIMESTAMP" property="repayLaunchTime"/>
+        <result column="req_num" jdbcType="INTEGER" property="reqNum"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="repay_entry" jdbcType="VARCHAR" property="repayEntry"/>
+        <result column="client_mac" jdbcType="VARCHAR" property="clientMac"/>
+        <result column="client_gps" jdbcType="VARCHAR" property="clientGps"/>
+        <result column="qunar_trade_no" jdbcType="VARCHAR" property="qunarTradeNo"/>
+        <result column="sms_status" jdbcType="TINYINT" property="smsStatus"/>
+        <result column="pay_scene" jdbcType="VARCHAR" property="payScene"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, product_no, org_channel, user_id, serial_no, repay_amt,repay_prcp_amt, withhold_amt, repay_req_amt, repay_succ_amt, repay_failed_amt,refund_amt,
+        repay_launch_time, req_num, status, channel, repay_entry, client_mac, client_gps,qunar_trade_no, pay_scene,
+        sms_status, create_time, update_time, req_user_id
+    </sql>
+
+    <sql id="whereCondition">
+        <trim suffixOverrides=",">
+            <if test="request.productNo != null and request.productNo != ''">
+                AND product_no = #{request.productNo}
+            </if>
+            <if test="request.userId != null and request.userId != ''">
+                AND user_id = #{request.userId}
+            </if>
+            <if test="request.startTime != null">
+                AND create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND create_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+            <if test="request.orgChannel != null and  request.orgChannel != ''">
+                AND org_channel= #{request.orgChannel}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="countByRequest" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM
+        user_repay_req
+        WHERE 1 = 1
+        <include refid="whereCondition"/>
+    </select>
+
+    <select id="queryUserRepayReqList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_repay_req where  1 = 1
+        <include refid="whereCondition"/>
+        order by create_time DESC
+        LIMIT #{page.currentIndex}, #{page.pageSize}
+    </select>
+
+    <select id="queryBySerialNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_repay_req
+        where serial_no = #{serialNo}
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+	<div class="col-sm-12">
+		<div class="ibox">
+			<div class="ibox-body">
+				<table class="table table-striped" id="exampleTable" data-mobile-responsive="true">
+					<tr>
+						<th>序号</th>
+						<th>订单名称</th>
+						<th>贷款通道</th>
+						<th>订单时间</th>
+						<th>订单金额</th>
+						<th>借据号</th>
+						<th>已还金额</th>
+						<th>待还金额</th>
+					</tr>
+					<tr th:each="data,dataStat:${detailList}">
+						<td th:text="${data.index}"></td>
+						<td th:text="${data.productName}"></td>
+						<td th:text="${data.tppCode}"></td>
+						<td th:text="${#lists.isEmpty(data.payTime)}?'':${#dates.format(data.payTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+						<td th:text="${data.iousPayAmount}"></td>
+						<td th:text="${data.loanProvideNo}"></td>
+						<td th:text="${data.repaidAmount}"></td>
+						<td th:text="${data.needRepayAmount}"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div th:include="include::footer"></div>
+</body>
+
+</html>

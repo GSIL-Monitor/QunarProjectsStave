@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.preloan.TblVirtualContractDao" >
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.TblVirtualContract" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_no" property="productNo" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="identity_type" property="identityType" jdbcType="VARCHAR"/>
+        <result column="identity_code" property="identityCode" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="contract_status" property="contractStatus" jdbcType="TINYINT"/>
+        <result column="ious_begin_time" property="iousBeginTime" jdbcType="TIMESTAMP"/>
+        <result column="ious_end_time" property="iousEndTime" jdbcType="TIMESTAMP"/>
+        <result column="contract_no" property="contractNo" jdbcType="VARCHAR"/>
+        <result column="contract_amount" property="contractAmount" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="accounting_status" property="accountingStatus" jdbcType="TINYINT"/>
+        <result column="pay_switch" property="paySwitch" jdbcType="TINYINT"/>
+        <result column="rate" property="rate" jdbcType="DECIMAL"/>
+        <result column="rate_type" property="rateType" jdbcType="TINYINT"/>
+        <result column="auto_repay_sign_status" property="autoRepaySignStatus" jdbcType="VARCHAR"/>
+        <result column="is_auto_pepay_pop" property="isAutoPepayPop" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, product_no,user_id, mobile, user_name,identity_code
+    </sql>
+
+    <sql id="whereCondition1">
+        <trim suffixOverrides=",">
+            <if test="productNo != null and productNo != ''">
+                AND product_no = #{productNo}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="whereCondition2">
+        <trim suffixOverrides=",">
+            <if test="userName != null and userName != ''">
+                AND user_name = #{userName}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND mobile = #{mobile}
+            </if>
+        </trim>
+    </sql>
+    
+    <select id="queryMobileByUserId"  parameterType="Object" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_ious_virtual_contract
+    where user_id IN 
+        <foreach item="item" index="index" collection="userIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+  </select>
+
+    <select id="queryUserIdsByMobile"  parameterType="Object" resultMap="BaseResultMap">
+        select
+        user_id AS userId ,
+        user_name AS userName ,
+        mobile  AS mobile
+        from tbl_ious_virtual_contract
+        where mobile = #{mobile}
+    </select>
+
+    <select id="queryByMobileProductNo"  parameterType="Object" resultMap="BaseResultMap">
+        select
+        user_id AS userId ,
+        user_name AS userName ,
+        mobile  AS mobile,
+        product_no AS productNo
+        from tbl_ious_virtual_contract
+        where mobile = #{mobile} and product_no = #{productNo}
+    </select>
+
+    <select id="queryByUserIdProductNo"  parameterType="Object" resultMap="BaseResultMap">
+        select
+        user_id AS userId ,
+        user_name AS userName ,
+        mobile  AS mobile,
+        product_no AS productNo
+        from tbl_ious_virtual_contract
+        where user_id = #{userId} and product_no = #{productNo}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_ious_virtual_contract
+        where 1=1
+        <include refid="whereCondition1" />
+    </select>
+
+    <select id="selectByUserNameMobile" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_ious_virtual_contract
+        where 1=1
+        <include refid="whereCondition2" />
+    </select>
+</mapper>

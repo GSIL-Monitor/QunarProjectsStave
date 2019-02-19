@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/css/animate.css" rel="stylesheet">
+	<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+	<script src="/static/appjs/contract/popUp.js"></script>
+</head>
+
+<div id="confirmDialog" style="display:none;z-index:9999;position: absolute;border:1px solid #A0A0A0;background-color: #F8F8F8;">
+	<div style="background-color: #A4D3EE;">
+		<div style="padding:5px;font-size:13pt;">
+			二次确认弹窗
+		</div>
+	</div>
+	<div id = "topTexts" style="padding-bottom:10px; padding-left: 10px; padding-top: 5px">
+	</div>
+	<div id = "inputTip" style="padding-bottom:10px; padding-left: 10px; padding-top: 0px">请输入字段确认:
+	</div>
+	<div style="padding-left: 10px">
+		<div style="padding-bottom:10px;">产品编码:
+			<input type="text" style="width:70px;" id="confirmProductNo">
+		</div>
+		<div>通道编码:
+			<input type="text" style="width:70px;" id="confirmTppCode">
+		</div>
+	</div>
+	<div style="padding: 15px; margin-left: 40px; float: left;">
+		<input type="button" value="确定" style="width: 85px;" id="popConfirmButton">
+	</div>
+	<div style="padding: 15px; margin-right: 40px; float: right;">
+		<input type="button" value="取消" style="width: 85px;" id="popCancelButton">
+	</div>
+</div>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content" style="overflow-x: scroll;width:100%;white-space: nowrap;">
+		<div class="row" >
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="form-horizontal m-t">
+							<input id="queryType" name="queryType"
+								   type="hidden" th:value="${type}" />
+							<div class="form-inline">
+								<span class="platId">
+									<label class="control-label">用户platId：</label><input id="platId" name="platId" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span class="customId">
+									<label class="control-label">用户customId：</label><input id="customId" name="customId" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span class="identityCode">
+									<label class="control-label">身份证号：</label><input id="identityCode" name="identityCode" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span class="mobile">
+									<label class="control-label">手机号：</label><input id="mobile" name="mobile" class="form-control" />
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							</div><br>
+							<div class="form-inline">
+								<span>
+									<label class="control-label">业务来源：</label>
+									<select id="orgChannel" name="orgChannel" class="form-control">
+										<option value="" selected="selected">All</option>
+										<option value="QUNAR">QUNAR</option>
+										<option value="CTRIP">CTRIP</option>
+									</select>
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<span>
+									<label class="control-label">产品线：</label>
+									<select id="productNo" name="productNo" class="form-control">
+										<option value="IOUS" selected="selected">拿去花</option>
+										<option value="CASH">借趣花</option>
+										<option value="MART">贷款超市</option>
+										<option value="ELITE">精英白领贷</option>
+										<option value="BOSS">小企业主贷</option>
+									</select>
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<span>
+									<label class="control-label">贷款提供商：</label>
+									<select id="tppCode" name="tppCode" class="form-control">
+										<option value="" selected="selected">请选择</option>
+									</select>
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							</div><br>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<span>
+										<button class="btn btn-primary" id="queryContract">查询</button>
+									</span>
+									<span>
+										<button class="btn btn-primary" id="clearAll">清空</button>
+									</span>
+								</div>
+							</div>
+							<div>
+								<p style="font-family:verdana;color:#ff0000">使用提示：</p><br>
+								<p style="font-family:verdana;font-size:80%;color:#1d6180;line-height:20%">1. platId、customId、手机号、身份证号至少一项不为空，查询优先级顺序为platId、customId、身份证、手机号</p><br>
+								<p style="font-family:verdana;font-size:80%;color:#1d6180;line-height:20%">2. 手机号查询可能得到多张平台合同及其对应的通道合同，请从中选择所需的身份证号重新查询</p><br>
+								<p style="font-family:verdana;font-size:80%;color:#1d6180;line-height:20%">3. 查询仅支持加密的手机号和身份证号</p><br>
+							</div>
+						</div>
+					</div>
+					<!--<div id="ious" style="display: none;font-size: 15px;color: black;">拿去花信息</div>-->
+					<div class="ibox-body" style="overflow: scroll">
+						<table id="platContract" data-mobile-responsive="true">
+						</table>
+					</div><br><br>
+					<!--<div id="cash" style="display: none;font-size: 15px;color: black;">借趣花信息</div>-->
+					<div class="ibox-body" style="overflow: scroll">
+						<table id="channelContract" data-mobile-responsive="true">
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script src="/static/appjs/contract/query.js"></script>
+</body>
+
+</html>

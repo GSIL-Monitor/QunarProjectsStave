@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/cache
+     http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="classpath:cache.properties" ignore-unresolvable="true"/>
+
+    <!--<cache:annotation-driven cache-manager="cacheManager"/>-->
+
+    <!--<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">-->
+        <!--<property name="cacheManager">-->
+            <!--<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">-->
+                <!--<property name="configLocation" value="classpath:config/ehcache.xml"/>-->
+                <!--<property name="shared" value="true"/>-->
+            <!--</bean>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--<bean name="memcachedClientBuilder" class="net.rubyeye.xmemcached.XMemcachedClientBuilder">-->
+        <!--<constructor-arg>-->
+            <!--<list>-->
+                <!--<bean class="java.net.InetSocketAddress">-->
+                    <!--<constructor-arg>-->
+                        <!--<value>${memcached.server1.host}</value>-->
+                    <!--</constructor-arg>-->
+                    <!--<constructor-arg>-->
+                        <!--<value>11211</value>-->
+                    <!--</constructor-arg>-->
+                <!--</bean>-->
+                <!--<bean class="java.net.InetSocketAddress">-->
+                    <!--<constructor-arg>-->
+                        <!--<value>${memcached.server2.host}</value>-->
+                    <!--</constructor-arg>-->
+                    <!--<constructor-arg>-->
+                        <!--<value>11211</value>-->
+                    <!--</constructor-arg>-->
+                <!--</bean>-->
+                <!--<bean class="java.net.InetSocketAddress">-->
+                    <!--<constructor-arg>-->
+                        <!--<value>${memcached.server3.host}</value>-->
+                    <!--</constructor-arg>-->
+                    <!--<constructor-arg>-->
+                        <!--<value>11211</value>-->
+                    <!--</constructor-arg>-->
+                <!--</bean>-->
+            <!--</list>-->
+        <!--</constructor-arg>-->
+        <!--<constructor-arg>-->
+            <!--<list>-->
+                <!--<value>1</value>-->
+                <!--<value>1</value>-->
+                <!--<value>1</value>-->
+            <!--</list>-->
+        <!--</constructor-arg>-->
+        <!--<property name="connectionPoolSize" value="20"></property>-->
+        <!--<property name="commandFactory">-->
+            <!--<bean class="net.rubyeye.xmemcached.command.TextCommandFactory"/>-->
+        <!--</property>-->
+        <!--<property name="sessionLocator">-->
+            <!--<bean class="net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator"/>-->
+        <!--</property>-->
+        <!--<property name="transcoder">-->
+            <!--<bean class="net.rubyeye.xmemcached.transcoders.SerializingTranscoder"/>-->
+        <!--</property>-->
+        <!--<property name="bufferAllocator">-->
+            <!--<bean class="net.rubyeye.xmemcached.buffer.SimpleBufferAllocator"></bean>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="memcachedClient"-->
+          <!--class="com.qunar.fintech.util.cache.MonitoredMemcacheClient">-->
+        <!--<constructor-arg index="0">-->
+            <!--<bean factory-bean="memcachedClientBuilder" factory-method="build"-->
+                  <!--destroy-method="shutdown"/>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+
+    <!--<bean id="memcacheTemplate"-->
+          <!--class="com.qunar.fintech.util.cache.MemcacheTemplate">-->
+        <!--<property name="cacheClient" ref="memcachedClient"/>-->
+        <!--<property name="cacheKeyPrefix" value="${memcached.prefix}"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="memcacheLock" class="com.qunar.fintech.util.lock.MemcacheLock">-->
+        <!--<constructor-arg index="0" ref="memcacheTemplate"/>-->
+    <!--</bean>-->
+
+
+    <bean name="sedisClient" class="com.qunar.redis.storage.Sedis">
+        <constructor-arg index="0" type="java.lang.String" value="${redis.namespace}"/> <!-- DBA分配给业务的namespace -->
+        <constructor-arg index="1" type="java.lang.String" value="${redis.cipher}"/> <!-- DBA分配给业务的cipher-->
+        <constructor-arg index="2" type="java.lang.String" value="${redis.zkAddress}"/>
+    </bean>
+
+    <!-- redis client -->
+    <bean id="redisClient" class="com.qunar.fintech.util.cache.MonitoredRedisClient">
+        <constructor-arg index="0" ref="sedisClient" />
+    </bean>
+
+    <bean id="redisTemplate" class="com.qunar.fintech.util.cache.RedisTemplate">
+        <property name="cacheClient" ref="redisClient" />
+        <property name="cacheKeyPrefix" value="${redis.key.prefix}" />
+    </bean>
+
+    <bean id="redisLock" class="com.qunar.fintech.util.lock.RedisLock">
+        <constructor-arg index="0" ref="redisTemplate" />
+    </bean>
+
+    <bean id="orderLock" class="com.qunar.fintech.plat.admin.support.lock.BusiLocker">
+        <property name="lockTemplate">
+            <bean class="com.qunar.fintech.util.lock.LockedExecutorTemplate">
+                <property name="distributedLock" ref="redisLock"/>
+                <property name="lockProcessStrategy">
+                    <bean class="com.qunar.fintech.util.lock.DefaultLockProcessStrategy">
+                        <property name="lockUsedReturnStrategy" value="RETURN_FALSE"/>
+                        <!--如果锁系统发生异常，那么当成异常进行处理-->
+                        <property name="lockGotExReturnStrategy" value="RETURN_FALSE"/>
+                        <!--如果锁系统发生异常，那么会重试两次，重试完之后，忽略异常-->
+                        <property name="lockUsedRetryTimes" value="2"/>
+                        <property name="lockUsedRetryLockIntervalMills" value="3000"/>
+                        <!--如果锁系统发生异常，那么会重试两次，重试完之后，忽略异常-->
+                        <property name="lockGotExRetryTimes" value="2"/>
+                        <property name="lockGotExRetryIntervalMills" value="30"/>
+                    </bean>
+                </property>
+                <property name="defaultExpiredSecs" value="15"/>
+            </bean>
+        </property>
+    </bean>
+</beans>

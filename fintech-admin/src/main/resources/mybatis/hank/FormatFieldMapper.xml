@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.hank.mapper.FormatFieldMapper">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.hank.entity.FormatField">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+        <result column="receiver" jdbcType="VARCHAR" property="receiver" />
+        <result column="out_order" jdbcType="TINYINT" property="outOrder" />
+        <result column="out_key" jdbcType="VARCHAR" property="outKey" />
+        <result column="out_remark" jdbcType="VARCHAR" property="outRemark"/>
+        <result column="operate_field" jdbcType="VARCHAR" property="operateField" />
+        <result column="operate_command" jdbcType="VARCHAR" property="operateCommand" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, task_type, receiver, out_order, out_key, out_remark, operate_field, operate_command, status
+    </sql>
+
+    <!-- 根据 id 查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from format_field where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据 taskType 和 receiver 查询 -->
+    <select id="selectByTaskTypeAndReceiver" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from format_field
+        where task_type = #{taskType,jdbcType=VARCHAR} and receiver = #{receiver,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="select" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from format_field
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 条件查询数量 -->
+    <select id="count" parameterType="java.lang.Object" resultType="int">
+        select count(*) from format_field
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入 -->
+    <insert id="insertSelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.FormatField">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into format_field
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="receiver != null">
+                receiver,
+            </if>
+            <if test="outOrder != null">
+                out_order,
+            </if>
+            <if test="outKey != null">
+                out_key,
+            </if>
+            <if test="outRemark != null">
+                out_remark,
+            </if>
+            <if test="operateCommand != null">
+                operate_command,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="operateField != null">
+                operate_field,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="receiver != null">
+                #{receiver,jdbcType=VARCHAR},
+            </if>
+            <if test="outOrder != null">
+                #{outOrder,jdbcType=TINYINT},
+            </if>
+            <if test="outKey != null">
+                #{outKey,jdbcType=VARCHAR},
+            </if>
+            <if test="outRemark != null">
+                #{outRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="operateCommand != null">
+                #{operateCommand,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="operateField != null">
+                #{operateField,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.FormatField">
+        update format_field
+        <set>
+            <if test="taskType != null">
+                task_type = #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="receiver != null">
+                receiver = #{receiver,jdbcType=VARCHAR},
+            </if>
+            <if test="outOrder != null">
+                out_order = #{outOrder,jdbcType=TINYINT},
+            </if>
+            <if test="outKey != null">
+                out_key = #{outKey,jdbcType=VARCHAR},
+            </if>
+            <if test="outRemark != null">
+                out_remark = #{outRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="operateCommand != null">
+                operate_command = #{operateCommand,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="operateField != null">
+                operate_field = #{operateField,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.ious.TblIousPayDao">
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.entity.TblIousPay">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="req_user_id" property="reqUserId" jdbcType="VARCHAR"/>
+        <result column="pay_id" property="payId" jdbcType="VARCHAR"/>
+        <result column="gw_pay_id" property="gwPayId" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="order_time" property="orderTime" jdbcType="TIMESTAMP"/>
+        <result column="request_time" property="requestTime" jdbcType="TIMESTAMP"/>
+        <result column="busi_order_no" property="busiOrderNo" jdbcType="VARCHAR"/>
+        <result column="busi_type_id" property="busiTypeId" jdbcType="VARCHAR"/>
+        <result column="busi_type_name" property="busiTypeName" jdbcType="VARCHAR"/>
+        <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR"/>
+        <result column="pay_amount" property="payAmount" jdbcType="DECIMAL"/>
+        <result column="ious_pay_amount" property="iousPayAmount" jdbcType="DECIMAL"/>
+        <result column="ious_refund_amount" property="iousRefundAmount" jdbcType="DECIMAL"/>
+        <result column="loan_term" property="loanTerm" jdbcType="INTEGER"/>
+        <result column="loan_provide_no" property="loanProvideNo" jdbcType="VARCHAR"/>
+        <result column="tpp_code" property="tppCode" jdbcType="VARCHAR"/>
+        <result column="product_no" property="productNo" jdbcType="VARCHAR"/>
+        <result column="trx_id" property="trxId" jdbcType="VARCHAR"/>
+        <result column="qunar_trade_no" property="qunarTradeNo" jdbcType="VARCHAR"/>
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="source" property="source" jdbcType="TINYINT"/>
+        <result column="error_code" property="errorCode" jdbcType="VARCHAR"/>
+        <result column="error_msg" property="errorMsg" jdbcType="VARCHAR"/>
+        <result column="accounting_sequence" property="accountingSequence" jdbcType="VARCHAR"/>
+        <result column="accounting_status" property="accountingStatus" jdbcType="TINYINT"/>
+        <result column="req_num" property="reqNum" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="base_select">
+        tip.id                       AS   id
+        ,tip.user_id                 AS   userId
+        ,tip.req_user_id             AS   reqUserId
+        ,tip.gw_pay_id               AS   gwPayId
+        ,tip.pay_id                  AS   payId
+        ,tip.order_no                AS   orderNo
+        ,tip.order_time              AS   orderTime
+        ,tip.request_time            AS   requestTime
+        ,tip.busi_order_no           AS   busiOrderNo
+        ,tip.busi_type_id            AS   busiTypeId
+        ,tip.busi_type_name          AS   busiTypeName
+        ,tip.merchant_code           AS   merchantCode
+        ,tip.pay_amount              AS   payAmount
+        ,tip.ious_pay_amount         AS   iousPayAmount
+        ,tip.ious_refund_amount      AS   iousRefundAmount
+        ,tip.loan_term               AS   loanTerm
+        ,tip.loan_provide_no         AS   loanProvideNo
+        ,tip.tpp_code                AS   tppCode
+        ,tip.product_no              AS   productNo
+        ,tip.trx_id                  AS   trxId
+        ,tip.qunar_trade_no          AS   qunarTradeNo
+        ,tip.remark                  AS   remark
+        ,tip.pay_time                AS   payTime
+        ,tip.status                  AS   status
+        ,tip.source                  AS   source
+        ,tip.error_code              AS   errorCode
+        ,tip.error_msg               AS   errorMsg
+        ,tip.accounting_sequence     AS   accountingSequence
+        ,tip.accounting_status       AS   accountingStatus
+        ,tip.req_num                 AS   reqNum
+        ,tip.create_time             AS   createTime
+        ,tip.update_time             AS   updateTime
+  </sql>
+    <sql id="Base_Column_List">
+    id, user_id, gw_pay_id, pay_id, order_no, order_time, request_time, busi_order_no, busi_type_id,
+    busi_type_name, merchant_code, pay_amount, ious_pay_amount, ious_refund_amount, loan_term,
+    loan_provide_no, tpp_code, product_no, trx_id, qunar_trade_no, pay_time, remark,
+    status, source, error_code, error_msg, accounting_sequence, accounting_status, req_num,
+    create_time, update_time
+  </sql>
+    <sql id="wherecontation">
+        <where>
+            <if test="request.userId != null and request.userId != ''">
+                AND tip.user_id = #{request.userId,jdbcType=VARCHAR}
+            </if>
+            <if test="request.orderNo != null and request.orderNo != ''">
+                AND tip.order_no = #{request.orderNo,jdbcType=BIGINT}
+            </if>
+            <if test="request.orgChannel != null and  request.orgChannel != ''">
+                AND tip.org_channel= #{request.orgChannel}
+            </if>
+            <if test="request.payId != null and request.payId != ''">
+                AND tip.pay_id = #{request.payId,jdbcType=BIGINT}
+            </if>
+            <if test="request.busiOrderNo != null and request.busiOrderNo != ''">
+                AND tip.busi_order_no = #{request.busiOrderNo,jdbcType=BIGINT}
+            </if>
+            <if test="request.productNo != null and request.productNo != ''">
+                AND tip.product_no = #{request.productNo,jdbcType=BIGINT}
+            </if>
+            <if test="request.tppCode != null and request.tppCode != ''">
+                AND tip.tpp_code = #{request.tppCode,jdbcType=BIGINT}
+            </if>
+            <if test="request.loanProvideNo != null and request.loanProvideNo != ''">
+                AND tip.loan_provide_no = #{request.loanProvideNo,jdbcType=BIGINT}
+            </if>
+            <if test="request.orderTimeStartTime != null and request.orderTimeStartTime != ''">
+                AND tip.order_time <![CDATA[ >= ]]> #{request.orderTimeStartTime}
+            </if>
+            <if test="request.orderTimeEndTime != null and request.orderTimeEndTime != ''">
+                AND tip.order_time <![CDATA[ <= ]]> #{request.orderTimeEndTime}
+            </if>
+            <if test="request.busiTypeId != null and request.busiTypeId != ''">
+                AND tip.busi_type_id = #{request.busiTypeId,jdbcType=BIGINT}
+            </if>
+            <if test="request.merchantCode != null and request.merchantCode != ''">
+                AND tip.merchant_code = #{request.merchantCode,jdbcType=BIGINT}
+            </if>
+            <if test="request.status != null">
+                AND tip.status = #{request.status,jdbcType=BIGINT}
+            </if>
+            <if test="request.gwPayId != null and request.gwPayId != ''">
+                AND tip.gw_pay_id = #{request.gwPayId}
+            </if>
+        </where>
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_ious_pay
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryTblIousPayByRequest" resultMap="BaseResultMap">
+        SELECT
+        <include refid="base_select"/>
+        FROM
+        tbl_ious_pay AS tip
+        <include refid="wherecontation"/>
+        order by tip.pay_time desc
+        limit #{page.fromIndex}, #{page.pageSize}
+    </select>
+
+    <select id="countIousPayByRequest" resultType="java.lang.Integer">
+        SELECT
+        count(*)
+        FROM
+        tbl_ious_pay AS tip
+        <include refid="wherecontation"/>
+    </select>
+
+    <select id="selectPayByOrderNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_ious_pay
+        where order_no = #{orderNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryTblIousPayByBankSerialNo" parameterType="String" resultMap="BaseResultMap">
+        select
+        <include refid="base_select"/>
+        from tbl_ious_pay
+        where  loan_provide_no = #{bankSerialNo}
+    </select>
+
+    <select id="getIousPayListByRequest" parameterType="Object" resultMap="BaseResultMap">
+        select
+        pay_id as payId
+        ,loan_provide_no as loanProvideNo
+        ,order_no as orderNo
+        ,req_user_id as reqUserId
+        from tbl_ious_pay
+        WHERE pay_id in
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item.payId}
+        </foreach>
+    </select>
+
+    <select id="selectIousPayByPayId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_ious_pay
+        where
+        pay_id = #{payId}
+    </select>
+
+    <select id="seltIousPayByGwPayIdList" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_ious_pay
+        where
+        gw_pay_id IN
+        <foreach collection="list" close=")" open="(" separator="," item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

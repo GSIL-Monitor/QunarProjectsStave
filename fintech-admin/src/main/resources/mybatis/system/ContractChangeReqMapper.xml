@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.system.dao.mapper.ContractChangeReqDao">
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.system.dao.entity.ContractChangeReq">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="req_no" jdbcType="VARCHAR" property="reqNo"/>
+        <result column="custom_id" jdbcType="VARCHAR" property="customId"/>
+        <result column="plat_id" jdbcType="VARCHAR" property="platId"/>
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="org_channel" jdbcType="VARCHAR" property="orgChannel"/>
+        <result column="tpp_code" jdbcType="VARCHAR" property="tppCode"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="busi_type" jdbcType="TINYINT" property="busiType"/>
+        <result column="proc_status" jdbcType="TINYINT" property="procStatus"/>
+        <result column="err_code" jdbcType="VARCHAR" property="errCode"/>
+        <result column="err_msg" jdbcType="VARCHAR" property="errMsg"/>
+        <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, req_no, custom_id, plat_id, product_no, org_channel, tpp_code, email, busi_type, proc_status, err_code, err_msg,
+    finish_time, create_time, update_time
+    </sql>
+
+    <sql id="whereCondition">
+        <trim suffixOverrides=",">
+            <if test="request.reqNo != null">
+                req_no = #{request.reqNo,jdbcType=VARCHAR}
+            </if>
+            <if test="request.customId != null">
+                AND custom_id = #{request.customId,jdbcType=VARCHAR}
+            </if>
+            <if test="request.productNo != null">
+                AND product_no = #{request.productNo,jdbcType=VARCHAR}
+            </if>
+            <if test="request.email != null">
+                AND email = #{request.email,jdbcType=VARCHAR}
+            </if>
+            <if test="request.startTime != null">
+                AND create_time <![CDATA[ >= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND create_time <![CDATA[ <= ]]> #{request.endTime}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryByReqNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_change_req
+        where req_no = #{reqNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryByCusIdAndPrd" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_change_req
+        where custom_id = #{customId,jdbcType=VARCHAR}
+        AND product_no = #{productNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryByParam" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_change_req
+        <where>
+            <include refid="whereCondition"/>
+        </where>
+        order by create_time DESC
+        LIMIT #{pageIndex}, #{pageSize}
+    </select>
+
+    <select id="countByRequest" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM contract_change_req
+        <where>
+            <include refid="whereCondition"/>
+        </where>
+    </select>
+
+    <insert id="insertReq" parameterType="com.qunar.fintech.plat.admin.system.dao.entity.ContractChangeReq" useGeneratedKeys="true" keyProperty="id">
+        insert into contract_change_req
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reqNo != null">
+                req_no,
+            </if>
+            <if test="customId != null">
+                custom_id,
+            </if>
+            <if test="platId != null">
+                plat_id,
+            </if>
+            <if test="productNo != null">
+                product_no,
+            </if>
+            <if test="orgChannel != null">
+                org_channel,
+            </if>
+            <if test="tppCode != null">
+                tpp_code,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="busiType != null">
+                busi_type,
+            </if>
+            <if test="procStatus != null">
+                proc_status,
+            </if>
+            <if test="errCode != null">
+                err_code,
+            </if>
+            <if test="errMsg != null">
+                err_msg,
+            </if>
+            <if test="finishTime != null">
+                finish_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reqNo != null">
+                #{reqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="customId != null">
+                #{customId,jdbcType=VARCHAR},
+            </if>
+            <if test="platId != null">
+                #{platId,jdbcType=VARCHAR},
+            </if>
+            <if test="productNo != null">
+                #{productNo,jdbcType=VARCHAR},
+            </if>
+            <if test="orgChannel != null">
+                #{orgChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="tppCode != null">
+                #{tppCode,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null">
+                #{busiType,jdbcType=TINYINT},
+            </if>
+            <if test="procStatus != null">
+                #{procStatus,jdbcType=TINYINT},
+            </if>
+            <if test="errCode != null">
+                #{errCode,jdbcType=VARCHAR},
+            </if>
+            <if test="errMsg != null">
+                #{errMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="finishTime != null">
+                #{finishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByIdAndProcStatus" flushCache="false">
+        update contract_change_req
+        <set>
+            <if test="record.reqNo != null">
+                req_no = #{record.reqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="record.customId != null">
+                custom_id = #{record.customId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.platId != null">
+                plat_id = #{record.platId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.productNo != null">
+                product_no = #{record.productNo,jdbcType=VARCHAR},
+            </if>
+            <if test="record.orgChannel != null">
+                org_channel = #{record.orgChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tppCode != null">
+                tpp_code = #{record.tppCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.email != null">
+                email = #{record.email,jdbcType=VARCHAR},
+            </if>
+            <if test="record.busiType != null">
+                busi_type = #{record.busiType,jdbcType=TINYINT},
+            </if>
+            <if test="record.procStatus != null">
+                proc_status = #{record.procStatus,jdbcType=TINYINT},
+            </if>
+            <if test="record.errCode != null">
+                err_code = #{record.errCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.errMsg != null">
+                err_msg = #{record.errMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="record.finishTime != null">
+                finish_time = #{record.finishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.createTime != null">
+                create_time = #{record.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.updateTime != null">
+                update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+        AND proc_status in
+        <foreach item="item" index="index" collection="procStatusList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

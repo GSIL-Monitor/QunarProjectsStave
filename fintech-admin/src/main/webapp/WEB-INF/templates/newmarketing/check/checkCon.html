@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" href="/static/appjs/layui/css/layui.css" media="all"/>
+<link rel="shortcut icon" href="favicon.ico">
+<link href="/resources/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="/resources/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="/resources/css/animate.css" rel="stylesheet">
+<link href="/resources/css/style.css?v=4.1.0" rel="stylesheet">
+<link href="/resources/css/marketing/checkCon.css" rel="stylesheet">
+<body class="">
+<div class="wrapper wrapper-content">
+    <input id="activityCode" name="activityCode"
+           type="hidden" th:value="${activityCode}"/>
+
+    <div class="process-area row">
+        <!-- <div class="process-bt col-sm-2">
+            <img src="../../../../resources/img/marketing/admin-icon.png"/>
+            <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+            <p>B岗产品审核</p>
+        </div>
+        <div class="process-bt col-sm-2">
+            <img src="../../../../resources/img/marketing/admin-icon.png"/>
+            <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+            <p>QA审核</p>
+        </div>
+        <div class="process-bt col-sm-2">
+            <img src="../../../../resources/img/marketing/admin-icon.png"/>
+            <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+            <p>法务审核</p>
+        </div>
+        <div class="process-bt col-sm-2">
+            <img src="../../../../resources/img/marketing/admin-icon.png"/>
+            <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+            <p>财务审核</p>
+        </div>
+        <div class="process-bt col-sm-2">
+            <img src="../../../../resources/img/marketing/admin-icon.png"/>
+            <img src="../../../../resources/img/marketing/admin-arrow.png"/>
+            <p>负责人审核</p>
+        </div>
+        <div class="process-bt col-sm-2">
+            <img src="../../../../resources/img/marketing/admin-icon.png"/>
+            <p>产品待发布</p>
+        </div> -->
+    </div>
+    <table class="table table-bordered table-check-res">
+
+    </table>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/static/appjs/newmarketing/check/checkCon.js"></script>
+<script src="/static/appjs/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+    });
+</script>
+</body>
+</html>

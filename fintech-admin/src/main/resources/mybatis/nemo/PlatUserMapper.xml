@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.fintech.plat.admin.query.dao.nemo.PlatUserMapper">
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.query.vo.NemoQueryVo">
+        <result column="plat_openid" property="platOpenId" jdbcType="VARCHAR"/>
+        <result column="origin_userid" property="originUserId" jdbcType="VARCHAR"/>
+        <result column="org_channel" property="orgChannel" jdbcType="VARCHAR"/>
+        <result column="customer_id" property="customerId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="TblBaseResultMap" type="com.qunar.fintech.plat.admin.query.vo.NemoQueryVo">
+        <result column="user_id" jdbcType="VARCHAR" property="originUserId"/>
+        <result column="user_channel" jdbcType="VARCHAR" property="orgChannel"/>
+        <result column="plat_openid" jdbcType="VARCHAR" property="platOpenId"/>
+        <result column="customer_id" jdbcType="VARCHAR" property="customerId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    plat_openid, origin_userid, org_channel, customer_id
+  </sql>
+
+    <select id="selectByPlatId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plat_user
+        <where>
+            <if test="nemoQuery.exportType ==1 ">
+                and plat_openid = #{nemoQuery.platOpenId,jdbcType=VARCHAR}
+            </if>
+            <if test="nemoQuery.exportType == 2 ">
+                and origin_userid = #{nemoQuery.originUserId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <!--<if test="nemoQuery.currentIndex != null and nemoQuery.pageSize != null">-->
+            <!--limit #{nemoQuery.currentIndex},#{nemoQuery.pageSize}-->
+        <!--</if>-->
+    </select>
+
+    <select id="countByPlatId" resultType="java.lang.Integer">
+        select
+        count(*)
+        from plat_user
+        <where>
+            <if test="nemoQuery.platOpenId !=null and nemoQuery.platOpenId != ''">
+                and plat_openid = #{nemoQuery.platOpenId,jdbcType=VARCHAR}
+            </if>
+            <if test="nemoQuery.originUserId !=null and nemoQuery.originUserId != ''">
+                and origin_userid = #{nemoQuery.originUserId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 查询分表数据-->
+    <select id="selectTblByPlatId"  resultMap="TblBaseResultMap">
+        select user_id, user_channel, plat_openid ,customer_id
+        from ${tableName}
+        <where>
+            <if test="nemoQuery.exportType ==1 ">
+                and plat_openid = #{nemoQuery.platOpenId,jdbcType=VARCHAR}
+            </if>
+            <if test="nemoQuery.exportType == 2 ">
+                and user_id = #{nemoQuery.originUserId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+</mapper>

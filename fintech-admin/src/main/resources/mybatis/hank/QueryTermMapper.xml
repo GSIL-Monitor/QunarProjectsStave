@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qunar.fintech.plat.admin.hank.mapper.QueryTermMapper">
+
+    <resultMap id="BaseResultMap" type="com.qunar.fintech.plat.admin.hank.entity.QueryTerm">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+        <result column="query_mode" jdbcType="TINYINT" property="queryMode" />
+        <result column="query_group" jdbcType="TINYINT" property="queryGroup" />
+        <result column="group_order" jdbcType="TINYINT" property="groupOrder" />
+        <result column="query_field" jdbcType="VARCHAR" property="queryField" />
+        <result column="query_command" jdbcType="VARCHAR" property="queryCommand" />
+        <result column="query_value" jdbcType="VARCHAR" property="queryValue" />
+        <result column="step_length" jdbcType="TINYINT" property="stepLength" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, task_type, query_mode, query_group, group_order, query_field, query_command, query_value, step_length, status
+    </sql>
+
+    <!-- 通过 id 查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from query_term where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 通过 task_type 和 query_mode 查询-->
+    <select id="selectByTaskTypeAndQueryMode" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from query_term
+        <where>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="queryMode != null and queryMode != ''">
+                and query_mode = #{queryMode,jdbcType=TINYINT}
+            </if>
+        </where>
+        order by id
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="select" parameterType="java.lang.Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from query_term
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="queryMode != null and queryMode != ''">
+                and query_mode = #{queryMode,jdbcType=TINYINT}
+            </if>
+        </where>
+        order by id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 条件查询数量 -->
+    <select id="count" parameterType="java.lang.Object" resultType="int">
+        select count(*) from query_term
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType,jdbcType=VARCHAR}
+            </if>
+            <if test="queryMode != null and queryMode != ''">
+                and query_mode = #{queryMode,jdbcType=TINYINT}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入 -->
+    <insert id="insertSelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.QueryTerm">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into query_term
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="queryMode != null">
+                query_mode,
+            </if>
+            <if test="queryGroup != null">
+                query_group,
+            </if>
+            <if test="groupOrder != null">
+                group_order,
+            </if>
+            <if test="queryField != null">
+                query_field,
+            </if>
+            <if test="queryCommand != null">
+                query_command,
+            </if>
+            <if test="queryValue != null">
+                query_value,
+            </if>
+            <if test="stepLength != null">
+                step_length,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskType != null">
+                #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="queryMode != null">
+                #{queryMode,jdbcType=TINYINT},
+            </if>
+            <if test="queryGroup != null">
+                #{queryGroup,jdbcType=TINYINT},
+            </if>
+            <if test="groupOrder != null">
+                #{groupOrder,jdbcType=TINYINT},
+            </if>
+            <if test="queryField != null">
+                #{queryField,jdbcType=VARCHAR},
+            </if>
+            <if test="queryCommand != null">
+                #{queryCommand,jdbcType=VARCHAR},
+            </if>
+            <if test="queryValue != null">
+                #{queryValue,jdbcType=VARCHAR},
+            </if>
+            <if test="stepLength != null">
+                #{stepLength,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.qunar.fintech.plat.admin.hank.entity.QueryTerm">
+        update query_term
+        <set>
+            <if test="taskType != null">
+                task_type = #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="queryMode != null">
+                query_mode = #{queryMode,jdbcType=TINYINT},
+            </if>
+            <if test="queryGroup != null">
+                query_group = #{queryGroup,jdbcType=TINYINT},
+            </if>
+            <if test="groupOrder != null">
+                group_order = #{groupOrder,jdbcType=TINYINT},
+            </if>
+            <if test="queryField != null">
+                query_field = #{queryField,jdbcType=VARCHAR},
+            </if>
+            <if test="queryCommand != null">
+                query_command = #{queryCommand,jdbcType=VARCHAR},
+            </if>
+            <if test="queryValue != null">
+                query_value = #{queryValue,jdbcType=VARCHAR},
+            </if>
+            <if test="stepLength != null">
+                step_length = #{stepLength,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>
